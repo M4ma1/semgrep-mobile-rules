@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- ruleid: ios.weakened_ats -->
+	    <key>NSAllowsArbitraryLoads</key>
+	    <true/>
+	    <!-- ok: ios.weakened_ats -->
+	    <key>NSAllowsArbitraryLoads</key>
+	    <false/>
+	    <!-- ruleid: ios.weakened_ats -->
+	    <key>NSAllowsArbitraryLoadsForMedia</key>
+	    <true/>
+	    <!-- ok: ios.weakened_ats -->
+	    <key>NSAllowsArbitraryLoadsForMedia</key>
+	    <false/>
+	    <!-- ruleid: ios.weakened_ats -->
+	    <key>NSAllowsArbitraryLoadsInWebContent</key>
+	    <true/>
+	    <!-- ok: ios.weakened_ats -->
+	    <key>NSAllowsArbitraryLoadsInWebContent</key>
+	    <false/>
+	    <!-- ruleid: ios.weakened_ats -->
+	    <key>NSAllowsLocalNetworking</key>
+	    <true/>
+	    <!-- ok: ios.weakened_ats -->
+	    <key>NSAllowsLocalNetworking</key>
+	    <false/>
+	    <!-- ruleid: ios.weakened_ats -->
+	    <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+	    <true/>
+	    <!-- ok: ios.weakened_ats -->
+	    <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+	    <false/>
+	    <!-- ruleid: ios.weakened_ats -->
+	    <key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+	    <true/>
+	    <!-- ok: ios.weakened_ats -->
+	    <key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+	    <false/>
+	    <key>NSExceptionDomains</key>
+		<dict>
+		<key>google.com</key>
+		<dict>
+			<!-- ruleid: ios.weakened_ats -->
+		    <key>NSIncludesSubdomains</key>
+		    <true/>
+		   	<!-- ruleid: ios.weakened_ats -->
+		    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+		    <true/>
+		    <!-- ruleid: ios.weakened_ats -->
+	    	<key>NSExceptionRequiresForwardSecrecy</key>
+	    	<false/>
+	    	<!-- ruleid: ios.weakened_ats -->
+	    	<key>NSExceptionMinimumTLSVersion</key>
+	    	<string>TLSv1.0</string>
+	    	<!-- ruleid: ios.weakened_ats -->
+	    	<key>NSExceptionMinimumTLSVersion</key>
+	    	<string>TLSv1.1</string>
+			</dict>
+		</dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+		<key>apple.com</key>
+		<dict>
+			<!-- ok: ios.weakened_ats -->
+		    <key>NSIncludesSubdomains</key>
+		    <false/>
+		   	<!-- ok: ios.weakened_ats -->
+		    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+		    <false/>
+		    <!-- ok: ios.weakened_ats -->
+	    	<key>NSExceptionRequiresForwardSecrecy</key>
+	    	<true/>
+	    	<!-- ok: ios.weakened_ats -->
+	    	<key>NSExceptionMinimumTLSVersion</key>
+	    	<string>TLSv1.2</string>
+	    	<!-- ok: ios.weakened_ats -->
+	    	<key>NSExceptionMinimumTLSVersion</key>
+	    	<string>TLSv1.3</string>
+		</dict>
+		</dict>
+	</dict>
+</dict>
+</plist>
