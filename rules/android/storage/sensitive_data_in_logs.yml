@@ -1,0 +1,98 @@
+rules:
+  - id: android.sensitive_data_in_logs
+    severity: WARNING
+    languages:
+      - java
+    metadata:
+      category: security
+      confidence: MEDIUM
+      likelihood: MEDIUM
+      impact: MEDIUM
+      subcategory:
+        - vuln
+      owasp-mobile: M9
+      owasp-mas:
+        identifier: MASVS-STORAGE-2
+        area: storage
+        level:
+          - L1
+          - L2
+      cwe: CWE-532
+      technology: [android]
+      replaces:
+        - MSTG-STORAGE-3
+        - android.mobsf.android_logging
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-logs-for-sensitive-data-mstg-storage-3
+        - https://cwe.mitre.org/data/definitions/532.html
+    message: >-
+      The application writes sensitive data (a key, secret, password, token, credential or personal
+      data such as an e-mail address) to the log. Log, System.out/err, java.util.logging, Timber and
+      BufferedWriter output can be read by other tools on the device, by adb, or by anyone with a
+      bug report. Do not log sensitive values.
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern-either:
+                  - pattern: Log.$M(..., <... $X ...>, ...)
+                  - pattern: System.out.$P(..., <... $X ...>, ...)
+                  - pattern: System.err.$P(..., <... $X ...>, ...)
+                  - pattern: (Logger $L).$M(..., <... $X ...>, ...)
+                  - pattern: Timber.$M(..., <... $X ...>, ...)
+                  - pattern: (BufferedWriter $B).write(..., <... $X ...>, ...)
+                  - pattern: |
+                      $Y = <... $X ...>;
+                      ...
+                      Log.$M(..., <... $Y ...>, ...);
+                  - pattern: |
+                      $Y = <... $X ...>;
+                      ...
+                      System.out.$P(..., <... $Y ...>, ...);
+                  - pattern: |
+                      $Y = <... $X ...>;
+                      ...
+                      System.err.$P(..., <... $Y ...>, ...);
+                  - pattern: |
+                      $Y = <... $X ...>;
+                      ...
+                      (Logger $L).$M(..., <... $Y ...>, ...);
+                  - pattern: |
+                      $Y = <... $X ...>;
+                      ...
+                      Timber.$M(..., <... $Y ...>, ...);
+                  - pattern: |
+                      $Y = <... $X ...>;
+                      ...
+                      (BufferedWriter $B).write(..., <... $Y ...>, ...);
+              - metavariable-regex:
+                  metavariable: $X
+                  regex: (?i)^[\w.()\[\]]*(key|secret|passw|pwd|token|salt|seed|bearer|otp|crypt|auth|iv|email|phone|ssn|cvv|credential|jwt)[\w.()\[\]]*$
+          - patterns:
+              - pattern-either:
+                  - pattern: Log.$M(..., <... "$S" + $D ...>, ...)
+                  - pattern: Log.$M(..., <... $D + "$S" ...>, ...)
+                  - pattern: Log.$M(..., <... String.format("$S", ...) ...>, ...)
+                  - pattern: System.out.$P(..., <... "$S" + $D ...>, ...)
+                  - pattern: System.out.$P(..., <... $D + "$S" ...>, ...)
+                  - pattern: System.out.$P(..., <... String.format("$S", ...) ...>, ...)
+                  - pattern: System.err.$P(..., <... "$S" + $D ...>, ...)
+                  - pattern: System.err.$P(..., <... $D + "$S" ...>, ...)
+                  - pattern: System.err.$P(..., <... String.format("$S", ...) ...>, ...)
+                  - pattern: (Logger $L).$M(..., <... "$S" + $D ...>, ...)
+                  - pattern: (Logger $L).$M(..., <... $D + "$S" ...>, ...)
+                  - pattern: (Logger $L).$M(..., <... String.format("$S", ...) ...>, ...)
+                  - pattern: Timber.$M(..., <... "$S" + $D ...>, ...)
+                  - pattern: Timber.$M(..., <... $D + "$S" ...>, ...)
+                  - pattern: Timber.$M(..., <... String.format("$S", ...) ...>, ...)
+                  - pattern: (BufferedWriter $B).write(..., <... "$S" + $D ...>, ...)
+                  - pattern: (BufferedWriter $B).write(..., <... $D + "$S" ...>, ...)
+                  - pattern: (BufferedWriter $B).write(..., <... String.format("$S", ...) ...>, ...)
+              - pattern-not: Log.$M(..., "..." + "...", ...)
+              - pattern-not: System.out.$P(..., "..." + "...", ...)
+              - pattern-not: System.err.$P(..., "..." + "...", ...)
+              - pattern-not: (Logger $L).$M(..., "..." + "...", ...)
+              - pattern-not: Timber.$M(..., "..." + "...", ...)
+              - pattern-not: (BufferedWriter $B).write(..., "..." + "...", ...)
+              - metavariable-regex:
+                  metavariable: $S
+                  regex: (?is).*(key|secret|passw|pwd|token|salt|seed|bearer|otp|crypt|auth|iv|email|phone|ssn|cvv|credential|jwt)
