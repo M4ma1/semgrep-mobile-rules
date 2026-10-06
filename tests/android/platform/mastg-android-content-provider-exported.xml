@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- ruleid: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P1" android:authorities="a.p1" android:exported="true" />
+        <!-- ruleid: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P2" android:authorities="a.p2" android:exported="true">
+            <grant-uri-permission android:path="/x" />
+        </provider>
+        <!-- ruleid: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P3" android:authorities="a.p3" android:exported="true"
+            android:readPermission="com.example.READ" />
+        <!-- ruleid: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P4" android:authorities="a.p4" android:exported="true"
+            android:writePermission="com.example.WRITE" />
+        <!-- ok: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P5" android:authorities="a.p5" android:exported="true"
+            android:permission="com.example.PERM" />
+        <!-- ok: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P6" android:authorities="a.p6" android:exported="true"
+            android:readPermission="com.example.READ" android:writePermission="com.example.WRITE" />
+        <!-- ok: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P7" android:authorities="a.p7" android:exported="true"
+            android:writePermission="com.example.WRITE" android:readPermission="com.example.READ" />
+        <!-- ok: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P8" android:authorities="a.p8" android:exported="false" />
+        <!-- ok: android.owasp.provider-exported-without-permissions -->
+        <provider android:name=".P9" android:authorities="a.p9" />
+    </application>
+</manifest>

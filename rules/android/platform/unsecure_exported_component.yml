@@ -1,0 +1,72 @@
+rules:
+  - id: android.unsecure_exported_component
+    severity: WARNING
+    languages:
+      - xml
+    metadata:
+      category: security
+      confidence: MEDIUM
+      likelihood: MEDIUM
+      impact: MEDIUM
+      subcategory:
+        - vuln
+      owasp-mobile: M8
+      owasp-mas:
+        identifier: MASVS-PLATFORM-1
+        area: platform
+        level:
+          - L1
+          - L2
+      cwe: CWE-926
+      technology: [android]
+      replaces:
+        - android.unsecure_exported_activity
+        - MSTG-PLATFORM-4_3
+      references:
+        - https://mas.owasp.org/MASTG/tests/android/MASVS-PLATFORM/MASTG-TEST-0029/
+    message: >-
+      This Android application exports an activity, activity-alias, service or broadcast receiver
+      (android:exported="true", or an <intent-filter> with no android:exported="false"). Any application on
+      the device can start, bind to or send to it, which may compromise the integrity of your application
+      or its data. Ensure exported components do not give privileged access to your application's control
+      plane. The launcher activity is not reported.
+    patterns:
+      - pattern-either:
+        - pattern: |
+            <activity ... android:exported="true" ... />
+        - pattern: |
+            <activity ... > ... <intent-filter> ... </activity>
+        - pattern: |
+            <activity-alias ... android:exported="true" ... />
+        - pattern: |
+            <activity-alias ... > ... <intent-filter> ... </activity-alias>
+        - pattern: |
+            <service ... android:exported="true" ... />
+        - pattern: |
+            <service ... > ... <intent-filter> ... </service>
+        - pattern: |
+            <receiver ... android:exported="true" ... />
+        - pattern: |
+            <receiver ... > ... <intent-filter> ... </receiver>
+      - pattern-not-regex: android:exported="false"
+      # the launcher activity must be exported; do not report it
+      - pattern-not: |
+          <activity ... >
+            ...
+            <intent-filter ...>
+              ...
+              <category android:name="android.intent.category.LAUNCHER" />
+              ...
+            </intent-filter>
+            ...
+          </activity>
+      - pattern-not: |
+          <activity-alias ... >
+            ...
+            <intent-filter ...>
+              ...
+              <category android:name="android.intent.category.LAUNCHER" />
+              ...
+            </intent-filter>
+            ...
+          </activity-alias>
