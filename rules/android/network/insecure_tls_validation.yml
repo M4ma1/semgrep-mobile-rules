@@ -1,0 +1,94 @@
+rules:
+  - id: android.insecure_tls_validation
+    severity: ERROR
+    languages:
+      - java
+    metadata:
+      category: security
+      confidence: HIGH
+      likelihood: MEDIUM
+      impact: HIGH
+      subcategory:
+        - vuln
+      owasp-mobile: M5
+      owasp-mas:
+        identifier: MASVS-NETWORK-1
+        area: network
+        level:
+          - L1
+          - L2
+      cwe: CWE-295
+      technology: [android]
+      replaces:
+        - MSTG-NETWORK-3
+        - android.owasp.network-hostname-verification
+        - android.owasp.network-checkservertrusted
+        - android.owasp.network-onreceivedsslerror
+        - android.mobsf.ignore_ssl_certificate_errors
+        - android.mobsf.accept_self_signed_certificate
+      references:
+        - https://mas.owasp.org/MASTG/tests/android/MASVS-NETWORK/MASTG-TEST-0282/
+        - https://cwe.mitre.org/data/definitions/295.html
+    message: >-
+      Improper TLS certificate or hostname validation. This code trusts every server certificate
+      (a TrustManager that never rejects a chain, an empty getAcceptedIssuers, SSLContext initialised
+      without TrustManagers), accepts every hostname (HostnameVerifier that always returns true,
+      ALLOW_ALL_HOSTNAME_VERIFIER), or lets a WebView continue after an SSL error. The app is then
+      open to man-in-the-middle attacks.
+    patterns:
+      - pattern-either:
+          # --- TrustManager that never rejects a chain (any param names, with or without `throws`) ---
+          - patterns:
+              - pattern: void checkServerTrusted(...) { ... }
+              - pattern-not-inside: void checkServerTrusted(...) { ... throw $E; ... }
+              - pattern-not: void checkServerTrusted(...) { $D.checkServerTrusted(...); }
+          - pattern: |
+              X509Certificate[] getAcceptedIssuers() {
+                ...
+                return new X509Certificate[]{};
+              }
+          - pattern: |
+              X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+              }
+          - pattern: |
+              X509Certificate[] getAcceptedIssuers() {
+                return null;
+              }
+          # --- SSLContext initialised with a custom TrustManager array (init(null, null, ...) = system defaults is fine) ---
+          - patterns:
+              - pattern: |
+                  $Y = SSLContext.getInstance(...);
+                  ...
+                  $Y.init(null, ...);
+              - pattern-not: |
+                  $Y = SSLContext.getInstance(...);
+                  ...
+                  $Y.init(null, null, ...);
+          - patterns:
+              - pattern: sslContext.init(null, ...);
+              - pattern-not: sslContext.init(null, null, ...);
+          # --- HostnameVerifier that accepts every host ---
+          - pattern: |
+              $X.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
+          - pattern: |
+              $X.setHostnameVerifier($Z.ALLOW_ALL_HOSTNAME_VERIFIER);
+          - pattern: |
+              $X.setHostnameVerifier(new AllowAllHostnameVerifier());
+          - pattern: |
+              $X.setDefaultHostnameVerifier(new NullHostnameVerifier());
+          - pattern: |
+              $RET verify(..., SSLSession $X) {
+                ...
+                return true;
+              }
+          # --- WebView that proceeds on SSL errors ---
+          - patterns:
+              - pattern: |
+                  $RET onReceivedSslError($WT $W, $HT $H, $ET $E) {
+                    ...
+                    $H.proceed();
+                  }
+              - metavariable-regex:
+                  metavariable: $HT
+                  regex: (.*\.)?SslErrorHandler
