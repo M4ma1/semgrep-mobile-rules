@@ -11,10 +11,20 @@ rules:
     - metavariable-regex:
         metavariable: $SCHEME
         regex: ^(?!https?$).+$
-    - pattern-inside: |
-        <activity ...>
-          ...
-        </activity>
+    - pattern-either:
+      - pattern-inside: |
+          <activity ...>
+            ...
+          </activity>
+      - pattern-inside: |
+          <activity-alias ...>
+            ...
+          </activity-alias>
+    # a non-exported component cannot be opened from a link
+    - pattern-not-inside: |
+        <activity ... android:exported="false" ... />
+    - pattern-not-inside: |
+        <activity-alias ... android:exported="false" ... />
     - pattern-inside: |
         <intent-filter ...>
           ...

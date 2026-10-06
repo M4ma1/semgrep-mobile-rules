@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name=".A1"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ruleid: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="https" android:host="x.com" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".A2"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ruleid: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="http" android:host="x.com" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".A3">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ruleid: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="https" android:host="x.com" />
+            </intent-filter>
+        </activity>
+        <activity-alias
+            android:name=".Al1"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ruleid: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="https" android:host="x.com" />
+            </intent-filter>
+        </activity-alias>
+        <activity
+            android:name=".B1"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ok: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="https" android:host="x.com" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".B2"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ok: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="https" android:host="x.com" />
+            </intent-filter>
+        </activity>
+        <activity-alias
+            android:name=".B3"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ok: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="https" android:host="x.com" />
+            </intent-filter>
+        </activity-alias>
+        <activity
+            android:name=".B4"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- ok: android.owasp.deeplink-autoverify-missing -->
+                <data android:scheme="myapp" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
