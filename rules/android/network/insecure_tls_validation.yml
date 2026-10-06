@@ -27,7 +27,7 @@ rules:
         - android.mobsf.ignore_ssl_certificate_errors
         - android.mobsf.accept_self_signed_certificate
       references:
-        - https://mas.owasp.org/MASTG/tests/android/MASVS-NETWORK/MASTG-TEST-0282/
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05g-Testing-Network-Communication.md#testing-endpoint-identify-verification-mstg-network-3
         - https://cwe.mitre.org/data/definitions/295.html
     message: >-
       Improper TLS certificate or hostname validation. This code trusts every server certificate
