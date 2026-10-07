@@ -1,0 +1,50 @@
+rules:
+  - id: android.insecure_hash_md
+    severity: WARNING
+    languages:
+      - java
+      - kotlin
+    metadata:
+      category: security
+      confidence: HIGH
+      likelihood: HIGH
+      impact: HIGH
+      subcategory:
+        - vuln
+      cwe: CWE-328
+      technology: [android]
+      owasp-mas:
+        identifier: MASVS-CRYPTO-1
+        area: cryptography
+        level:
+          - L1
+          - L2
+      replaces:
+        - android.insecure_hash_md2
+        - android.insecure_hash_md4
+        - android.insecure_hash_md5
+        - android.mobsf.weak_hash
+        - android.semgrep.use-of-md5
+        - android.gitlab.kotlin_crypto_rule-WeakMessageDigest
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#identifying-insecure-andor-deprecated-cryptographic-algorithms-mstg-crypto-4
+        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#algorithms
+    message: >-
+      This Android application uses the MD2, MD4 or MD5 hash algorithm (getInstance("MD5"), an MDx-with-RSA
+      signature, the Apache Commons DigestUtils MD helpers, or Guava Hashing.md5()). These algorithms are
+      broken: collisions can be generated cheaply, so they are not suitable for signatures, integrity checks
+      or password hashing. Use SHA-256 or SHA-3 instead. HMAC-MD5 is not reported here.
+    pattern-either:
+      - pattern: $C.getInstance("=~/^MD[245]$/i", ...)
+      - pattern: $C.getInstance("=~/^MD[245]with.*/i", ...)
+      - pattern: DigestUtils.md5(...)
+      - pattern: DigestUtils.md5Hex(...)
+      - pattern: DigestUtils.getMd5Digest()
+      - pattern: DigestUtils.md2(...)
+      - pattern: DigestUtils.md2Hex(...)
+      - pattern: DigestUtils.getMd2Digest()
+      - pattern: DigestUtils.md4(...)
+      - pattern: DigestUtils.md4Hex(...)
+      - pattern: DigestUtils.getMd4Digest()
+      - pattern: Files.hash(..., Hashing.md5())
+      - pattern: $C.Files.hash(..., Hashing.md5())
