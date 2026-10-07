@@ -1,7 +1,7 @@
 rules:
   - id: android.insecure_cipher_ecb
-    severity: WARNING
-    languages: 
+    severity: ERROR
+    languages:
       - java
       - kotlin
     metadata:
@@ -11,31 +11,35 @@ rules:
       impact: HIGH
       subcategory:
         - vuln
+      cwe: CWE-327
+      technology: [android]
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
         level:
           - L1
           - L2
+      replaces:
+        - android.mobsf.aes_ecb_mode
+        - android.mobsf.aes_ecb_mode_default
+        - android.owasp.broken-encryption-modes
+        - android.gitlab.kotlin_crypto_rule-CipherECBMode
+        - android.semgrep.ecb-cipher
       references:
         - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
         - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
     message: >-
-      This Android mobile application seems using a weak cipher, `ECB`, which could expose to various kind of vulnerabilities.
-      The data encrypted using `ECB` mode block results in a lack of diffusion, which could allow to retrieve its plain-text value. 
-      It is recommended to avoid the use of `ECB`, and use `GCM` instead.
-    pattern-either:
-      - pattern: Cipher $VAR = Cipher.getInstance("=~/.*\/ECB\/.*/", ...);
-      - pattern: $VAR = Cipher.getInstance("=~/.*\/ECB\/.*/", ...)
-      - pattern-inside: |
-          KeyGenParameterSpec $KGPS = new KeyGenParameterSpec.Builder(...)
-          . ...
-          .setBlockModes(KeyProperties.BLOCK_MODE_ECB)
-          . ...
-          .build();
-      - pattern-inside: |
-          $KGPS = KeyGenParameterSpec.Builder(...)
-          . ...
-          .setBlockModes(KeyProperties.BLOCK_MODE_ECB)
-          . ...
-          .build()
+      This Android application uses ECB block-cipher mode (an explicit ".../ECB/..." transformation,
+      KeyProperties.BLOCK_MODE_ECB, or Cipher.getInstance("AES"), which defaults to ECB). ECB encrypts
+      identical plaintext blocks to identical ciphertext blocks, so patterns in the data stay visible and
+      blocks can be replayed or reordered. Use an authenticated mode such as AES/GCM/NoPadding instead.
+      RSA transformations (RSA/ECB/...) are not reported: the "ECB" there is only a naming convention.
+    patterns:
+      - pattern-either:
+          - pattern: Cipher.getInstance("=~/[^\/]*\/ECB(\/.*)?/i", ...)
+          - pattern: javax.crypto.Cipher.getInstance("=~/[^\/]*\/ECB(\/.*)?/i", ...)
+          - pattern: Cipher.getInstance("=~/^AES$/i", ...)
+          - pattern: javax.crypto.Cipher.getInstance("=~/^AES$/i", ...)
+          - pattern: $X.setBlockModes(..., KeyProperties.BLOCK_MODE_ECB, ...)
+      - pattern-not: Cipher.getInstance("=~/^RSA\/.*/i", ...)
+      - pattern-not: javax.crypto.Cipher.getInstance("=~/^RSA\/.*/i", ...)
