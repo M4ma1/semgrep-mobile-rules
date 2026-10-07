@@ -11,21 +11,32 @@ rules:
       impact: HIGH
       subcategory:
         - vuln
+      cwe: CWE-327
+      technology: [android]
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
         level:
           - L1
           - L2
+      replaces:
+        - android.mobsf.sha1_hash
+        - android.semgrep.use-of-sha1
       references:
         - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
-        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
+        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#algorithms
     message: >-
-      This Android mobile application seems using the insecure SHA-1 algorithm, which could expose to various kind of vulnerabilities.
-      SHA-1 is not collision resistant and is therefore not suitable as a cryptographic signature.
-      It is recommended to use the `SHA-256` or `SHA3` algorithm instead.
+      This Android application uses the SHA-1 hash algorithm (MessageDigest "SHA-1", "SHA1" or "SHA",
+      a SHA1with... Signature, or the Apache Commons DigestUtils SHA-1 helpers). SHA-1 is not collision
+      resistant and is therefore not suitable for signatures, integrity checks or password hashing.
+      Use SHA-256 or SHA-3 instead. HMAC-SHA1 and PBKDF2WithHmacSHA1 are not reported here.
     pattern-either:
-      - pattern: $VAR = MessageDigest.getInstance("SHA1")
-      - pattern: DigestUtils.getSha1Digest()
+      - pattern: MessageDigest.getInstance("=~/^(SHA-?1|SHA)$/i", ...)
+      - pattern: java.security.MessageDigest.getInstance("=~/^(SHA-?1|SHA)$/i", ...)
+      - pattern: Signature.getInstance("=~/^SHA-?1with.*/i", ...)
+      - pattern: java.security.Signature.getInstance("=~/^SHA-?1with.*/i", ...)
       - pattern: DigestUtils.sha1(...)
       - pattern: DigestUtils.sha1Hex(...)
+      - pattern: DigestUtils.sha(...)
+      - pattern: DigestUtils.shaHex(...)
+      - pattern: DigestUtils.getSha1Digest()
