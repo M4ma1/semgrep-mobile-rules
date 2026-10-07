@@ -1,0 +1,39 @@
+rules:
+  - id: android.insecure_null_cipher
+    severity: WARNING
+    languages:
+      - java
+      - kotlin
+      - scala
+    metadata:
+      category: security
+      confidence: HIGH
+      likelihood: LOW
+      impact: MEDIUM
+      subcategory:
+        - vuln
+      cwe: CWE-327
+      technology: [android]
+      owasp-mas:
+        identifier: MASVS-CRYPTO-1
+        area: cryptography
+        level:
+          - L1
+          - L2
+      replaces:
+        - android.gitlab.kotlin_crypto_rule-NullCipher
+        - android.semgrep.no-null-cipher
+        - android.mobsf.weak_cipher (NullCipher branch only)
+      references:
+        - https://find-sec-bugs.github.io/bugs.htm#NULL_CIPHER
+        - https://owasp.org/www-community/Using_the_Java_Cryptographic_Extensions
+    message: >-
+      NullCipher was detected. A NullCipher implements the Cipher interface by returning ciphertext
+      identical to the supplied plaintext, so nothing is encrypted. It is only appropriate in tests.
+      Its accidental use introduces a significant confidentiality risk. Use a real cipher such as
+      Cipher.getInstance("AES/GCM/NoPadding").
+    pattern-either:
+      - pattern: new NullCipher(...)
+      - pattern: new javax.crypto.NullCipher(...)
+      - pattern: NullCipher(...)
+      - pattern: javax.crypto.NullCipher(...)

@@ -8,5 +8,3 @@ Cipher.getInstance("RC4");
 Cipher.getInstance("Blowfish");
 // ruleid:android.mobsf.weak_cipher
 Cipher.getInstance("DESede");
-// ruleid:android.mobsf.weak_cipher
-NullCipher nullc = new NullCipher();
