@@ -20,12 +20,12 @@ rules:
       references:
         - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
         - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
+      replaces:
+        - android.mobsf.weak_cipher (RC4 branch)
+        - android.owasp.broken-encryption-algorithms (RC4 branch)
     message: >-
       This Android mobile application seems using a weak cipher, `RC4`, which could expose to various kind of vulnerabilities.
       The data encrypted using `RC4` mode block could allow to retrieve its plain-text value. 
       It is recommended to avoid the use of `RC4`, and use `AES` instead.
     pattern-either:
-      - pattern: Cipher $VAR = Cipher.getInstance("=~/(RC4\/.*\/.*|RC4)$/i", ...);
-      - pattern: SecretKeyFactory $VAR = SecretKeyFactory.getInstance("=~/((RC4|ARCFOUR)\/.*\/.*|(RC4|ARCFOUR))$/i", ...);
-      - pattern: $VAR = Cipher.getInstance("=~/(RC4\/.*\/.*|RC4)$/i", ...);
-      - pattern: $VAR = SecretKeyFactory.getInstance("=~/((RC4|ARCFOUR)\/.*\/.*|(RC4|ARCFOUR))$/i", ...);
+      - pattern: $C.getInstance("=~/((RC4|ARCFOUR)\/.*\/.*|(RC4|ARCFOUR))$/i", ...)
