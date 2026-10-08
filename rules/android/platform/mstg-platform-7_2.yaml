@@ -19,14 +19,17 @@ rules:
       likelihood: LOW
       impact: MEDIUM
       technology: [android]
+      replaces:
+        - android.mobsf.webview_javascript_interface
+        - android.owasp.webview-bridges-setup
     message: The application exposes the Java class "$CLASS" through the WebView "$WV".
     pattern-either:
       - patterns:
-          - pattern: $WV.addJavascriptInterface(($CLASS $X),$Y)
-          - pattern-not: this.addJavascriptInterface(($CLASS $X),$Y)
+          - pattern: $WV.addJavascriptInterface(($CLASS $X),$Y, ...)
+          - pattern-not: this.addJavascriptInterface(($CLASS $X),$Y, ...)
       - patterns:
           - pattern-inside: class $WV{ ... }
-          - pattern: addJavascriptInterface(($CLASS $X),$Y)
+          - pattern: addJavascriptInterface(($CLASS $X),$Y, ...)
       - patterns:
           - pattern-inside: class $WV{ ... }
-          - pattern: this.addJavascriptInterface(($CLASS $X),$Y)
+          - pattern: this.addJavascriptInterface(($CLASS $X),$Y, ...)
