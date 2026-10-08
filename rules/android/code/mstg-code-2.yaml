@@ -17,10 +17,12 @@ rules:
       likelihood: MEDIUM
       impact: MEDIUM
       technology: [android]
+      replaces:
+        - android.owasp.debuggable-flag
     message: The application is built with the "android:debuggable" flag set to true.
     paths:
       include:
         - "**/AndroidManifest.xml"
     patterns:
       - pattern-inside: <application ... > ... </application>
-      - pattern: android:debuggable="true"
+      - pattern: android:debuggable="=~/^true$/i"

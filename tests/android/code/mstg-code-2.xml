@@ -31,5 +31,13 @@
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- ruleid: MSTG-CODE-2 -->
+    <application android:debuggable="True" />
+    <!-- ruleid: MSTG-CODE-2 -->
+    <application android:debuggable="TRUE" />
+    <!-- ok: MSTG-CODE-2 -->
+    <application android:debuggable="false" />
+    <!-- ok: MSTG-CODE-2 -->
+    <application android:label="no debuggable attribute" />
 
 </manifest>
