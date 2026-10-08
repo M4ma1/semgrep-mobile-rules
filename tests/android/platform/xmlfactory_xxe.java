@@ -33,6 +33,7 @@ class BadXMLInputFactory {
     public Blah() {
         // ruleid:android.mobsf.xmlinputfactory_xxe
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+        // ruleid:android.mobsf.xmlinputfactory_xxe
         xmlInputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", true);
     }
 }
@@ -41,5 +42,23 @@ class MaybeBadXMLInputFactory {
     public Blah() {
         // ruleid:android.mobsf.xmlinputfactory_xxe
         final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+    }
+}
+
+// Cases ported from the former android.mobsf.xmlinputfactory_xxe_enabled rule
+class GoodExplicitlyDisabled {
+    public void blah() {
+        // ok:android.mobsf.xmlinputfactory_xxe
+        final XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+        xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        // ok:android.mobsf.xmlinputfactory_xxe
+        xmlInputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+    }
+}
+
+class BadExplicitlyEnabled {
+    public void blah(XMLInputFactory xmlInputFactory) {
+        // ruleid:android.mobsf.xmlinputfactory_xxe
+        xmlInputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", true);
     }
 }
