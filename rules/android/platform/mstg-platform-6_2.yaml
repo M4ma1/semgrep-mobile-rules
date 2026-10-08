@@ -18,9 +18,12 @@ rules:
       likelihood: LOW
       impact: LOW
       technology: [android]
+      replaces:
+        - android.mobsf.webview_allow_file_from_url
     message: >-
         The WebView allows to load external content. It is suggested to verify that the granted
-        accesses are necessary and follow the best practices.
+        accesses are necessary and follow the best practices. Enabling file access from URLs in a
+        WebView can leak sensitive information from the file system.
     options:
       symbolic_propagation: true
     patterns:

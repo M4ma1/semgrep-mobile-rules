@@ -45,5 +45,20 @@ public class TestClass {
             getSettings().setAllowFileAccessFromFileURLs(false);
         }
     }
-    
+
+    // Cases ported from android.mobsf.webview_allow_file_from_url
+    protected void test5() {
+        WebView webView = (WebView) findViewById(R.id.webView);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        // ruleid: MSTG-PLATFORM-6_2
+        webSettings.setAllowFileAccessFromFileURLs(true);
+        boolean enabled = true;
+        // ruleid: MSTG-PLATFORM-6_2
+        webSettings.setAllowUniversalAccessFromFileURLs(enabled);
+        // ruleid: MSTG-PLATFORM-6_2
+        setAllowFileAccessFromFileURLs(true);
+        // ok: MSTG-PLATFORM-6_2
+        webSettings.setAllowFileAccessFromFileURLs(false);
+    }
 }
