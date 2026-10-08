@@ -1,7 +1,9 @@
 rules:
   - id: android.mobsf.object_deserialization
     patterns:
-      - pattern: new ObjectInputStream(...);
+      - pattern-either:
+          - pattern: new ObjectInputStream(...);
+          - pattern: new java.io.ObjectInputStream(...);
     severity: WARNING
     languages:
       - java
@@ -18,3 +20,5 @@ rules:
       masvs: platform-8
       reference: >-
         https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05h-Testing-Platform-Interaction.md#testing-object-persistence-mstg-platform-8
+      replaces:
+        - android.owasp.object-deserialization

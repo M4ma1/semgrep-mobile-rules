@@ -23,4 +23,10 @@ public class Cls
             throw e;
         }
     }
+
+    public UserData deserializeQualified(InputStream receivedFile) throws IOException, ClassNotFoundException {
+        // ruleid:android.mobsf.object_deserialization
+        java.io.ObjectInputStream in = new java.io.ObjectInputStream(receivedFile);
+        return (UserData) in.readObject();
+    }
 }
