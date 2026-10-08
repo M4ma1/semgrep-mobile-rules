@@ -3,6 +3,7 @@ rules:
     severity: WARNING
     languages:
       - java
+      - kotlin
     metadata:
       authors:
         - Federico Dotta @apps3c (HN Security)
@@ -28,16 +29,29 @@ rules:
       symbolic_propagation: true
     patterns:
       - pattern-either:
-        - patterns:
-          - pattern: $B(...)
-          - pattern-not: $B(false)
-        - patterns:
-          - pattern: $A.$B(...)
-          - pattern-not: $A.$B(false)
-      - metavariable-pattern:
-          metavariable: $B
-          pattern-either:
-            - pattern: setAllowContentAccess
-            - pattern: setAllowFileAccess
-            - pattern: setAllowFileAccessFromFileURLs
-            - pattern: setAllowUniversalAccessFromFileURLs
+          # Setter calls: settings.setAllowFileAccess(true), setAllowFileAccess(x), ...
+          - patterns:
+              - pattern-either:
+                  - patterns:
+                      - pattern: $B(...)
+                      - pattern-not: $B(false)
+                  - patterns:
+                      - pattern: $A.$B(...)
+                      - pattern-not: $A.$B(false)
+              - metavariable-pattern:
+                  metavariable: $B
+                  pattern-either:
+                    - pattern: setAllowContentAccess
+                    - pattern: setAllowFileAccess
+                    - pattern: setAllowFileAccessFromFileURLs
+                    - pattern: setAllowUniversalAccessFromFileURLs
+          # Kotlin property syntax: settings.allowFileAccess = true / apply { allowFileAccess = x }
+          - patterns:
+              - pattern-either:
+                  - pattern: $A.$P = $V
+                  - pattern: $P = $V
+              - pattern-not: $A.$P = false
+              - pattern-not: $P = false
+              - metavariable-regex:
+                  metavariable: $P
+                  regex: ^(allowContentAccess|allowFileAccess|allowFileAccessFromFileURLs|allowUniversalAccessFromFileURLs)$
