@@ -1,15 +1,4 @@
 rules:
-  - id: android.owasp.backup-manifest-allow-backup
-    severity: WARNING
-    languages:
-      - xml
-    metadata:
-      summary: This rule inspects the AndroidManifest.xml for allowBackup.
-      references:
-        - https://developer.android.com/guide/topics/data/autobackup
-    message: "[MASVS-STORAGE-2] allowBackup detected as $ARG."
-    patterns:
-      - pattern: 'android:allowBackup="$ARG"'
   - id: android.owasp.backup-manifest-backup-rules
     severity: WARNING
     languages:
