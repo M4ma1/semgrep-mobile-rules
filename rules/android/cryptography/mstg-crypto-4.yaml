@@ -3,65 +3,90 @@ rules:
     severity: WARNING
     languages:
       - java
+      - kotlin
     metadata:
       authors:
         - Maurizio Siddu @akabe1 (IMQ Minded Security)
       owasp-mobile: M5
       category: security
       area: cryptography
-      verification-level: 
+      cwe: CWE-327
+      verification-level:
         - L1
         - L2
       references:
         - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x04g-Testing-Cryptography.md#identifying-insecure-andor-deprecated-cryptographic-algorithms-mstg-crypto-4
+        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
       confidence: HIGH
       likelihood: MEDIUM
       impact: HIGH
       technology: [android]
-    message: The application uses deprecated cryptographic algorithms.
+      replaces:
+        - android.insecure_cipher_des
+        - android.insecure_cipher_3des
+        - android.insecure_cipher_rc2
+        - android.insecure_cipher_rc4
+        - android.insecure_cipher_blowfish
+        - android.insecure_cipher_ecb
+        - android.insecure_cipher_cbc
+        - android.mobsf.cbc_padding_oracle
+        - android.gitlab.kotlin_crypto_rule-CipherPaddingOracle
+        - android.mobsf.weak_cipher
+        - android.owasp.broken-encryption-algorithms
+        - android.gitlab.kotlin_crypto_rule-CipherDESInsecure
+        - android.gitlab.kotlin_crypto_rule-CipherDESedeInsecure
+        - android.mobsf.aes_ecb_mode
+        - android.mobsf.aes_ecb_mode_default
+        - android.owasp.broken-encryption-modes
+        - android.gitlab.kotlin_crypto_rule-CipherECBMode
+        - android.semgrep.ecb-cipher
+    message: >-
+      The application uses a deprecated or insecure cryptographic algorithm or mode:
+      DES, 3DES (DESede), RC2, RC4 (ARCFOUR) or Blowfish; ECB mode (including the default
+      Cipher.getInstance("AES")); CBC with PKCS5/PKCS7 padding (vulnerable to padding oracle attacks);
+      or the deprecated "Crypto" SecureRandom provider. Use AES in an authenticated mode such as
+      AES/GCM/NoPadding. RSA/ECB/... transformations are not reported: "ECB" there is only a naming convention.
     patterns:
       - pattern-either:
-          - patterns: 
-              - pattern: |
-                  Cipher $CIP = Cipher.getInstance("=~/.*\/ECB\/.*/", ...);
-          - patterns: 
-              - pattern: |
-                  Cipher $CIP = Cipher.getInstance("=~/.*\/CBC\/(PKCS5|PKCS7)Padding/", ...);
-          - patterns:                   
-              - pattern: |
-                  Cipher $CIP = Cipher.getInstance("=~/(3DES|DESede|DES|Blowfish)\/.*\/.*/", ...);
+          # --- weak algorithms (DES, 3DES, RC2, RC4, Blowfish) ---
+          - pattern: $C.getInstance("=~/(?<!3)DES(\/.*\/.*)?$/i", ...)
+          - pattern: $C.getInstance("=~/((3DES|DESede|DESEDEWRAP)\/.*\/.*|(3DES|DESede|DESEDEWRAP))/i", ...)
+          - pattern: $C.getInstance("=~/(RC2\/.*\/.*|RC2(_\d+)?)$/i", ...)
+          - pattern: $C.getInstance("=~/((RC4|ARCFOUR)\/.*\/.*|(RC4|ARCFOUR))$/i", ...)
+          - pattern: $C.getInstance("=~/(Blowfish\/.*\/.*|Blowfish)/i", ...)
+          # --- ECB mode ---
+          - pattern: Cipher.getInstance("=~/[^\/]*\/ECB(\/.*)?/i", ...)
+          - pattern: javax.crypto.Cipher.getInstance("=~/[^\/]*\/ECB(\/.*)?/i", ...)
+          - pattern: Cipher.getInstance("=~/^AES$/i", ...)
+          - pattern: javax.crypto.Cipher.getInstance("=~/^AES$/i", ...)
+          - pattern: $X.setBlockModes(..., KeyProperties.BLOCK_MODE_ECB, ...)
+          # --- CBC with PKCS5/PKCS7 padding ---
+          - pattern: Cipher.getInstance("=~/.*\/CBC\/(PKCS5|PKCS7)Padding/i", ...)
+          - pattern: javax.crypto.Cipher.getInstance("=~/.*\/CBC\/(PKCS5|PKCS7)Padding/i", ...)
           - patterns:
-              - pattern: |
-                  SecretKeyFactory $VAR = SecretKeyFactory.getInstance("=~/(3DES|DESede|DES)/", ...);
-          - patterns:                   
-              - pattern: |
-                  SecureRandom $SR = SecureRandom.getInstance($VAR, "=~/Crypto/");
-          - patterns:                   
               - pattern-inside: |
                   KeyGenParameterSpec $KGPS = new KeyGenParameterSpec.Builder(...)
                     . ...
-                    .setBlockModes(KeyProperties.BLOCK_MODE_ECB)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    . ...
+                    .setEncryptionPaddings($PAD)
                     . ...
                     .build();
-          - patterns:                     
-              - pattern-inside: |
-                  KeyGenParameterSpec $KGPS = new KeyGenParameterSpec.Builder(...)
-                     . ...
-                     .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                     . ...
-                     .setEncryptionPaddings($PAD)
-                     . ...
-                     .build();
               - metavariable-regex:
                   metavariable: $PAD
                   regex: KeyProperties\.ENCRYPTION_PADDING_(PKCS7|PKCS5)
           - patterns:
               - pattern-inside: |
-                  $KG.initialize(new KeyGenParameterSpec.Builder(...)
+                  $KGPS = KeyGenParameterSpec.Builder(...)
                     . ...
-                    .setBlockModes(KeyProperties.BLOCK_MODE_ECB)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                     . ...
-                    .build());
+                    .setEncryptionPaddings($PAD)
+                    . ...
+                    .build()
+              - metavariable-regex:
+                  metavariable: $PAD
+                  regex: KeyProperties\.ENCRYPTION_PADDING_(PKCS7|PKCS5)
           - patterns:
               - pattern-inside: |
                   $KG.initialize(new KeyGenParameterSpec.Builder(...)
@@ -72,5 +97,21 @@ rules:
                     . ...
                     .build());
               - metavariable-regex:
-                    metavariable: $PAD
-                    regex: KeyProperties\.ENCRYPTION_PADDING_(PKCS7|PKCS5)
+                  metavariable: $PAD
+                  regex: KeyProperties\.ENCRYPTION_PADDING_(PKCS7|PKCS5)
+          - patterns:
+              - pattern-inside: |
+                  $KG.initialize(KeyGenParameterSpec.Builder(...)
+                    . ...
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    . ...
+                    .setEncryptionPaddings($PAD)
+                    . ...
+                    .build())
+              - metavariable-regex:
+                  metavariable: $PAD
+                  regex: KeyProperties\.ENCRYPTION_PADDING_(PKCS7|PKCS5)
+          # --- deprecated "Crypto" SecureRandom provider ---
+          - pattern: SecureRandom.getInstance($ALG, "=~/Crypto/")
+      - pattern-not: Cipher.getInstance("=~/^RSA\/.*/i", ...)
+      - pattern-not: javax.crypto.Cipher.getInstance("=~/^RSA\/.*/i", ...)
