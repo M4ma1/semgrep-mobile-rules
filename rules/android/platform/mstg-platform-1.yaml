@@ -18,6 +18,8 @@ rules:
       likelihood: LOW
       impact: LOW
       technology: [android]
+      replaces:
+        - detect-dangerous-android-permissions
     message: The application should request the minimum set of necessary permissions.
     pattern-either:
         # Access to location
@@ -38,6 +40,19 @@ rules:
             - metavariable-regex:
                 metavariable: $P
                 regex: android\.permission\.(READ_CALENDAR|WRITE_CALENDAR|READ_CALL_LOG|WRITE_CALL_LOG|PROCESS_OUTGOING_CALLS|CAMERA|GET_ACCOUNTS|RECORD_AUDIO|READ_PHONE_STATE|READ_PHONE_NUMBERS|CALL_PHONE|ANSWER_PHONE_CALLS|ADD_VOICEMAIL|USE_SIP|BODY_SENSORS|SEND_SMS|RECEIVE_SMS|READ_SMS|RECEIVE_WAP_PUSH|RECEIVE_MMS|READ_EXTERNAL_STORAGE|WRITE_EXTERNAL_STORAGE)
+        # Dangerous / special permissions added in newer Android versions
+        # (ported from detect-dangerous-android-permissions) + MANAGE_EXTERNAL_STORAGE
+        - patterns:
+            - pattern: <uses-permission android:name="$P"/>
+            - metavariable-regex:
+                metavariable: $P
+                regex: android\.permission\.(READ_CELL_BROADCASTS|READ_MEDIA_AUDIO|READ_MEDIA_VIDEO|READ_MEDIA_IMAGES|READ_MEDIA_VISUAL_USER_SELECTED|ACCEPT_HANDOVER|ACTIVITY_RECOGNITION|POST_NOTIFICATIONS|BLUETOOTH_SCAN|BLUETOOTH_CONNECT|BLUETOOTH_ADVERTISE|UWB_RANGING|NEARBY_WIFI_DEVICES|RANGING|MANAGE_EXTERNAL_STORAGE)
+        # Voicemail permission lives in a different namespace
+        - patterns:
+            - pattern: <uses-permission android:name="$P"/>
+            - metavariable-regex:
+                metavariable: $P
+                regex: com\.android\.voicemail\.permission\.ADD_VOICEMAIL
         # Deprecated permissions
         - patterns:
             - pattern: <uses-permission android:name="$P"/>

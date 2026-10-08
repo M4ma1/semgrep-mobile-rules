@@ -11,11 +11,50 @@
         android:targetSdkVersion="18" />
     <!-- ruleid: MSTG-PLATFORM-1 -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <!-- ruleid: MSTG-PLATFORM-1 -->
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <!-- ruleid: MSTG-PLATFORM-1 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- Ported from detect-dangerous-android-permissions -->
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.READ_CELL_BROADCASTS"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.ACCEPT_HANDOVER"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.UWB_RANGING"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.RANGING"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="com.android.voicemail.permission.ADD_VOICEMAIL"/>
+    <!-- ok: MSTG-PLATFORM-1 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- ruleid: MSTG-PLATFORM-1 -->
+    <permission android:name="com.example.test.PERM" android:protectionLevel="dangerous"/>
+    <!-- ok: MSTG-PLATFORM-1 -->
+    <permission android:name="com.example.test.PERM2" android:protectionLevel="signature"/>
 
     <application
         android:allowBackup="true"
