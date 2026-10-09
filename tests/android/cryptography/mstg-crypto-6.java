@@ -8,7 +8,8 @@ public class A{
         return 1 + new Random().nextInt(6);
     }
     private int test2random(){
-        // ruleid: MSTG-CRYPTO-6
+        // Math.random() is reported by android.insecure_random_number_generator
+        // ok: MSTG-CRYPTO-6
         return 1 + Math.random();
     }
     private int test3gen(){
@@ -17,7 +18,8 @@ public class A{
         return r.nextDouble();
     }
     private int test4(){
-        // ruleid: MSTG-CRYPTO-6
+        // seeded SecureRandom is reported by android.insecure_random_number_generator
+        // ok: MSTG-CRYPTO-6
         SecureRandom number = new SecureRandom(12);
         return number.nextInt(21);
     }

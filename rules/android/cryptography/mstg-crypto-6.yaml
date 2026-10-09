@@ -18,6 +18,7 @@ rules:
       likelihood: MEDIUM
       impact: HIGH
       technology: [android]
+      # Math.random(...) and seeded SecureRandom are reported by android.insecure_random_number_generator
     message: The application makes use of insecure random number generator.
     paths:
       exclude:
@@ -32,7 +33,6 @@ rules:
         - patterns:
             - pattern-inside: $M(...){ ... }
             - pattern-either:
-                - pattern: Math.random(...)
                 - pattern: (java.util.Random $X).$Y(...)
                 - pattern: new Date()
                 - pattern: System.currentTimeMillis()
@@ -43,6 +43,3 @@ rules:
             - metavariable-regex:
                 metavariable: $M
                 regex: ^((?!(?i)Log).)*$
-        # Specify a seed may reduce the randomness
-        - pattern: new SecureRandom($SEED);
-

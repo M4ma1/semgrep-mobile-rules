@@ -19,6 +19,8 @@ rules:
           - L2
       references:
         - https://mas.owasp.org/MASTG/tests/android/MASVS-CRYPTO/MASTG-TEST-0016/
+      replaces:
+        - android.owasp.random-apis-insufficient-entropy
     message: >-
       This Android mobile application seems using an insecure random number generator, which could expose to various kind of vulnerabilities.
       If the source of entropy is used for security purposes, make sure to use the `SecureRandom` API without specifying a seed.
@@ -28,3 +30,4 @@ rules:
         - pattern: new Random()
         - pattern: Random()
         - pattern: Math.random(...)
+        - pattern: (java.util.Random $X).$Y(...)
