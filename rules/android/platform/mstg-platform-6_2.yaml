@@ -30,28 +30,36 @@ rules:
     patterns:
       - pattern-either:
           # Setter calls: settings.setAllowFileAccess(true), setAllowFileAccess(x), ...
-          - patterns:
-              - pattern-either:
-                  - patterns:
-                      - pattern: $B(...)
-                      - pattern-not: $B(false)
-                  - patterns:
-                      - pattern: $A.$B(...)
-                      - pattern-not: $A.$B(false)
-              - metavariable-pattern:
-                  metavariable: $B
-                  pattern-either:
-                    - pattern: setAllowContentAccess
-                    - pattern: setAllowFileAccess
-                    - pattern: setAllowFileAccessFromFileURLs
-                    - pattern: setAllowUniversalAccessFromFileURLs
+          - pattern: $A.setAllowContentAccess(...)
+          - pattern: setAllowContentAccess(...)
+          - pattern: $A.setAllowFileAccess(...)
+          - pattern: setAllowFileAccess(...)
+          - pattern: $A.setAllowFileAccessFromFileURLs(...)
+          - pattern: setAllowFileAccessFromFileURLs(...)
+          - pattern: $A.setAllowUniversalAccessFromFileURLs(...)
+          - pattern: setAllowUniversalAccessFromFileURLs(...)
           # Kotlin property syntax: settings.allowFileAccess = true / apply { allowFileAccess = x }
-          - patterns:
-              - pattern-either:
-                  - pattern: $A.$P = $V
-                  - pattern: $P = $V
-              - pattern-not: $A.$P = false
-              - pattern-not: $P = false
-              - metavariable-regex:
-                  metavariable: $P
-                  regex: ^(allowContentAccess|allowFileAccess|allowFileAccessFromFileURLs|allowUniversalAccessFromFileURLs)$
+          - pattern: $A.allowContentAccess = $V
+          - pattern: allowContentAccess = $V
+          - pattern: $A.allowFileAccess = $V
+          - pattern: allowFileAccess = $V
+          - pattern: $A.allowFileAccessFromFileURLs = $V
+          - pattern: allowFileAccessFromFileURLs = $V
+          - pattern: $A.allowUniversalAccessFromFileURLs = $V
+          - pattern: allowUniversalAccessFromFileURLs = $V
+      - pattern-not: $A.setAllowContentAccess(false)
+      - pattern-not: setAllowContentAccess(false)
+      - pattern-not: $A.setAllowFileAccess(false)
+      - pattern-not: setAllowFileAccess(false)
+      - pattern-not: $A.setAllowFileAccessFromFileURLs(false)
+      - pattern-not: setAllowFileAccessFromFileURLs(false)
+      - pattern-not: $A.setAllowUniversalAccessFromFileURLs(false)
+      - pattern-not: setAllowUniversalAccessFromFileURLs(false)
+      - pattern-not: $A.allowContentAccess = false
+      - pattern-not: allowContentAccess = false
+      - pattern-not: $A.allowFileAccess = false
+      - pattern-not: allowFileAccess = false
+      - pattern-not: $A.allowFileAccessFromFileURLs = false
+      - pattern-not: allowFileAccessFromFileURLs = false
+      - pattern-not: $A.allowUniversalAccessFromFileURLs = false
+      - pattern-not: allowUniversalAccessFromFileURLs = false
