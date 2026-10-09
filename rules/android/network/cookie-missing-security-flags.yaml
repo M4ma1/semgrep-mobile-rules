@@ -1,0 +1,54 @@
+rules:
+- id: android.cookie-missing-security-flags
+  metadata:
+    cwe:
+    - "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+    - "CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute"
+    owasp:
+    - A05:2021 - Security Misconfiguration
+    - A02:2025 - Security Misconfiguration
+    source-rule-url:
+    - https://find-sec-bugs.github.io/bugs.htm#HTTPONLY_COOKIE
+    - https://find-sec-bugs.github.io/bugs.htm#INSECURE_COOKIE
+    category: security
+    technology:
+    - kotlin
+    references:
+    - https://owasp.org/Top10/A05_2021-Security_Misconfiguration
+    subcategory:
+    - audit
+    likelihood: LOW
+    impact: LOW
+    confidence: LOW
+    replaces:
+    - android.semgrep.cookie-missing-httponly
+    - android.semgrep.cookie-missing-secure-flag
+    - android.gitlab.kotlin_cookie_rule-CookieHTTPOnly
+    - android.gitlab.kotlin_cookie_rule-CookieInsecure
+  message: >-
+    A cookie was detected without the 'HttpOnly' and/or 'Secure' flag. 'HttpOnly'
+    forbids client-side scripts from reading the cookie, and 'Secure' prevents the
+    client from transmitting it over insecure channels such as HTTP. Set both flags
+    by calling '$COOKIE.setHttpOnly(true)' and '$COOKIE.setSecure(true)' before the
+    cookie is added to the response.
+  severity: WARNING
+  languages: [kotlin]
+  patterns:
+  - pattern-not-inside: |
+      $COOKIE.setValue("")
+      ...
+  - pattern-either:
+    # Flag explicitly disabled
+    - pattern: $COOKIE.setHttpOnly(false)
+    - pattern: $COOKIE.setSecure(false)
+    # Cookie added to the response without ever setting the flag
+    - patterns:
+      - pattern-not-inside: |
+          $COOKIE.setHttpOnly(...)
+          ...
+      - pattern: $RESPONSE.addCookie($COOKIE)
+    - patterns:
+      - pattern-not-inside: |
+          $COOKIE.setSecure(...)
+          ...
+      - pattern: $RESPONSE.addCookie($COOKIE)
