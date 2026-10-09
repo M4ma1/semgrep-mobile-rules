@@ -5,6 +5,7 @@ import com.hazelcast.config.SymmetricEncryptionConfig
 import io.vertx.ext.web.handler.CSRFHandler
 import java.net.PasswordAuthentication
 import java.security.KeyStore
+import java.sql.Connection
 import java.sql.DriverManager
 import javax.crypto.spec.PBEKeySpec
 import javax.net.ssl.KeyManagerFactory
@@ -63,5 +64,21 @@ class HardcodedPasswords {
 
         // ok: android.gitlab.kotlin_password_rule-HardcodePassword
         s.setPassword(password)
+    }
+
+    // Cases ported from the former android.gitlab.kotlin_password_rule-ConstantDBPassword
+    fun constantDbPassword(): Connection {
+        // ruleid: android.gitlab.kotlin_password_rule-HardcodePassword
+        return DriverManager.getConnection("jdbc:hsqldb:mem:test", "sa", "secret")
+    }
+
+    fun okConnectionFromParameter(password: String): Connection {
+        // ok: android.gitlab.kotlin_password_rule-HardcodePassword
+        return DriverManager.getConnection("jdbc:hsqldb:mem:test", "sa", password)
+    }
+
+    fun okConnectionFromEnv(): Connection {
+        // ok: android.gitlab.kotlin_password_rule-HardcodePassword
+        return DriverManager.getConnection("jdbc:hsqldb:mem:test", "sa", System.getenv("PASSWORD"))
     }
 }
