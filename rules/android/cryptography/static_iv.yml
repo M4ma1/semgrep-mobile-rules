@@ -1,15 +1,17 @@
 rules:
   - id: android.static_iv
     severity: WARNING
-    languages: 
+    languages:
       - java
     metadata:
       category: security
       confidence: HIGH
       likelihood: HIGH
       impact: HIGH
+      cwe: cwe-329
       subcategory:
         - vuln
+      owasp-mobile: m5
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
@@ -19,12 +21,33 @@ rules:
       references:
         - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
         - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#predictable-initialization-vector
+      replaces:
+        - android.mobsf.cbc_static_iv
+        - android.mobsf.weak_iv
     message: >-
       This Android mobile application seems using a static initialization vector, which could expose to various kind of vulnerabilities.
-      Initialization vector must be regenerated for each message to be encrypted. 
-    patterns:
+      Initialization vector must be regenerated for each message to be encrypted. A hardcoded or constant IV makes
+      the ciphertext predictable (e.g. vulnerable to a chosen plaintext attack in CBC mode).
+    pattern-either:
+      # IV built from a hardcoded byte array
       - pattern: |
-          static byte[] $IV = ... ;
+          byte[] $X = {...};
           ...
-          IvParameterSpec $IV_SPEC = new IvParameterSpec($IV);
-      - focus-metavariable: $IV_SPEC
+          new IvParameterSpec($X, ...);
+      # IV built from a hardcoded string
+      - pattern: |
+          byte[] $X = "...".$FUNC(...);
+          ...
+          new IvParameterSpec($X, ...);
+      # IV kept in a static field
+      - patterns:
+          - pattern: |
+              static byte[] $IV = ... ;
+              ...
+              IvParameterSpec $IV_SPEC = new IvParameterSpec($IV);
+          - focus-metavariable: $IV_SPEC
+      # IV built inline from a hardcoded value
+      - pattern: new IvParameterSpec(new byte[]{...}, ...)
+      - pattern: new IvParameterSpec("...".$FUNC(...), ...)
+      - pattern: new IvParameterSpec(new byte[$N], ...)
