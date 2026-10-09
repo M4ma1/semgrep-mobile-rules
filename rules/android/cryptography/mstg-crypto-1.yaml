@@ -18,6 +18,9 @@ rules:
       likelihood: MEDIUM
       impact: HIGH
       technology: [android]
+      replaces:
+        - android.mobsf.aes_hardcoded_key
+        - android.owasp.hardcoded-crypto-keys-usage
     message: The application relies on symmetric cryptography with hardcoded keys as a single method of encryption.
     options:
       symbolic_propagation: true
@@ -65,3 +68,10 @@ rules:
               - pattern: $X.getString(...)
         - focus-metavariable:
             - $K
+      # Hardcoded literal key passed to SecretKeySpec (directly, or through a local variable via symbolic propagation)
+      - pattern: new SecretKeySpec("...".getBytes(...), $ALGO)
+      - pattern: new SecretKeySpec(new byte[]{...}, $ALGO)
+      - pattern: |
+          byte[] $K = {...};
+          ...
+          new SecretKeySpec($K, $ALGO);
