@@ -48,48 +48,6 @@
     </domain-config>
 </network-security-config>
 
-<network-security-config xmlns:tools="http://schemas.android.com/tools" tools:ignore="InsecureBaseConfiguration,AcceptsUserCertificates">
-    <!-- ok: android.semgrep.nsc-allows-plaintext-traffic -->
-    <base-config cleartextTrafficPermitted="true">
-            <!-- Trust system and user certificates -->
-            <certificates src="system" />
-            <!-- ok: android.semgrep.nsc-allows-user-ca-certs -->
-            <certificates src="user" />
-    </base-config>
-
-    <domain-config>
-        <domain includeSubdomains="true">localhost</domain>
-        <trust-anchors>
-            <!-- Trust a debug certificate in addition to the system certificates -->
-            <certificates src="system" />
-            <!-- ok: android.semgrep.nsc-allows-user-ca-certs-for-domain -->
-            <certificates src="user" />
-            <certificates src="@raw/debug_certificate" />
-        </trust-anchors>
-    </domain-config>
-</network-security-config>
-
-<network-security-config xmlns:tools="http://schemas.android.com/tools" tools:ignore="InsecureBaseConfiguration">
-    <!-- ok: android.semgrep.nsc-allows-plaintext-traffic -->
-    <base-config cleartextTrafficPermitted="true">
-            <!-- Trust system and user certificates -->
-            <certificates src="system" />
-            <!-- ruleid: android.semgrep.nsc-allows-user-ca-certs -->
-            <certificates src="user" />
-    </base-config>
-
-    <domain-config>
-        <domain includeSubdomains="true">localhost</domain>
-        <trust-anchors>
-            <!-- Trust a debug certificate in addition to the system certificates -->
-            <certificates src="system" />
-            <!-- ruleid: android.semgrep.nsc-allows-user-ca-certs-for-domain -->
-            <certificates src="user" />
-            <certificates src="@raw/debug_certificate" />
-        </trust-anchors>
-    </domain-config>
-</network-security-config>
-
 <network-security-config>
     <domain-config>
         <domain includeSubdomains="true">example.com</domain>

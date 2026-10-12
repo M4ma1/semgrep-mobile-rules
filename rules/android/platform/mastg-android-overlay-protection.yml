@@ -4,6 +4,8 @@ rules:
     languages:
       - java
     metadata:
+      replaces:
+        - android.mobsf.android_detect_tapjacking
       summary: Detects usage of setFilterTouchesWhenObscured method for overlay attack protection
     message: "[MASVS-PLATFORM-3] setFilterTouchesWhenObscured is used to protect against overlay attacks"
     pattern: $VIEW.setFilterTouchesWhenObscured(...)

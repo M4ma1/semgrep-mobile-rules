@@ -4,6 +4,8 @@ rules:
     languages:
       - java
     metadata:
+      replaces:
+        - android.owasp.non-random-use
       authors:
         - Riccardo Cardelli @gand3lf (IMQ Minded Security)
       owasp-mobile: M5

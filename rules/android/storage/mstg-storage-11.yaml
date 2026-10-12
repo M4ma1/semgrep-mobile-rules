@@ -4,6 +4,8 @@ rules:
     languages:
       - xml
     metadata:
+      replaces:
+        - android.owasp.minsdkversion
       authors:
         - Riccardo Cardelli @gand3lf (IMQ Minded Security)
       owasp-mobile: M1

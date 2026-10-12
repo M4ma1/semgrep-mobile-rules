@@ -21,6 +21,8 @@ rules:
       technology: [android]
       replaces:
         - android.mobsf.webview_allow_file_from_url
+        - android.mobsf.webview_set_allow_file_access
+        - android.owasp.webview-settings
     message: >-
         The WebView allows to load external content. It is suggested to verify that the granted
         accesses are necessary and follow the best practices. Enabling file access from URLs in a

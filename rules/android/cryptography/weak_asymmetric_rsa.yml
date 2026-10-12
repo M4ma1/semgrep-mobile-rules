@@ -5,6 +5,8 @@ rules:
       - java
       - kotlin
     metadata:
+      replaces:
+        - android.semgrep.use-of-weak-rsa-key
       category: security
       confidence: MEDIUM
       likelihood: LOW

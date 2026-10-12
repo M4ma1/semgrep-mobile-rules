@@ -32,6 +32,3 @@ rules:
       - patterns:
           - pattern: <pin-set ... />
           - pattern-not: <pin-set><pin/><pin/></pin-set>
-# Trust anchors contains user certificates
-      - patterns:
-          - pattern: <trust-anchors>...<certificates src="user" />...</trust-anchors>

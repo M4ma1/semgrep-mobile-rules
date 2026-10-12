@@ -4,6 +4,8 @@ rules:
     languages:
       - java
     metadata:
+      replaces:
+        - android.insecure_javascript_execution
       authors:
         - Christian Cotignola @b4dsheep (IMQ Minded Security)
       owasp-mobile: M1

@@ -11,3 +11,9 @@ keyGen_weak_again.initialize(2048)
 // ok: android.weak_asymmetric_rsa
 val keyGen = KeyPairGenerator.getInstance("RSA")
 keyGen.initialize(3072)
+
+fun rsaWeakTyped() {
+    // ruleid: android.weak_asymmetric_rsa
+    val keyGenTyped: KeyPairGenerator = KeyPairGenerator.getInstance("RSA")
+    keyGenTyped.initialize(1024)
+}

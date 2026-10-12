@@ -21,7 +21,8 @@
         </pin-set>
     </domain-config>
     <base-config>
-        <!-- ruleid: MSTG-NETWORK-4_1 -->
+        <!-- user CAs are reported by android.owasp.network-insecure-trust-anchors, not by this rule -->
+        <!-- ok: MSTG-NETWORK-4_1 -->
         <trust-anchors>
             <certificates src="@raw/extracas"/>
             <certificates src="system"/>

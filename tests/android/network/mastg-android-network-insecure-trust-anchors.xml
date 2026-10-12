@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+            <!-- ruleid: android.owasp.network-insecure-trust-anchors -->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+    <domain-config>
+        <domain includeSubdomains="true">localhost</domain>
+        <trust-anchors>
+            <!-- ok: android.owasp.network-insecure-trust-anchors -->
+            <certificates src="@raw/debug_certificate" />
+            <!-- ruleid: android.owasp.network-insecure-trust-anchors -->
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
+
+<network-security-config xmlns:tools="http://schemas.android.com/tools" tools:ignore="InsecureBaseConfiguration,AcceptsUserCertificates">
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+            <!-- ok: android.owasp.network-insecure-trust-anchors -->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

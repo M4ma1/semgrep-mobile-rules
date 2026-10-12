@@ -4,6 +4,8 @@ rules:
     languages:
       - java
     metadata:
+      replaces:
+        - android.owasp.sensitive-data-in-notifications
       authors:
         - Riccardo Granata (IMQ Minded Security)
         - Andrea Agnello (IMQ Minded Security)
