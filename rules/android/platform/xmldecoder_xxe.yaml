@@ -11,12 +11,12 @@ rules:
       category: security
       confidence: MEDIUM
       cwe:
-        - 'CWE-611: Improper Restriction of XML External Entity Reference'
+        - 'CWE-502: Deserialization of Untrusted Data'
       impact: HIGH
       likelihood: MEDIUM
       references:
         - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
-        - https://cwe.mitre.org/data/definitions/611.html
+        - https://cwe.mitre.org/data/definitions/502.html
         - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
       subcategory:
         - vuln

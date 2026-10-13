@@ -14,12 +14,12 @@ rules:
       category: security
       confidence: HIGH
       cwe:
-        - "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+        - 'CWE-749: Exposed Dangerous Method or Function'
       impact: HIGH
       likelihood: HIGH
       references:
         - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0076/
-        - https://cwe.mitre.org/data/definitions/95.html
+        - https://cwe.mitre.org/data/definitions/749.html
         - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
       subcategory:
         - vuln

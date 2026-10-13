@@ -50,11 +50,11 @@ rules:
       category: security
       confidence: HIGH
       cwe:
-        - 'CWE-676: Use of Potentially Dangerous Function'
+        - 'CWE-295: Improper Certificate Validation'
       impact: HIGH
       likelihood: MEDIUM
       references:
-        - https://cwe.mitre.org/data/definitions/676.html
+        - https://cwe.mitre.org/data/definitions/295.html
         - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
       subcategory:
         - vuln

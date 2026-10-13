@@ -10,12 +10,12 @@ rules:
       category: security
       confidence: MEDIUM
       cwe:
-        - 'CWE-749: Exposed Dangerous Method or Function'
+        - 'CWE-922: Insecure Storage of Sensitive Information'
       impact: HIGH
       likelihood: MEDIUM
       references:
         - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05h-Testing-Platform-Interaction.md#testing-webview-protocol-handlers-mstg-platform-6
-        - https://cwe.mitre.org/data/definitions/749.html
+        - https://cwe.mitre.org/data/definitions/922.html
         - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
       subcategory:
         - vuln

@@ -11,12 +11,12 @@ rules:
       category: security
       confidence: HIGH
       cwe:
-        - "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+        - 'CWE-532: Insertion of Sensitive Information into Log File'
       impact: HIGH
       likelihood: HIGH
       references:
         - https://mas.owasp.org/MASTG/tests/ios/MASVS-STORAGE/MASTG-TEST-0053/
-        - https://cwe.mitre.org/data/definitions/95.html
+        - https://cwe.mitre.org/data/definitions/532.html
         - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
       subcategory:
         - vuln

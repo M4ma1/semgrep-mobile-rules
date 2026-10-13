@@ -11,12 +11,12 @@ rules:
       category: security
       confidence: MEDIUM
       cwe:
-        - "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       impact: HIGH
       likelihood: MEDIUM
       references:
         - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
-        - https://cwe.mitre.org/data/definitions/78.html
+        - https://cwe.mitre.org/data/definitions/89.html
         - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
       subcategory:
         - vuln
