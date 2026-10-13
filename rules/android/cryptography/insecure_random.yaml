@@ -1,18 +1,29 @@
 rules:
   - id: android.mobsf.java_insecure_random
+    languages:
+      - java
+    severity: WARNING
+    message: The App uses an insecure Random Number Generator.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-330: Use of Insufficiently Random Values'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#weak-random-number-generators
+        - https://cwe.mitre.org/data/definitions/330.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m5
+      masvs: crypto-6
     patterns:
       - pattern-either:
           - pattern: |
               import java.util.Random;
           - pattern: |
               import java.util.concurrent.ThreadLocalRandom;
-    message: The App uses an insecure Random Number Generator.
-    languages:
-      - java
-    severity: WARNING
-    metadata:
-      cwe: cwe-330
-      owasp-mobile: m5
-      masvs: crypto-6
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#weak-random-number-generators

@@ -1,32 +1,35 @@
 rules:
-- id: android.semgrep.bad-hexa-conversion
-  metadata:
-    cwe:
-    - 'CWE-704: Incorrect Type Conversion or Cast'
-    owasp: 'A03:2017 - Sensitive Data Exposure'
-    source-rule-url: https://find-sec-bugs.github.io/bugs.htm#BAD_HEXA_CONVERSION
-    category: security
-    technology:
-    - kotlin
-    references:
-    - https://cwe.mitre.org/data/definitions/704.html
-    subcategory:
-    - audit
-    likelihood: LOW
-    impact: LOW
-    confidence: LOW
-  message: >-
-    'Integer.toHexString()' strips leading zeroes from each byte if read byte-by-byte.
-    This mistake weakens the hash value computed since it introduces more collisions.
-    Use 'String.format("%02X", ...)' instead.
-  severity: WARNING
-  languages: [kt]
-  pattern: |-
-    fun $METHOD(...) {
-      ...
-      val $MD: MessageDigest = ...
-      ...
-      $MD.digest(...)
-      ...
-      Integer.toHexString(...)
-    }
+  - id: android.semgrep.bad-hexa-conversion
+    languages:
+      - kotlin
+    severity: WARNING
+    message: >-
+      'Integer.toHexString()' strips leading zeroes from each byte if read byte-by-byte. This
+      mistake weakens the hash value computed since it introduces more collisions. Use
+      'String.format("%02X", ...)' instead.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-704: Incorrect Type Conversion or Cast'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/704.html
+        - https://find-sec-bugs.github.io/bugs.htm#BAD_HEXA_CONVERSION
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+        - kotlin
+      owasp: A03:2017 - Sensitive Data Exposure
+    pattern: |-
+      fun $METHOD(...) {
+        ...
+        val $MD: MessageDigest = ...
+        ...
+        $MD.digest(...)
+        ...
+        Integer.toHexString(...)
+      }

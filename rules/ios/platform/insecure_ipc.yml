@@ -1,26 +1,33 @@
 rules:
   - id: ios.insecure_ipc
-    severity: WARNING
-    languages: 
+    languages:
       - swift
+    severity: WARNING
+    message: >-
+      This iOS mobile application seems to be using an IPC mechanism, which could expose to
+      various kind of vulnerabilities. Please ensure that the application do not expose critical
+      functionality or sensitive data that should not be accessible.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: LOW
+      cwe:
+        - 'CWE-927: Use of Implicit Intent for Sensitive Communication'
       impact: LOW
+      likelihood: LOW
+      references:
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0056/
+        - https://cwe.mitre.org/data/definitions/927.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-PLATFORM-1
         area: platform
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0056/
-    message: >-
-      This iOS mobile application seems to be using an IPC mechanism, which could expose to various kind of vulnerabilities.
-      Please ensure that the application do not expose critical functionality or sensitive data that should not be accessible.
     pattern-either:
       - pattern: NSXPCConnection
       - pattern: NSXPCInterface

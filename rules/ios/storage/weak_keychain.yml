@@ -1,29 +1,38 @@
 rules:
   - id: ios.weak_keychain
-    severity: WARNING
-    languages: 
+    languages:
       - swift
+    severity: WARNING
+    message: >-
+      This iOS mobile application seems to be configured with a weak Keychain protection, which
+      could expose sensitive data. Specifically the deprecated Keychain attributes
+      `kSecAttrAccessibleAlways` or `kSecAttrAccessibleAlwaysThisDeviceOnly` could allow an
+      attacker to access the data stored in the corresponding Keychain item, regardless of
+      whether the device is locked. It is recommended to use an adequate protection level for
+      Keychain data, possibly having the `ThisDeviceOnly` suffix, related with the level of
+      confidentiality required for the stored data. Note that by default the `kSecAttrAccessible`
+      flag for Keychain is set to `kSecAttrAccessibleWhenUnlocked`.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: LOW
+      cwe:
+        - 'CWE-922: Insecure Storage of Sensitive Information'
       impact: LOW
+      likelihood: LOW
+      references:
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-STORAGE/MASTG-TEST-0052
+        - https://cwe.mitre.org/data/definitions/922.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-STORAGE-1
         area: storage
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/tests/ios/MASVS-STORAGE/MASTG-TEST-0052
-    message: >-
-      This iOS mobile application seems to be configured with a weak Keychain protection, which could expose sensitive data.
-      Specifically the deprecated Keychain attributes `kSecAttrAccessibleAlways` or `kSecAttrAccessibleAlwaysThisDeviceOnly` could
-      allow an attacker to access the data stored in the corresponding Keychain item, regardless of whether the device is locked.
-      It is recommended to use an adequate protection level for Keychain data, possibly having the `ThisDeviceOnly` suffix, related with the level of confidentiality required for the stored data. 
-      Note that by default the `kSecAttrAccessible` flag for Keychain is set to `kSecAttrAccessibleWhenUnlocked`.
     pattern-either:
       - pattern: kSecAttrAccessibleAlways
       - pattern: kSecAttrAccessibleAlwaysThisDeviceOnly

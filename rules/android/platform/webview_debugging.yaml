@@ -1,5 +1,28 @@
 rules:
   - id: android.mobsf.webview_debugging
+    languages:
+      - java
+    severity: ERROR
+    message: >-
+      Remote WebView debugging is enabled. This allows an attacker with debugging access to
+      interact with the webview and steal or corrupt data.
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-489: Active Debug Code'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05j-Testing-Resiliency-Against-Reverse-Engineering.md#testing-anti-debugging-detection-mstg-resilience-2
+        - https://cwe.mitre.org/data/definitions/489.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m1
+      masvs: resilience-2
     patterns:
       - pattern-either:
           - pattern: |
@@ -8,15 +31,3 @@ rules:
               $X = true;
               ...
               $WB.setWebContentsDebuggingEnabled($X);
-    message: >-
-      Remote WebView debugging is enabled. This allows an attacker with
-      debugging access to interact with the webview and steal or corrupt data.
-    languages:
-      - java
-    severity: ERROR
-    metadata:
-      cwe: cwe-489
-      owasp-mobile: m1
-      masvs: resilience-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05j-Testing-Resiliency-Against-Reverse-Engineering.md#testing-anti-debugging-detection-mstg-resilience-2

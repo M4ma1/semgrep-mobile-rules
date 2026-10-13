@@ -1,31 +1,36 @@
 rules:
   - id: MSTG-PLATFORM-2_5
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      Potential Fragment Injection found, check that the "android:targetSdkVersion" is not less
+      than 19.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M7
       category: security
+      confidence: LOW
+      cwe:
+        - "CWE-470: Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection')"
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-fragment-injection-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/470.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M7
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-fragment-injection-mstg-platform-2
-      confidence: LOW
-      likelihood: LOW
-      impact: MEDIUM
-      technology: [android]
-    message: Potential Fragment Injection found, check that the "android:targetSdkVersion" is not less than 19.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     patterns:
       - pattern-either:
-        - patterns:
-          - pattern: class $CLASS extends PreferenceActivity{ ... }
-          - pattern-not: class $CLASS extends PreferenceActivity{ ...
-                @Override
-                boolean isValidFragment(String $FNAME) { ... }
-              ... }
-        - pattern: boolean isValidFragment(String $FNAME) { return true; }
-
+          - patterns:
+              - pattern: class $CLASS extends PreferenceActivity{ ... }
+              - pattern-not: class $CLASS extends PreferenceActivity{ ... @Override boolean isValidFragment(String $FNAME) { ... } ... }
+          - pattern: boolean isValidFragment(String $FNAME) { return true; }

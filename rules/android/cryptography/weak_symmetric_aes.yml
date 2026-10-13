@@ -1,39 +1,46 @@
 rules:
   - id: android.weak_symmetric_aes
-    severity: WARNING
-    languages: 
+    languages:
       - java
       - kotlin
+    severity: WARNING
+    message: >-
+      This Android mobile application seems using a symmetric algorithm, `AES`, configured
+      weakly, which could expose to various kind of vulnerabilities. AES keys should be at least
+      256 bits based on NIST recommendation.
     metadata:
       category: security
       confidence: MEDIUM
-      likelihood: LOW
+      cwe:
+        - 'CWE-326: Inadequate Encryption Strength'
       impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#algorithms
+        - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#insufficient-key-length
+        - https://www.keylength.com/en/4/
+        - https://cwe.mitre.org/data/definitions/326.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
       subcategory:
         - vuln
+      technology:
+        - android
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
         level:
           - L1
           - L2
-      references:
-        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#algorithms
-        - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#insufficient-key-length
-        - https://www.keylength.com/en/4/
-    message: >-
-      This Android mobile application seems using a symmetric algorithm, `AES`, configured weakly, which could expose to various kind of vulnerabilities.
-      AES keys should be at least 256 bits based on NIST recommendation.
     patterns:
       - pattern-either:
-        - pattern: |
-            $KEY = $G.getInstance("AES");
-            ...
-            $KEY.initialize($BITS);
-        - pattern: |
-            $G $KEY = $G.getInstance("AES");
-            ...
-            $KEY.initialize($BITS);
+          - pattern: |
+              $KEY = $G.getInstance("AES");
+              ...
+              $KEY.initialize($BITS);
+          - pattern: |
+              $G $KEY = $G.getInstance("AES");
+              ...
+              $KEY.initialize($BITS);
       - metavariable-comparison:
           metavariable: $BITS
           comparison: $BITS < 256

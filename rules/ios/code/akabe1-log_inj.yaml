@@ -1,30 +1,37 @@
 rules:
   - id: ios.akabe1.log-inj
+    languages:
+      - swift
     severity: WARNING
+    message: >-
+      This iOS mobile application could be vulnerable to Log Injection, as it seems that some
+      untrusted input data is put into a logger without properly neutralizing it. This kind of
+      vulnerabilities could lead to log forging, or injection of malicious content (i.e. XSS
+      stored). It is suggested to perform output escaping and/or input validation/sanitization of
+      untrusted input before write it on logs.
     metadata:
-      author: Maurizio Siddu
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-117: Improper Output Neutralization for Logs'
+      impact: MEDIUM
+      likelihood: LOW
       references:
         - https://owasp.org/www-community/attacks/Log_Injection
         - https://owasp.org/www-community/Injection_Flaws
         - https://cwe.mitre.org/data/definitions/117.html
-      category: security
-      confidence: MEDIUM
-      likelihood: LOW
-      impact: MEDIUM
-      technology: [ios]
-    message: >-
-      This iOS mobile application could be vulnerable to Log Injection, as it seems that some
-      untrusted input data is put into a logger without properly neutralizing it. 
-      This kind of vulnerabilities could lead to log forging, or injection of malicious
-      content (i.e. XSS stored).
-      It is suggested to perform output escaping and/or input validation/sanitization of
-      untrusted input before write it on logs.
-    languages: [swift]
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - ios
+      authors:
+        - Maurizio Siddu
     patterns:
       - pattern-either:
           #Unvalidated input from app text fields
           #Trying to catch textfields like --> @IBOutlet weak var textFieldName: UITextField!
-          - patterns: 
+          - patterns:
               - pattern-inside: |
                   class $CLASS: $X {
                       ...
@@ -58,7 +65,7 @@ rules:
               - metavariable-regex:
                   metavariable: $TEXTFIELD
                   regex: (?i)(.*?)(?=TextField)([!]?)
-          - patterns: 
+          - patterns:
               - pattern-inside: |
                   class $CLASS: $X {
                       ...
@@ -208,13 +215,13 @@ rules:
                   regex: (?i)(host|scheme|query|percentEncodedQuery|fragmqnt|password|path|port|user)
           - patterns:
               - pattern-inside: |
-                    $ITEMS = $COMP.queryItems 
+                  $ITEMS = $COMP.queryItems 
+                  ...
+                  for $ITEM in $ITEMS {
                     ...
-                    for $ITEM in $ITEMS {
-                      ...
-                      NSLog("=~/.*(%@).*/", $ITEM.$FIELD)
-                      ...
-                    }
+                    NSLog("=~/.*(%@).*/", $ITEM.$FIELD)
+                    ...
+                  }
           #    - metavariable-regex:
           #        metavariable: $LOG
           #        regex: ([\s\S]*?)(?=%@)([\s\S]*?)

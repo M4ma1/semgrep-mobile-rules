@@ -3,9 +3,22 @@ rules:
     languages:
       - java
     severity: INFO
+    message: '[MASVS-STORAGE] Make sure to verify that your app runs on a device with a passcode set'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-287: Improper Authentication'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/287.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule searches for API that checks whether the device passcode is set.
-    message: "[MASVS-STORAGE] Make sure to verify that your app runs on a device with a passcode set"
     pattern-either:
       - pattern: |
           $X.getSystemService("keyguard");

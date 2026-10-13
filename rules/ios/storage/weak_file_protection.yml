@@ -1,27 +1,37 @@
 rules:
   - id: ios.weak_file_protection
-    severity: WARNING
-    languages: 
+    languages:
       - swift
+    severity: WARNING
+    message: >-
+      This iOS mobile application seems to be using a insufficient data protection class when
+      storing some files locally into the device, which could expose sensitive data. This data
+      protection configuration could expose the files to undesiderated accesses because the data
+      remain accessible under certain circumstances (i.e. jailbroken device). It is recommended,
+      when possible, to use the maximum data protection level `FileProtectionType.complete` or
+      `URLFileProtection.complete`, or the secure write option
+      `Data.WritingOptions.completeFileProtection`.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: MEDIUM
+      cwe:
+        - 'CWE-311: Missing Encryption of Sensitive Data'
       impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-STORAGE/MASTG-TEST-0052/
+        - https://cwe.mitre.org/data/definitions/311.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-STORAGE-1
         area: storage
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/tests/ios/MASVS-STORAGE/MASTG-TEST-0052/
-    message: >-
-      This iOS mobile application seems to be using a insufficient data protection class when storing some files locally into the device, which could expose sensitive data.
-      This data protection configuration could expose the files to undesiderated accesses because the data remain accessible under certain circumstances (i.e. jailbroken device).
-      It is recommended, when possible, to use the maximum data protection level `FileProtectionType.complete` or `URLFileProtection.complete`, or the secure write option `Data.WritingOptions.completeFileProtection`. 
     pattern-either:
       - pattern: FileProtectionType.none
       - pattern: Data.WritingOptions.noFileProtection

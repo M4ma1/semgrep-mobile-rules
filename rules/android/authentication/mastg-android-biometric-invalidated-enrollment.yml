@@ -4,8 +4,24 @@ rules:
       - java
       - kotlin
     severity: WARNING
-    metadata:
-      summary: This rule detects KeyGenParameterSpec configurations that disable key invalidation on biometric enrollment changes.
-    message: "[MASVS-AUTH-2] Key configured with setInvalidatedByBiometricEnrollment(false). For sensitive operations, keys should be invalidated when biometric enrollment changes to prevent unauthorized access by newly enrolled biometrics."
+    message: >-
+      [MASVS-AUTH-2] Key configured with setInvalidatedByBiometricEnrollment(false). For
+      sensitive operations, keys should be invalidated when biometric enrollment changes to
+      prevent unauthorized access by newly enrolled biometrics.
 
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-287: Improper Authentication'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/287.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-AUTH-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: This rule detects KeyGenParameterSpec configurations that disable key invalidation on biometric enrollment changes.
     pattern: $BUILDER.setInvalidatedByBiometricEnrollment(false)

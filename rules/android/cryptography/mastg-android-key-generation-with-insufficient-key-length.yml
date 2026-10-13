@@ -1,11 +1,24 @@
 rules:
   - id: android.owasp.key-generation-with-insufficient-key-length
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: '[MASVS-CRYPTO] Make sure that the key size is according to security best practices'
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-326: Inadequate Encryption Strength'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/326.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule looks for methods that create keys with insufficient length in encryption algorithms.
-    message: "[MASVS-CRYPTO] Make sure that the key size is according to security best practices"
     pattern-either:
       - pattern: |
           $K = $G.getInstance("RSA");

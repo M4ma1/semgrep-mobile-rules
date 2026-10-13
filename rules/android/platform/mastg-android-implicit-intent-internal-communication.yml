@@ -1,5 +1,26 @@
 rules:
   - id: android.owasp.implicit-intent-internal-communication
+    languages:
+      - java
+    severity: WARNING
+    message: >-
+      [MASVS-CODE-4] The app uses an implicit intent for internal component communication. Use
+      explicit intents by specifying the package or component.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-927: Use of Implicit Intent for Sensitive Communication'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/927.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: Detects implicit intents used for internal component communication without specifying a package or component.
     patterns:
       - pattern: |
           $INTENT = new Intent(...);
@@ -23,8 +44,3 @@ rules:
           $INTENT = new Intent($CONTEXT, $CLASS);
           ...
           $CONTEXT.startActivity($INTENT);
-    message: "[MASVS-CODE-4] The app uses an implicit intent for internal component communication. Use explicit intents by specifying the package or component."
-    languages: [java]
-    severity: WARNING
-    metadata:
-      summary: Detects implicit intents used for internal component communication without specifying a package or component.

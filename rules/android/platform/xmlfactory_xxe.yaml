@@ -2,20 +2,31 @@
 # https://github.com/returntocorp/semgrep-rules/blob/develop/java/lang/security/xmlinputfactory-external-entities-enabled.yaml
 rules:
   - id: android.mobsf.xmlinputfactory_xxe
-    message: >
-      XML external entities are not explicitly disabled, or are explicitly
-      enabled, for this XMLInputFactory. This could be vulnerable to XML
-      external entity vulnerabilities. Explicitly disable external entities by
-      setting "javax.xml.stream.isSupportingExternalEntities" to false.
-    severity: ERROR
     languages:
       - java
+    severity: ERROR
+    message: >-
+      XML external entities are not explicitly disabled, or are explicitly enabled, for this
+      XMLInputFactory. This could be vulnerable to XML external entity vulnerabilities.
+      Explicitly disable external entities by setting
+      "javax.xml.stream.isSupportingExternalEntities" to false.
     metadata:
-      cwe: cwe-611
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-611: Improper Restriction of XML External Entity Reference'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/611.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp-mobile: m8
       masvs: platform-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
       replaces:
         - android.mobsf.xmlinputfactory_xxe_enabled
     pattern-either:

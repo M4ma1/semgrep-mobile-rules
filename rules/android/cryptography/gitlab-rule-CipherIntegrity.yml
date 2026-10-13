@@ -2,34 +2,42 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_crypto_rule-CipherIntegrity
     languages:
-      - "kotlin"
-    message: |
+      - kotlin
+    severity: ERROR
+    message: >-
       The ciphertext produced is susceptible to alteration by an adversary. This mean that the
-      cipher provides no way to detect that the data has been tampered with. If the ciphertext can be
-      controlled by an attacker, it could be altered without detection.
-    severity: "ERROR"
+      cipher provides no way to detect that the data has been tampered with. If the ciphertext
+      can be controlled by an attacker, it could be altered without detection.
     metadata:
-      shortDescription: "Use of a broken or risky cryptographic algorithm"
-      category: "security"
-      cwe: "CWE-327"
-      owasp:
-        - "A3:2017-Sensitive Data Exposure"
-        - "A02:2021-Cryptographic Failures"
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
       technology:
-        - "kotlin"
-      security-severity: "CRITICAL"
-
+        - android
+        - kotlin
+      owasp:
+        - A3:2017-Sensitive Data Exposure
+        - A02:2021-Cryptographic Failures
+      security-severity: CRITICAL
+      shortDescription: Use of a broken or risky cryptographic algorithm
     patterns:
       - pattern: |
           javax.crypto.Cipher.getInstance($TRANSFORMATION, ...)
       - metavariable-pattern:
-          metavariable: "$TRANSFORMATION"
+          metavariable: $TRANSFORMATION
           patterns:
             # any algorithm with either no mode or CBC, OFB, CTR, or ECB and any padding
-            - pattern-regex: '^"[^/]*(/(CBC|OFB|CTR|ECB)(/.*)?)?"$'
+            - pattern-regex: ^"[^/]*(/(CBC|OFB|CTR|ECB)(/.*)?)?"$
             # ECIES and RSA algorithms are ok
-            - pattern-not-regex: '^"(ECIES|RSA)(/|"$)'
+            - pattern-not-regex: ^"(ECIES|RSA)(/|"$)

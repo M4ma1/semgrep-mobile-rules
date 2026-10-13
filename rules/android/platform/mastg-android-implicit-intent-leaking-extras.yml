@@ -1,5 +1,26 @@
 rules:
   - id: android.owasp.implicit-intent-leaking-extras
+    languages:
+      - java
+    severity: WARNING
+    message: >-
+      [MASVS-CODE-4] The app sends an implicit intent with extras. Any app that registers for
+      this action can receive the data. Use explicit intents for internal communication.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-927: Use of Implicit Intent for Sensitive Communication'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/927.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: Detects implicit intents that carry extras without specifying a target package or component.
     patterns:
       - pattern: |
           $I = new Intent(...);
@@ -22,8 +43,3 @@ rules:
           $I.setComponent(...);
           ...
           $CTX.startActivity($I);
-    message: "[MASVS-CODE-4] The app sends an implicit intent with extras. Any app that registers for this action can receive the data. Use explicit intents for internal communication."
-    languages: [java]
-    severity: WARNING
-    metadata:
-      summary: Detects implicit intents that carry extras without specifying a target package or component.

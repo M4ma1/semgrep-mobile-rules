@@ -2,25 +2,34 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_ssrf_rule-SSRF
     languages:
-      - "kotlin"
-    message: |
+      - kotlin
+    severity: ERROR
+    message: >-
       Server-Side Request Forgery occur when a web server executes a request to a user supplied
-      destination parameter that is not validated. Such vulnerabilities could allow an attacker to
-      access internal services or to launch attacks from your web server.
+      destination parameter that is not validated. Such vulnerabilities could allow an attacker
+      to access internal services or to launch attacks from your web server.
     metadata:
-      shortDescription: "Server-Side Request Forgery (SSRF)"
-      category: "security"
-      cwe: "CWE-918"
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-918: Server-Side Request Forgery (SSRF)'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/918.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp:
-        - "A1:2017-Injection"
-        - "A10:2021-Server-Side Request Forgery"
-      security-severity: "CRITICAL"
-    severity: "ERROR"
-
+        - A1:2017-Injection
+        - A10:2021-Server-Side Request Forgery
+      security-severity: CRITICAL
+      shortDescription: Server-Side Request Forgery (SSRF)
     pattern-either:
       - patterns:
           - pattern-either:
@@ -33,24 +42,24 @@ rules:
               - pattern-inside: |
                   import java.net.URI;
                   ...
-          - pattern: "$TYPE(...). ... .$FUNC"
-          - pattern-not: '$TYPE("..."). ... .$FUNC'
+          - pattern: $TYPE(...). ... .$FUNC
+          - pattern-not: $TYPE("..."). ... .$FUNC
           - metavariable-pattern:
-              metavariable: "$FUNC"
+              metavariable: $FUNC
               pattern-either:
-                - pattern: "connect"
-                - pattern: "GetContent"
-                - pattern: "openConnection"
-                - pattern: "openStream"
-                - pattern: "getContent"
-                - pattern: "content"
+                - pattern: connect
+                - pattern: GetContent
+                - pattern: openConnection
+                - pattern: openStream
+                - pattern: getContent
+                - pattern: content
           - metavariable-pattern:
-              metavariable: "$TYPE"
+              metavariable: $TYPE
               pattern-either:
-                - pattern: "URL"
-                - pattern: "java.net.URL"
-                - pattern: "URI"
-                - pattern: "java.net.URI"
+                - pattern: URL
+                - pattern: java.net.URL
+                - pattern: URI
+                - pattern: java.net.URI
       - patterns:
           - pattern-either:
               - pattern-inside: |

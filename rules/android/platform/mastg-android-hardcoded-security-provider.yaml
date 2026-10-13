@@ -3,9 +3,24 @@ rules:
     languages:
       - java
     severity: WARNING
+    message: >-
+      [MASVS-CRYPTO-1] Explicitly specified security provider found. Do not hardcode a provider
+      unless using AndroidKeyStore.
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule looks for explicitly specified security providers in getInstance calls.
-    message: "[MASVS-CRYPTO-1] Explicitly specified security provider found. Do not hardcode a provider unless using AndroidKeyStore."
     patterns:
       - pattern-either:
           - pattern: $X.getInstance($ALGO, $PROVIDER)
@@ -15,4 +30,3 @@ rules:
       - metavariable-regex:
           metavariable: $X
           regex: (Cipher|KeyGenerator|KeyPairGenerator|MessageDigest|Signature|Mac|SecretKeyFactory|KeyFactory|SecureRandom|KeyAgreement|AlgorithmParameters|AlgorithmParameterGenerator|CertificateFactory|CertPathBuilder|CertPathValidator|CertStore|KeyStore)
-

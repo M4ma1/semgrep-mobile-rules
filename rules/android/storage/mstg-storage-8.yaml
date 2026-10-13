@@ -1,26 +1,33 @@
 rules:
   - id: MSTG-STORAGE-8
-    severity: WARNING
     languages:
       - xml
+    severity: WARNING
+    message: The application allows automatic backup.
     metadata:
-      authors:
-        - Michele Di @cyberaz0r (IMQ Minded Security)
-      owasp-mobile: M1
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-530: Exposure of Backup File to an Unauthorized Control Sphere'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-backups-for-sensitive-data-mstg-storage-8
+        - https://cwe.mitre.org/data/definitions/530.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: storage
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-backups-for-sensitive-data-mstg-storage-8
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: The application allows automatic backup.
+      authors:
+        - Michele Di @cyberaz0r (IMQ Minded Security)
     paths:
       include:
-        - "**/AndroidManifest.xml"
+        - '**/AndroidManifest.xml'
     patterns:
       - pattern: <application ... />
       - pattern-not: <application ... android:allowBackup="false" ... />

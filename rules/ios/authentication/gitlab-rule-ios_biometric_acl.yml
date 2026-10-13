@@ -3,18 +3,75 @@
 # source (original): https://github.com/mobsf/mobsfscan/blob/main/mobsfscan/rules/patterns/ios/swift/swift_rules.yaml
 # hash: e29e85c3
 # yamllint enable
----
 rules:
   - id: ios.gitlab.rules_lgpl_swift_other_rule-ios-biometric-acl
+    languages:
+      - swift
+    severity: ERROR
+    message: |-
+      Weak biometric ACL flag is associated with a key stored in Keychain. 
+      With '.biometryAny/.userPresence/.touchIDAny' flag, an attacker with 
+      the ability to add a biometry to the device can authenticate as the 
+      user. It is recommended to use more specific and secure authentication 
+      mechanisms like '.biometryCurrentSet' and '.touchIDCurrentSet'.
+
+      Here's an example of how to fix the problem by using .biometryCurrentSet 
+      for biometric authentication in Swift:
+      ```
+      import LocalAuthentication
+
+      // Create an instance of LAContext for biometric authentication
+      let context = LAContext()
+
+      // Check if biometric authentication is available
+      if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+        // Use biometryCurrentSet for biometric authentication
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, 
+              localizedReason: "Authenticate with biometrics", 
+              reply: { success, error in
+                  if success {
+                    print("Biometric authentication successful.")
+                    // Proceed with authenticated actions
+                  } else {
+                    print("Biometric authentication failed: 
+                          \(error?.localizedDescription ?? "Unknown error")")
+                    // Handle authentication failure
+                  }
+        })
+      } else {
+        print("Biometric authentication not available.")
+        // Fallback to alternative authentication method
+      }
+
+      ```
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-305: Authentication Bypass by Primary Weakness'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/305.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-AUTH-2/
+      subcategory:
+        - vuln
+      technology:
+        - ios
+      owasp:
+        - A2:2017-Broken Authentication
+        - A07:2021-Identification and Authentication Failures
+      security-severity: CRITICAL
+      shortDescription: Authentication bypass by primary weakness
     patterns:
       - pattern-either:
           # Case 1: Direct literal or array literal in the function call
-          - pattern: "SecAccessControlCreateWithFlags(..., .biometryAny, ...)"
-          - pattern: "SecAccessControlCreateWithFlags(..., .userPresence, ...)"
-          - pattern: "SecAccessControlCreateWithFlags(..., .touchIDAny, ...)"
-          - pattern: "SecAccessControlCreateWithFlags(..., [..., .biometryAny, ...], ...)"
-          - pattern: "SecAccessControlCreateWithFlags(..., [..., .userPresence, ...], ...)"
-          - pattern: "SecAccessControlCreateWithFlags(..., [..., .touchIDAny, ...], ...)"
+          - pattern: SecAccessControlCreateWithFlags(..., .biometryAny, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., .userPresence, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., .touchIDAny, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., [..., .biometryAny, ...], ...)
+          - pattern: SecAccessControlCreateWithFlags(..., [..., .userPresence, ...], ...)
+          - pattern: SecAccessControlCreateWithFlags(..., [..., .touchIDAny, ...], ...)
           # Case 2: Variable assignment followed by function call
           - pattern: |
               $FLAGS = .biometryAny
@@ -41,50 +98,3 @@ rules:
               $FLAGS = [..., .touchIDAny, ...]
               ...
               SecAccessControlCreateWithFlags(..., $FLAGS, ...)
-    message: |
-      Weak biometric ACL flag is associated with a key stored in Keychain. 
-      With '.biometryAny/.userPresence/.touchIDAny' flag, an attacker with 
-      the ability to add a biometry to the device can authenticate as the 
-      user. It is recommended to use more specific and secure authentication 
-      mechanisms like '.biometryCurrentSet' and '.touchIDCurrentSet'.
-      
-      Here's an example of how to fix the problem by using .biometryCurrentSet 
-      for biometric authentication in Swift:
-      ```
-      import LocalAuthentication
-  
-      // Create an instance of LAContext for biometric authentication
-      let context = LAContext()
-      
-      // Check if biometric authentication is available
-      if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-        // Use biometryCurrentSet for biometric authentication
-        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, 
-              localizedReason: "Authenticate with biometrics", 
-              reply: { success, error in
-                  if success {
-                    print("Biometric authentication successful.")
-                    // Proceed with authenticated actions
-                  } else {
-                    print("Biometric authentication failed: 
-                          \(error?.localizedDescription ?? "Unknown error")")
-                    // Handle authentication failure
-                  }
-        })
-      } else {
-        print("Biometric authentication not available.")
-        // Fallback to alternative authentication method
-      }
-
-      ```
-    languages:
-      - swift
-    severity: ERROR
-    metadata:
-      category: security
-      cwe: "CWE-305"
-      shortDescription: "Authentication bypass by primary weakness"
-      owasp:
-        - "A2:2017-Broken Authentication"
-        - "A07:2021-Identification and Authentication Failures"
-      security-severity: CRITICAL

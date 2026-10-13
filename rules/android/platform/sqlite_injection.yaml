@@ -1,8 +1,32 @@
 rules:
   - id: android.mobsf.sqlite_injection
+    languages:
+      - java
+    severity: WARNING
+    message: >-
+      App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries
+      can cause SQL Injection. Also sensitive information should be encrypted and written to the
+      database.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/78.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m7
+      masvs: platform-2
     patterns:
-      - pattern-not: '$DB.execSQL("..." , ...);'
-      - pattern-not: '$DB.rawQuery("..." , ...);'
+      - pattern-not: $DB.execSQL("..." , ...);
+      - pattern-not: $DB.rawQuery("..." , ...);
       - pattern-either:
           - pattern: |
               $DB.rawQuery("..." + $INP + "..." , ...);
@@ -20,16 +44,3 @@ rules:
               $DB.execSQL($INP + "..." + $INP2, ...);
           - pattern: |
               $DB.execSQL($INP + "..." + $INP2 + "...", ...);
-    message: >-
-      App uses SQLite Database and execute raw SQL query. Untrusted user input
-      in raw SQL queries can cause SQL Injection. Also sensitive information
-      should be encrypted and written to the database.
-    languages:
-      - java
-    severity: WARNING
-    metadata:
-      cwe: cwe-78
-      owasp-mobile: m7
-      masvs: platform-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2

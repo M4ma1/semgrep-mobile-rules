@@ -3,8 +3,23 @@ rules:
     languages:
       - java
     severity: WARNING
+    message: >-
+      [MASVS-PLATFORM] Make sure to verify that your app runs on a device with an up-to-date OS
+      version to make sure it satisfy your security requirements
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule scans for API that checks the version of the operating system
-    message: "[MASVS-PLATFORM] Make sure to verify that your app runs on a device with an up-to-date OS version to make sure it satisfy your security requirements"
     patterns:
       - pattern: Build.VERSION.SDK_INT

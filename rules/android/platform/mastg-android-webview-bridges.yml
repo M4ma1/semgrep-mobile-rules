@@ -1,10 +1,24 @@
 rules:
   - id: android.owasp.webview-bridges-javascriptinterface
+    languages:
+      - java
     severity: WARNING
-    languages: [java]
-    metadata:
-      summary: Detects methods annotated with @JavascriptInterface, which are exposed to JavaScript in a WebView bridge.
     message: '[MASVS-PLATFORM-2] Method is exposed to JavaScript via @JavascriptInterface'
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-749: Exposed Dangerous Method or Function'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/749.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: Detects methods annotated with @JavascriptInterface, which are exposed to JavaScript in a WebView bridge.
     pattern: |
       @JavascriptInterface
       $TYPE $NAME(...) {

@@ -2,31 +2,39 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_inject_rule-SpotbugsPathTraversalAbsolute
     languages:
-      - "kotlin"
-    message: |
+      - kotlin
+    severity: WARNING
+    message: >-
       The software uses an HTTP request parameter to construct a pathname that should be within a
       restricted directory, but it does not properly neutralize absolute path sequences such as
       "/abs/path" that can resolve to a location that is outside of that directory. See
       http://cwe.mitre.org/data/definitions/36.html for more information.
-    severity: "WARNING"
     metadata:
-      shortDescription: "Improper limitation of a pathname to a restricted directory ('Path Traversal')"
-      category: "security"
-      cwe: "CWE-22"
-      owasp:
-        - "A1:2017-Injection"
-        - "A03:2021-Injection"
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/22.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
       technology:
-        - "kotlin"
-      security-severity: "MEDIUM"
-
-    mode: "taint"
+        - android
+        - kotlin
+      owasp:
+        - A1:2017-Injection
+        - A03:2021-Injection
+      security-severity: MEDIUM
+      shortDescription: Improper limitation of a pathname to a restricted directory ('Path Traversal')
+    mode: taint
     pattern-sanitizers:
-      - pattern: "org.apache.commons.io.FilenameUtils.getName(...)"
+      - pattern: org.apache.commons.io.FilenameUtils.getName(...)
     pattern-sinks:
       - patterns:
           - pattern-inside: |
@@ -36,46 +44,46 @@ rules:
                   java.io.File($U)
               - pattern-inside: |-
                   java.nio.file.Paths.get($U)
-          - pattern: "$VAR"
+          - pattern: $VAR
       - patterns:
           - pattern-inside: |-
               java.io.RandomAccessFile($INPUT,...)
-          - pattern: "$INPUT"
-      - pattern: "java.io.FileReader(...)"
-      - pattern: "javax.activation.FileDataSource(...)"
-      - pattern: "java.io.FileInputStream(...)"
-      - pattern: "java.io.File(...)"
-      - pattern: "java.nio.file.Paths.get(...)"
-      - pattern: "java.io.File.createTempFile(...)"
-      - pattern: "java.io.File.createTempDirectory(...)"
-      - pattern: "java.nio.file.Files.createTempFile(...)"
-      - pattern: "java.nio.file.Files.createTempDirectory(...)"
+          - pattern: $INPUT
+      - pattern: java.io.FileReader(...)
+      - pattern: javax.activation.FileDataSource(...)
+      - pattern: java.io.FileInputStream(...)
+      - pattern: java.io.File(...)
+      - pattern: java.nio.file.Paths.get(...)
+      - pattern: java.io.File.createTempFile(...)
+      - pattern: java.io.File.createTempDirectory(...)
+      - pattern: java.nio.file.Files.createTempFile(...)
+      - pattern: java.nio.file.Files.createTempDirectory(...)
       - patterns:
-          - pattern: "$SRC.$METHOD(...)"
+          - pattern: $SRC.$METHOD(...)
           - metavariable-pattern:
-              metavariable: "$SRC"
+              metavariable: $SRC
               pattern-either:
-                - pattern: "getClass()"
-                - pattern: "getClass().getClassLoader()"
-                - pattern: "($C: ClassLoader)"
-                - pattern: "($C: Class)"
-                - pattern: "$CLZ.getClassLoader()"
+                - pattern: getClass()
+                - pattern: getClass().getClassLoader()
+                - pattern: '($C: ClassLoader)'
+                - pattern: '($C: Class)'
+                - pattern: $CLZ.getClassLoader()
           - metavariable-pattern:
-              metavariable: "$METHOD"
+              metavariable: $METHOD
               pattern-either:
-                - pattern: "getResourceAsStream"
-                - pattern: "getResource"
+                - pattern: getResourceAsStream
+                - pattern: getResource
       - patterns:
           - pattern-inside: |-
               java.io.FileWriter($PATH, ...)
-          - pattern: "$PATH"
+          - pattern: $PATH
       - patterns:
           - pattern-inside: |-
               java.io.FileOutputStream($PATH, ...)
-          - pattern: "$PATH"
+          - pattern: $PATH
     pattern-sources:
-      - pattern: "($REQ: HttpServletRequest).getParameter(...)"
+      - pattern: '($REQ: HttpServletRequest).getParameter(...)'
       - patterns:
           - pattern-inside: |-
               fun $FUNC(..., @RequestParam $REQ:$TYPE, ...) {...}
-          - focus-metavariable: "$REQ"
+          - focus-metavariable: $REQ

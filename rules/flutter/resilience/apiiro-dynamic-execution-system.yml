@@ -1,12 +1,26 @@
 rules:
   - id: flutter.apiiro.dart-dynamic-system-commands
+    languages:
+      - dart
+    severity: ERROR
+    message: Dynamic execution by system commands.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/78.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     pattern-either:
       - patterns:
           - pattern: Process.$RUN('dart', ['-e', ...]);
           - metavariable-pattern:
               metavariable: $RUN
               pattern-regex: (run|runSync|start)
-    message: Dynamic execution by system commands.
-    severity: ERROR
-    languages:
-      - dart

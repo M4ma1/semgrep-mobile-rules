@@ -1,6 +1,29 @@
 # https://find-sec-bugs.github.io/bugs.htm#BLOWFISH_KEY_SIZE
 rules:
   - id: android.mobsf.weak_key_size
+    languages:
+      - java
+    severity: ERROR
+    message: >-
+      Cryptographic implementations with insufficient key length is susceptible to bruteforce
+      attacks.
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-326: Inadequate Encryption Strength'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#common-configuration-issues-mstg-crypto-1-mstg-crypto-2-and-mstg-crypto-3
+        - https://cwe.mitre.org/data/definitions/326.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m5
+      masvs: crypto-3
     patterns:
       - pattern-either:
           - pattern: |
@@ -39,15 +62,3 @@ rules:
               $K = $G.getInstance("AES");
               ...
               $K.init(64);
-    message: >-
-      Cryptographic implementations with insufficient key length is susceptible
-      to bruteforce attacks.
-    languages:
-      - java
-    severity: ERROR
-    metadata:
-      cwe: cwe-326
-      owasp-mobile: m5
-      masvs: crypto-3
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#common-configuration-issues-mstg-crypto-1-mstg-crypto-2-and-mstg-crypto-3

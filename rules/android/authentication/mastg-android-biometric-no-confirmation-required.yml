@@ -3,8 +3,23 @@ rules:
     languages:
       - java
     severity: WARNING
+    message: >-
+      [MASVS-AUTH-3] BiometricPrompt allows authentication without explicit user confirmation.
+      For sensitive operations, consider using setConfirmationRequired(true).
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-287: Improper Authentication'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/287.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-AUTH-3/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule detects BiometricPrompt configurations that disable explicit user confirmation.
-    message: "[MASVS-AUTH-3] BiometricPrompt allows authentication without explicit user confirmation. For sensitive operations, consider using setConfirmationRequired(true)."
     pattern: |
       $BUILDER.setConfirmationRequired(false)

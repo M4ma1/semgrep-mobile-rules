@@ -3,22 +3,18 @@
 # source (original): https://github.com/mobsf/mobsfscan/blob/main/mobsfscan/rules/patterns/android/kotlin/kotlin_rules.yaml
 # hash: e29e85c3
 # yamllint enable
----
 rules:
   - id: android.gitlab.rules_lgpl_kotlin_other_rule-android-kotlin-webview-debug
-    patterns:
-      - pattern: |
-          $X.setWebContentsDebuggingEnabled(true)
-      - pattern-inside: |
-          WebView
-          ...
-    message: |
+    languages:
+      - kotlin
+    severity: WARNING
+    message: |-
       Remote WebView debugging is enabled.This can introduce security 
       risks as it allows remote debugging tools, such as Chrome DevTools, 
       to inspect and manipulate the WebView content. This can potentially 
       expose sensitive information, including user data, session tokens, 
       and other confidential data, to unauthorized parties.
-      
+
       To fix this security issue, you should disable remote WebView 
       debugging in production builds of your app. Here's how you can do it:
       ```
@@ -43,14 +39,28 @@ rules:
       }
       ```
 
-    languages:
-      - kotlin
-    severity: WARNING
     metadata:
       category: security
-      cwe: "CWE-489"
-      shortDescription: "Leftover debug code"
+      confidence: HIGH
+      cwe:
+        - 'CWE-489: Active Debug Code'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/489.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp:
-        - "A6:2017-Security Misconfiguration"
-        - "A05:2021-Security Misconfiguration"
+        - A6:2017-Security Misconfiguration
+        - A05:2021-Security Misconfiguration
       security-severity: MEDIUM
+      shortDescription: Leftover debug code
+    patterns:
+      - pattern: |
+          $X.setWebContentsDebuggingEnabled(true)
+      - pattern-inside: |
+          WebView
+          ...

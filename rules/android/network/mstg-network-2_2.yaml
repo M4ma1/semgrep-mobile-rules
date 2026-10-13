@@ -1,24 +1,31 @@
 rules:
   - id: MSTG-NETWORK-2_2
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: Unrecommended cipher suite $BADCIPHER is used.
     metadata:
-      authors:
-        - Giacomo Zorzin @gellge (IMQ Minded Security)
-      owasp-mobile: M3
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-326: Inadequate Encryption Strength'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/tree/v1.5.0/Document/0x04f-Testing-Network-Communication.md
+        - https://cwe.mitre.org/data/definitions/326.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M3
       area: network
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/tree/v1.5.0/Document/0x04f-Testing-Network-Communication.md
-      confidence: HIGH
-      likelihood: LOW
-      impact: LOW
-      technology: [android]
-    message: Unrecommended cipher suite $BADCIPHER is used.
+      authors:
+        - Giacomo Zorzin @gellge (IMQ Minded Security)
     options:
       symbolic_propagation: true
     mode: taint
@@ -27,16 +34,16 @@ rules:
       # generated using SSL Configuration Generator with Mozilla Guideline v5.6, intermediate configuration
       # (https://ssl-config.mozilla.org/)
       - pattern-either:
-        - patterns:
-            - pattern: $SRC = <... "$BADCIPHER" ...>;
-            - metavariable-regex:
-                metavariable: $BADCIPHER
-                regex: "(?!TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256|TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256|TLS_DHE_RSA_WITH_AES_128_GCM_SHA256|TLS_DHE_RSA_WITH_AES_256_GCM_SHA384)"
-        - patterns:
-            - pattern: $OBJ.$METHOD(<... "$BADCIPHER" ...>);
-            - metavariable-regex:
-                metavariable: $BADCIPHER
-                regex: "(?!TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256|TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256|TLS_DHE_RSA_WITH_AES_128_GCM_SHA256|TLS_DHE_RSA_WITH_AES_256_GCM_SHA384)"
+          - patterns:
+              - pattern: $SRC = <... "$BADCIPHER" ...>;
+              - metavariable-regex:
+                  metavariable: $BADCIPHER
+                  regex: (?!TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256|TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256|TLS_DHE_RSA_WITH_AES_128_GCM_SHA256|TLS_DHE_RSA_WITH_AES_256_GCM_SHA384)
+          - patterns:
+              - pattern: $OBJ.$METHOD(<... "$BADCIPHER" ...>);
+              - metavariable-regex:
+                  metavariable: $BADCIPHER
+                  regex: (?!TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256|TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384|TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256|TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256|TLS_DHE_RSA_WITH_AES_128_GCM_SHA256|TLS_DHE_RSA_WITH_AES_256_GCM_SHA384)
     pattern-propagators:
       - pattern: (ArrayList<String> $ARL).add($TAINTED);
         from: $TAINTED

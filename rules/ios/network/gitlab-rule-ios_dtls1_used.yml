@@ -3,33 +3,28 @@
 # source (original): https://github.com/mobsf/mobsfscan/blob/main/mobsfscan/rules/patterns/ios/swift/swift_rules.yaml
 # hash: e29e85c3
 # yamllint enable
----
 rules:
   - id: ios.gitlab.rules_lgpl_swift_other_rule-ios-dtls1-used
-    patterns:
-      - pattern:
-          $Y.TLSMinimumSupportedProtocolVersion
-      - pattern-inside: |
-          ...
-          $X = "tls_protocol_version_t.DTLSv10"
-          ...
-    message: |
+    languages:
+      - swift
+    severity: WARNING
+    message: |-
       DTLS 1.2 should be used. Detected old version - DTLS 1.0.
       DTLS (Datagram Transport Layer Security) 1.0 suffers from 
       various security vulnerabilities and weaknesses, as it is 
       an outdated and less secure protocol compared to newer 
       versions such as DTLS 1.2 or 1.3.
-      
+
       Here's an example of how to use DTLS 1.2:
       ```
       import Network
-  
+
       // Create a NWConnection instance with DTLS 1.2
       let connection = NWConnection(host: NWEndpoint.Host("example.com"), port: NWEndpoint.Port("443"), using: .dtls)
-      
+
       // Start the connection
       connection.start(queue: .main)
-      
+
       // Handle connection state changes
       connection.stateUpdateHandler = { newState in
         switch newState {
@@ -44,14 +39,28 @@ rules:
       }
       ```
 
-    languages:
-      - swift
-    severity: WARNING
     metadata:
       category: security
-      cwe: "CWE-757"
-      shortDescription: "Selection of less-secure algorithm during negotiation ('algorithm downgrade')"
+      confidence: MEDIUM
+      cwe:
+        - "CWE-757: Selection of Less-Secure Algorithm During Negotiation ('Algorithm Downgrade')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/757.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - ios
       owasp:
-        - "A6:2017-Security Misconfiguration"
-        - "A05:2021-Security Misconfiguration"
+        - A6:2017-Security Misconfiguration
+        - A05:2021-Security Misconfiguration
       security-severity: MEDIUM
+      shortDescription: Selection of less-secure algorithm during negotiation ('algorithm downgrade')
+    patterns:
+      - pattern: $Y.TLSMinimumSupportedProtocolVersion
+      - pattern-inside: |
+          ...
+          $X = "tls_protocol_version_t.DTLSv10"
+          ...

@@ -1,21 +1,50 @@
 rules:
   - id: flutter.cryptography.weak-hash
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: MD5 or SHA-1 is used for a security-sensitive digest.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-328, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-328: Use of Weak Hash'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/328.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     pattern-either:
       - pattern: md5.convert($DATA)
       - pattern: sha1.convert($DATA)
       - pattern: Digest("MD5", ...)
       - pattern: Digest("SHA-1", ...)
+
   - id: flutter.cryptography.insecure-random-secret
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: Non-cryptographic Random is used to create a security-sensitive value.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-338, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/338.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern: $NAME = Random().$METHOD(...)
       - metavariable-regex:
           metavariable: $NAME
-          regex: '(?i).*(token|nonce|secret|key|session|otp|code|salt|iv).*'
+          regex: (?i).*(token|nonce|secret|key|session|otp|code|salt|iv).*

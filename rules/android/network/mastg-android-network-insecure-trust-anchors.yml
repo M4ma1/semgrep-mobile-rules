@@ -1,14 +1,31 @@
 rules:
   - id: android.owasp.network-insecure-trust-anchors
-    severity: WARNING
     languages:
       - xml
+    severity: WARNING
+    message: >-
+      The network security config allows certificates imported on the user's behalf thereby
+      allowing connections to potentially insecure CAs. Evaluate if this is necessary for your
+      app, and disable it if appropriate (to hide this warning, set
+      `tools:ignore="AcceptsUserCertificates"` on `<network-security-config>`).
     metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: HIGH
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detects entries in network security config that allow user-added CAs (base-config, domain-config or debug-overrides).
       replaces:
         - android.semgrep.nsc-allows-user-ca-certs
         - android.semgrep.nsc-allows-user-ca-certs-for-domain
-    message: The network security config allows certificates imported on the user's behalf thereby allowing connections to potentially insecure CAs. Evaluate if this is necessary for your app, and disable it if appropriate (to hide this warning, set `tools:ignore="AcceptsUserCertificates"` on `<network-security-config>`).
     patterns:
       - pattern: <certificates src="user" ... />
       - pattern-not-inside: |

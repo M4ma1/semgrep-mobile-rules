@@ -1,26 +1,33 @@
 rules:
   - id: MSTG-PLATFORM-5
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The application allows for JavaScript execution within a WebView instance.
     metadata:
-      replaces:
-        - android.insecure_javascript_execution
-      authors:
-        - Christian Cotignola @b4dsheep (IMQ Minded Security)
-      owasp-mobile: M1
       category: security
+      confidence: HIGH
+      cwe:
+        - "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-javascript-execution-in-webviews-mstg-platform-5
+        - https://cwe.mitre.org/data/definitions/79.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-javascript-execution-in-webviews-mstg-platform-5
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: The application allows for JavaScript execution within a WebView instance.
+      authors:
+        - Christian Cotignola @b4dsheep (IMQ Minded Security)
+      replaces:
+        - android.insecure_javascript_execution
     pattern-either:
       - pattern: $OBJ.setJavaScriptEnabled(true)
       - pattern: setJavaScriptEnabled(true)

@@ -1,27 +1,37 @@
 rules:
   - id: ios.akabe1.improper-wkwebview
+    languages:
+      - swift
     severity: WARNING
+    message: >-
+      This iOS mobile application seems using a WKWebView object weakly configured from a
+      security point of view, as its settings present any of the following flaws: - WKWebView has
+      JavaScript support not explicitly disabled (enabled by default) - WKWebView has enabled
+      JavaScript to access content from other "file://" scheme URLs (allowFileAccessFromFileURLs
+      default false) - WKWebView has enabled JavaScript to access content from any origin
+      (allowUniversalAccessFromFileURLs default false) This configuration of WKWebView increases
+      the attack surface of the mobile app and could lead to various kind of vulnearbilities
+      (i.e. reflected XSS, code injection, information disclosure, etc.). If possible it is
+      recommended to configure WKWebView in the mobile app with JavaScript disabled, and
+      disabling the permission to access content from any origin or other file scheme URLs.
     metadata:
-      author: Maurizio Siddu
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-749: Exposed Dangerous Method or Function'
+      impact: MEDIUM
+      likelihood: LOW
       references:
         - https://mas.owasp.org/MASTG/iOS/0x06h-Testing-Platform-Interaction
         - https://developer.apple.com/documentation/webkit/wkwebview
-      category: security
-      confidence: MEDIUM
-      likelihood: LOW
-      impact: MEDIUM
-      technology: [ios]
-    message: >-
-      This iOS mobile application seems using a WKWebView object weakly configured from a security
-      point of view, as its settings present any of the following flaws:
-        - WKWebView has JavaScript support not explicitly disabled (enabled by default)
-        - WKWebView has enabled JavaScript to access content from other "file://" scheme URLs (allowFileAccessFromFileURLs default false)
-        - WKWebView has enabled JavaScript to access content from any origin (allowUniversalAccessFromFileURLs default false)
-      This configuration of WKWebView increases the attack surface of the mobile app and could lead to various
-      kind of vulnearbilities (i.e. reflected XSS, code injection, information disclosure, etc.).
-      If possible it is recommended to configure WKWebView in the mobile app with JavaScript disabled, and disabling 
-      the permission to access content from any origin or other file scheme URLs.
-    languages: [swift]
+        - https://cwe.mitre.org/data/definitions/749.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - ios
+      authors:
+        - Maurizio Siddu
     patterns:
       - pattern-either:
           # WKWebView with JavaScript enabled
@@ -89,7 +99,7 @@ rules:
                       $PREFS.allowsContentJavaScript = false
                       ...
                   }
-          - patterns:       
+          - patterns:
               - pattern-inside: |
                   func $FUNC() {
                     ...
@@ -125,7 +135,7 @@ rules:
                     $WEBVIEW.configuration.defaultWebpagePreferences.allowsContentJavaScript = false
                     ...
                   }
-          - patterns:       
+          - patterns:
               - pattern-inside: |
                   func $FUNC() {
                     ...

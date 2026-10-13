@@ -2,39 +2,47 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_file_rule-FilenameUtils
     languages:
-      - "kotlin"
-    message: |
-      A file is opened to read its content. The filename comes from an input
-      parameter. If an unfiltered parameter is passed to this file API, files from an
-      arbitrary filesystem location could be read.
+      - kotlin
+    severity: WARNING
+    message: >-
+      A file is opened to read its content. The filename comes from an input parameter. If an
+      unfiltered parameter is passed to this file API, files from an arbitrary filesystem
+      location could be read.
     metadata:
-      shortDescription: "Improper limitation of a pathname to a restricted directory ('Path Traversal')"
-      cwe: "CWE-22"
-      owasp:
-        - "A5:2017-Broken Access Control"
-        - "A01:2021-Broken Access Control"
-      security-severity: "MEDIUM"
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/22.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
       technology:
-        - "kotlin"
-      category: "security"
-    severity: "WARNING"
-
+        - android
+        - kotlin
+      owasp:
+        - A5:2017-Broken Access Control
+        - A01:2021-Broken Access Control
+      security-severity: MEDIUM
+      shortDescription: Improper limitation of a pathname to a restricted directory ('Path Traversal')
     patterns:
       - pattern-inside: |
           import org.apache.commons.io.FilenameUtils
           ...
       - pattern-either:
-          - pattern: "normalize(...)"
-          - pattern: "getExtension(...)"
-          - pattern: "isExtensions(...)"
-          - pattern: "getName(...)"
-          - pattern: "getBaseName(...)"
-          - pattern: "org.apache.commons.io.FilenameUtils.normalize(...)"
-          - pattern: "org.apache.commons.io.FilenameUtils.getExtension(...)"
-          - pattern: "org.apache.commons.io.FilenameUtils.isExtensions(...)"
-          - pattern: "org.apache.commons.io.FilenameUtils.getName(...)"
-          - pattern: "org.apache.commons.io.FilenameUtils.getBaseName(...)"
+          - pattern: normalize(...)
+          - pattern: getExtension(...)
+          - pattern: isExtensions(...)
+          - pattern: getName(...)
+          - pattern: getBaseName(...)
+          - pattern: org.apache.commons.io.FilenameUtils.normalize(...)
+          - pattern: org.apache.commons.io.FilenameUtils.getExtension(...)
+          - pattern: org.apache.commons.io.FilenameUtils.isExtensions(...)
+          - pattern: org.apache.commons.io.FilenameUtils.getName(...)
+          - pattern: org.apache.commons.io.FilenameUtils.getBaseName(...)

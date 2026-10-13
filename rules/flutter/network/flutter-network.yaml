@@ -1,9 +1,23 @@
 rules:
   - id: flutter.network.cleartext-http
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: Flutter application connects to a cleartext HTTP endpoint.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-319, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-319: Cleartext Transmission of Sensitive Information'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/319.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern-either:
           - pattern: Uri.parse($URL)
@@ -11,20 +25,51 @@ rules:
           - pattern: http.$METHOD(Uri.parse($URL), ...)
       - metavariable-regex:
           metavariable: $URL
-          regex: '.*http://(?!localhost|127[.]0[.]0[.]1).*'
+          regex: .*http://(?!localhost|127[.]0[.]0[.]1).*
+
   - id: flutter.network.bad-certificate-callback-accepts-all
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: HttpClient accepts every TLS certificate.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-295, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     pattern-either:
       - pattern: $CLIENT.badCertificateCallback = (...) => true
-      - pattern: '$CLIENT.badCertificateCallback = ($CERT, $HOST, $PORT) { return true; }'
+      - pattern: $CLIENT.badCertificateCallback = ($CERT, $HOST, $PORT) { return true; }
+
   - id: flutter.network.insecure-websocket
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: WebSocket uses unencrypted ws:// transport.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-319, technology: [flutter, websocket]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-319: Cleartext Transmission of Sensitive Information'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/319.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+        - websocket
     patterns:
       - pattern-either:
           - pattern: WebSocket.connect($URL)
@@ -32,13 +77,29 @@ rules:
           - pattern: WebSocketChannel.connect(Uri.parse($URL))
       - metavariable-regex:
           metavariable: $URL
-          regex: '.*ws://(?!localhost|127[.]0[.]0[.]1).*'
+          regex: .*ws://(?!localhost|127[.]0[.]0[.]1).*
+
   - id: flutter.network.user-controlled-request-url
-    mode: taint
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
-    message: Externally controlled URL reaches an HTTP request and may permit SSRF or unintended schemes.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-918, technology: [flutter]}
+    message: >-
+      Externally controlled URL reaches an HTTP request and may permit SSRF or unintended schemes.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-918: Server-Side Request Forgery (SSRF)'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/918.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $CONTROLLER.text
@@ -55,23 +116,55 @@ rules:
           - pattern: http.$METHOD($URL, ...)
           - pattern: $DIO.$METHOD($URL, ...)
           - pattern: $CLIENT.openUrl($METHOD, $URL)
+
   - id: flutter.network.webview-unrestricted-javascript
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: Flutter WebView enables unrestricted JavaScript execution.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-749, technology: [flutter, webview]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-749: Exposed Dangerous Method or Function'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/749.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+        - webview
     pattern-either:
       - pattern: $CONTROLLER.setJavaScriptMode(JavaScriptMode.unrestricted)
       - pattern: 'WebView(..., javascriptMode: JavascriptMode.unrestricted, ...)'
+
   - id: flutter.network.webview-unsafe-content
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: Flutter WebView permits mixed content or loads a local file/content URL.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-319, technology: [flutter, webview]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-319: Cleartext Transmission of Sensitive Information'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/319.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+        - webview
     pattern-either:
       - pattern: $CONTROLLER.setMixedContentMode(MixedContentMode.alwaysAllow)
       - patterns:
           - pattern: $CONTROLLER.loadRequest(Uri.parse($URL))
           - metavariable-regex:
               metavariable: $URL
-              regex: '.*(file|content)://.*'
+              regex: .*(file|content)://.*

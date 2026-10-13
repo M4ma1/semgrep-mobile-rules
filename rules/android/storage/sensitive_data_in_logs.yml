@@ -1,35 +1,38 @@
 rules:
   - id: android.sensitive_data_in_logs
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      The application writes sensitive data (a key, secret, password, token, credential or
+      personal data such as an e-mail address) to the log. Log, System.out/err,
+      java.util.logging, Timber and BufferedWriter output can be read by other tools on the
+      device, by adb, or by anyone with a bug report. Do not log sensitive values.
     metadata:
       category: security
       confidence: MEDIUM
-      likelihood: MEDIUM
+      cwe:
+        - 'CWE-532: Insertion of Sensitive Information into Log File'
       impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-logs-for-sensitive-data-mstg-storage-3
+        - https://cwe.mitre.org/data/definitions/532.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
       subcategory:
         - vuln
-      owasp-mobile: M9
+      technology:
+        - android
       owasp-mas:
         identifier: MASVS-STORAGE-2
         area: storage
         level:
           - L1
           - L2
-      cwe: CWE-532
-      technology: [android]
+      owasp-mobile: M9
       replaces:
         - MSTG-STORAGE-3
         - android.mobsf.android_logging
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-logs-for-sensitive-data-mstg-storage-3
-        - https://cwe.mitre.org/data/definitions/532.html
-    message: >-
-      The application writes sensitive data (a key, secret, password, token, credential or personal
-      data such as an e-mail address) to the log. Log, System.out/err, java.util.logging, Timber and
-      BufferedWriter output can be read by other tools on the device, by adb, or by anyone with a
-      bug report. Do not log sensitive values.
     patterns:
       - pattern-either:
           - patterns:

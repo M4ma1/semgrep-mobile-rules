@@ -1,23 +1,32 @@
 rules:
   - id: MSTG-CODE-8_4
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      The application uses the activity context to display toasts potentially causing memory
+      leaks.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M7
       category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-401: Missing Release of Memory after Effective Lifetime'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#memory-corruption-bugs-mstg-code-8
+        - https://cwe.mitre.org/data/definitions/401.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M7
       area: code
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#memory-corruption-bugs-mstg-code-8
-      confidence: LOW
-      likelihood: LOW
-      impact: LOW
-      technology: [android]
-    message: The application uses the activity context to display toasts potentially causing memory leaks.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     options:
       symbolic_propagation: true
     patterns:

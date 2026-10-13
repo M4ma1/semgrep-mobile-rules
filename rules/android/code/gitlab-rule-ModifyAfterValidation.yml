@@ -2,24 +2,31 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_strings_rule-ModifyAfterValidation
     languages:
-      - "kotlin"
-    message: |
-      CERT: IDS11-J. Perform any string modifications before validation
+      - kotlin
+    severity: WARNING
+    message: 'CERT: IDS11-J. Perform any string modifications before validation'
     metadata:
-      shortDescription: "Collapse of data into unsafe value"
-      category: "security"
-      cwe: "CWE-182"
-      confidence: "HIGH"
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-182: Collapse of Data into Unsafe Value'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/182.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp:
-        - "A1:2017-Injection"
-        - "A03:2021-Injection"
-      security-severity: "MEDIUM"
-    severity: "WARNING"
-
+        - A1:2017-Injection
+        - A03:2021-Injection
+      security-severity: MEDIUM
+      shortDescription: Collapse of data into unsafe value
     patterns:
       - pattern-inside: |
           $PATTERN = Pattern.compile(...)
@@ -34,5 +41,5 @@ rules:
               - pattern: |
                   $VAR.$METHOD(...)
               - metavariable-regex:
-                  metavariable: "$METHOD"
-                  regex: "(replace|replaceAll|replaceFirst|concat)"
+                  metavariable: $METHOD
+                  regex: (replace|replaceAll|replaceFirst|concat)

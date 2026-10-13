@@ -1,8 +1,22 @@
 rules:
   - id: flutter.apiiro.dart-obfuscation-anonymous-nesting
+    languages:
+      - dart
+    severity: WARNING
+    message: Detect obfuscation by deep anonymous nesting.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-506: Embedded Malicious Code'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/506.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     pattern: |
       ((...) { ((...) { ((...) { ... })() })() })()
-    message: Detect obfuscation by deep anonymous nesting.
-    severity: WARNING
-    languages: 
-      - dart

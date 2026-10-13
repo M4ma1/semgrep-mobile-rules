@@ -1,5 +1,29 @@
 rules:
   - id: android.mobsf.android_certificate_pinning
+    languages:
+      - java
+    severity: INFO
+    message: >-
+      This app does not use a TLS/SSL certificate or public key pinning in code to detect or
+      prevent MITM attacks in secure communication channel. Please verify if pinning is enabled
+      in `network_security_config.xml`.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05g-Testing-Network-Communication.md#testing-custom-certificate-stores-and-certificate-pinning-mstg-network-4
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m3
+      masvs: network-4
     patterns:
       - pattern-either:
           - pattern: |
@@ -36,16 +60,3 @@ rules:
               $F.openRawResource(...);
               ...
               $X = new Picasso.Builder(...);
-    message: >-
-      This app does not use a TLS/SSL certificate or public key pinning in code to detect
-      or prevent MITM attacks in secure communication channel. Please verify if pinning is
-      enabled in `network_security_config.xml`.
-    languages:
-      - java
-    severity: INFO
-    metadata:
-      cwe: cwe-295
-      owasp-mobile: m3
-      masvs: network-4
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05g-Testing-Network-Communication.md#testing-custom-certificate-stores-and-certificate-pinning-mstg-network-4

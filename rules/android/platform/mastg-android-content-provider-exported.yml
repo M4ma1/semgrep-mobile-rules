@@ -1,21 +1,34 @@
 rules:
   - id: android.owasp.provider-exported-without-permissions
-    languages: [xml]
+    languages:
+      - xml
     severity: WARNING
-    metadata:
-      summary: Detects an exported ContentProvider that is not fully protected by permissions.
-      masvs:
-        - MASVS-PLATFORM
-      references:
-        - https://mas.owasp.org/MASTG/tests/android/MASVS-PLATFORM/MASTG-TEST-0029/
-      replaces:
-        - android.owasp.provider-permission-protected
-        - MSTG-STORAGE-6_1
-    message: >
+    message: >-
       [MASVS-PLATFORM] The ContentProvider is exported (android:exported="true") without
       android:permission, and without both android:readPermission and android:writePermission.
       Any app on the device can read and/or write its data. Set android:exported="false" or
       require a signature-level permission.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-926: Improper Export of Android Application Components'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://mas.owasp.org/MASTG/tests/android/MASVS-PLATFORM/MASTG-TEST-0029/
+        - https://cwe.mitre.org/data/definitions/926.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      masvs:
+        - MASVS-PLATFORM
+      summary: Detects an exported ContentProvider that is not fully protected by permissions.
+      replaces:
+        - android.owasp.provider-permission-protected
+        - MSTG-STORAGE-6_1
     patterns:
       - pattern: <provider ... android:exported="true" ... />
       - pattern-not: <provider ... android:permission="$PERM" ... />

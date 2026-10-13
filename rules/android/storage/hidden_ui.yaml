@@ -1,5 +1,29 @@
 rules:
   - id: android.mobsf.android_hidden_ui
+    languages:
+      - java
+    severity: ERROR
+    message: >-
+      Hidden elements in view can be used to hide data from user. But this data can be leaked. If
+      the view contains sensitive data, it might still be accessible through memory inspection. A
+      good practice is to clear sensitive data before hiding it.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#checking-for-sensitive-data-disclosure-through-the-user-interface-mstg-storage-7
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-3/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m1
+      masvs: storage-7
     patterns:
       - pattern-either:
           - pattern: |
@@ -14,16 +38,3 @@ rules:
               $V = View.INVISIBLE;
               ...
               $X.setVisibility($V);
-    message: >-
-      Hidden elements in view can be used to hide data from user. But this data
-      can be leaked. If the view contains sensitive data, it might still be accessible through memory inspection.
-      A good practice is to clear sensitive data before hiding it.
-    languages:
-      - java
-    severity: ERROR
-    metadata:
-      cwe: cwe-919
-      owasp-mobile: m1
-      masvs: storage-7
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#checking-for-sensitive-data-disclosure-through-the-user-interface-mstg-storage-7

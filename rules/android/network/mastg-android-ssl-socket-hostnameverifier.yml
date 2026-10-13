@@ -1,11 +1,24 @@
 rules:
   - id: android.owasp.ssl-socket-hostnameverifier
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: Detected usage of SSLSocket API with or without a HostnameVerifier
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rules scans for the usage of SSLSocket API with a HostnameVerifier.
-    message: "Detected usage of SSLSocket API with or without a HostnameVerifier"
     match:
       any:
         - pattern: SSLSocketFactory.getDefault()

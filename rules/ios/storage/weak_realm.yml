@@ -1,26 +1,33 @@
 rules:
   - id: ios.weak_realm
-    severity: INFO
-    languages: 
+    languages:
       - swift
+    severity: INFO
+    message: >-
+      This iOS mobile application seems to be using a Realm database with a weak configuration,
+      which could expose to various kind of vulnerabilities. If the database stores sensitive
+      data, make sure to encrypt the Realm database using a custom `Realm.Configuration`.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: LOW
+      cwe:
+        - 'CWE-311: Missing Encryption of Sensitive Data'
       impact: LOW
+      likelihood: LOW
+      references:
+        - https://mas.owasp.org/MASTG/iOS/0x06d-Testing-Data-Storage/#realm-databases
+        - https://www.mongodb.com/docs/realm/sdk/swift/realm-files/encrypt-a-realm/
+        - https://cwe.mitre.org/data/definitions/311.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-STORAGE-1
         area: storage
         level:
           - L1
-      references:
-        - https://mas.owasp.org/MASTG/iOS/0x06d-Testing-Data-Storage/#realm-databases
-        - https://www.mongodb.com/docs/realm/sdk/swift/realm-files/encrypt-a-realm/
-    message: >-
-      This iOS mobile application seems to be using a Realm database with a weak configuration, which could expose to various kind of vulnerabilities.
-      If the database stores sensitive data, make sure to encrypt the Realm database using a custom `Realm.Configuration`.
     patterns:
       - pattern-either:
           - pattern-inside: |

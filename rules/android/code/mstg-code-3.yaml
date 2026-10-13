@@ -1,26 +1,33 @@
 rules:
   - id: MSTG-CODE-3
-    severity: WARNING
     languages:
       - generic
+    severity: WARNING
+    message: The application uses the Android NDK build system without stripping out debug symbols.
     metadata:
-      authors:
-        - Martino Lessio @mlessio (IMQ Minded Security)
-      owasp-mobile: M9
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-489: Active Debug Code'
+      impact: LOW
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#testing-for-debugging-symbols-mstg-code-3
+        - https://cwe.mitre.org/data/definitions/489.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M9
       area: code
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#testing-for-debugging-symbols-mstg-code-3
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: LOW
-      technology: [android]
-    message: The application uses the Android NDK build system without stripping out debug symbols.
+      authors:
+        - Martino Lessio @mlessio (IMQ Minded Security)
     paths:
       include:
-        - "**/build.gradle"
+        - '**/build.gradle'
     patterns:
       - pattern-inside: externalNativeBuild{ ... }
       - pattern: -fvisibility=hidden

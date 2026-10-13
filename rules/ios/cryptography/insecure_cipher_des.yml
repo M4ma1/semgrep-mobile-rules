@@ -1,26 +1,32 @@
 rules:
   - id: ios.insecure_cipher_des
-    severity: WARNING
-    languages: 
+    languages:
       - swift
+    severity: WARNING
+    message: >-
+      This iOS mobile application seems using a weak cipher, `DES`, which could expose to various
+      kind of vulnerabilities. The data encrypted using `DES` mode block could allow to retrieve
+      its plain-text value. It is recommended to avoid the use of `DES`, and use `AES` instead.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: HIGH
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
       impact: HIGH
+      likelihood: HIGH
+      references:
+        - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
+        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
-        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
-    message: >-
-      This iOS mobile application seems using a weak cipher, `DES`, which could expose to various kind of vulnerabilities.
-      The data encrypted using `DES` mode block could allow to retrieve its plain-text value. 
-      It is recommended to avoid the use of `DES`, and use `AES` instead.
     pattern: kCCAlgorithmDES

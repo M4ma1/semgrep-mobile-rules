@@ -1,24 +1,33 @@
 rules:
   - id: MSTG-PLATFORM-4_1
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      Pending Intents must be declared as immutable and specify the exact package, action, and
+      component that will receive the base intent.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M1
       category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-927: Use of Implicit Intent for Sensitive Communication'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-sensitive-functionality-exposure-through-ipc-mstg-platform-4
+        - https://cwe.mitre.org/data/definitions/927.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-sensitive-functionality-exposure-through-ipc-mstg-platform-4
-      confidence: MEDIUM
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: Pending Intents must be declared as immutable and specify the exact package, action, and component that will receive the base intent.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     patterns:
       - pattern-inside: |
           $T(...){

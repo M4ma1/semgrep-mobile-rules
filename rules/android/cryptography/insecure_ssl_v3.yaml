@@ -1,16 +1,27 @@
 rules:
   - id: android.mobsf.insecure_sslv3
+    languages:
+      - java
+    severity: ERROR
+    message: SSLv3 is insecure and has multiple known vulnerabilities.
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#identifying-insecure-andor-deprecated-cryptographic-algorithms-mstg-crypto-4
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m5
+      masvs: crypto-4
     patterns:
       - pattern-either:
           - pattern: |
               $S.getInstance("SSLv3");
-    message: SSLv3 is insecure and has multiple known vulnerabilities.
-    languages:
-      - java
-    severity: ERROR
-    metadata:
-      cwe: cwe-327
-      owasp-mobile: m5
-      masvs: crypto-4
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#identifying-insecure-andor-deprecated-cryptographic-algorithms-mstg-crypto-4

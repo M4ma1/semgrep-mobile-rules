@@ -1,21 +1,51 @@
 rules:
   - id: flutter.code.sqflite-sql-injection
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: Dynamic data is concatenated into a raw sqflite query.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-89, technology: [flutter, sqflite]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/89.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+        - sqflite
     pattern-either:
       - pattern: $DB.rawQuery($A + $B)
       - pattern: $DB.rawInsert($A + $B)
       - pattern: $DB.rawUpdate($A + $B)
       - pattern: $DB.rawDelete($A + $B)
       - pattern: $DB.execute($A + $B)
+
   - id: flutter.code.process-run-untrusted-input
-    mode: taint
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: Externally controlled data reaches Process.run or Process.start.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-78, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/78.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $CONTROLLER.text
@@ -27,12 +57,27 @@ rules:
           - pattern: Process.run($COMMAND, $ARGS, ...)
           - pattern: Process.runSync($COMMAND, $ARGS, ...)
           - pattern: Process.start($COMMAND, $ARGS, ...)
+
   - id: flutter.code.path-traversal
-    mode: taint
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: Externally controlled path reaches a filesystem operation.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-22, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/22.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $CONTROLLER.text
@@ -48,12 +93,28 @@ rules:
           - pattern: File($PATH)
           - pattern: Directory($PATH)
           - pattern: FileSystemEntity.$METHOD($PATH, ...)
+
   - id: flutter.code.flutter-html-untrusted-data
-    mode: taint
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: Untrusted HTML is rendered by a Flutter HTML widget.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-79, technology: [flutter, flutter_html]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/79.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+        - flutter_html
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $CONTROLLER.text
@@ -65,12 +126,27 @@ rules:
           - pattern: HtmlEscape(...).convert(...)
     pattern-sinks:
       - pattern: 'Html(data: $DATA, ...)'
+
   - id: flutter.code.method-channel-untrusted-arguments
-    mode: taint
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: External data crosses a Flutter MethodChannel boundary without validation.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-20, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-20: Improper Input Validation'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/20.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $CONTROLLER.text
@@ -84,12 +160,27 @@ rules:
           - pattern: $SCHEMA.parse(...)
     pattern-sinks:
       - pattern: $CHANNEL.invokeMethod($METHOD, $ARGUMENTS)
+
   - id: flutter.code.isolate-untrusted-message
-    mode: taint
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: External data is sent to an isolate without validation.
-    metadata: {category: security, confidence: LOW, cwe: CWE-20, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-20: Improper Input Validation'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/20.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $CONTROLLER.text

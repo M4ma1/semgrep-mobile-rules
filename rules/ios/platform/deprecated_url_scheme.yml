@@ -1,25 +1,32 @@
 rules:
   - id: ios.deprecated_url_scheme
-    severity: WARNING
-    languages: 
+    languages:
       - xml
+    severity: WARNING
+    message: >-
+      This iOS mobile application is declaring URL Schemes, which could expose to various kind of
+      vulnerabilities. More specifically, URL Scheme usage for deep linking does not verify the
+      identify of the application. Any application can register with your URL Scheme. It is
+      recommended to use Universal Links, which perform this verification.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: HIGH
+      cwe:
+        - 'CWE-939: Improper Authorization in Handler for Custom URL Scheme'
       impact: HIGH
+      likelihood: HIGH
+      references:
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0075/
+        - https://cwe.mitre.org/data/definitions/939.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-PLATFORM-1
         area: platform
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0075/
-    message: >-
-      This iOS mobile application is declaring URL Schemes, which could expose to various kind of vulnerabilities.
-      More specifically, URL Scheme usage for deep linking does not verify the identify of the application. Any application can register with your URL Scheme.
-      It is recommended to use Universal Links, which perform this verification.
     pattern: <key>CFBundleURLSchemes</key>

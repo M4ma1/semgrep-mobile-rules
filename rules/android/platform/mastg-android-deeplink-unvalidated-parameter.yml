@@ -1,11 +1,27 @@
 rules:
-- id: android.owasp.deeplink-unvalidated-parameter
-  severity: WARNING
-  languages:
-    - java
-  metadata:
-    summary: This rule locates the deep link handler entry point and the URI parameters it reads.
-  message: '[MASVS-PLATFORM] A deep link handler reads the incoming URI (getIntent/getData) and/or extracts a parameter (getQueryParameter). Verify each value is validated (type conversion, bounds, or sanitization) before it is used.'
-  pattern-either:
-    - pattern: $INTENT.getData()
-    - pattern: $URI.getQueryParameter(...)
+  - id: android.owasp.deeplink-unvalidated-parameter
+    languages:
+      - java
+    severity: WARNING
+    message: >-
+      [MASVS-PLATFORM] A deep link handler reads the incoming URI (getIntent/getData) and/or
+      extracts a parameter (getQueryParameter). Verify each value is validated (type conversion,
+      bounds, or sanitization) before it is used.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-20: Improper Input Validation'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/20.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: This rule locates the deep link handler entry point and the URI parameters it reads.
+    pattern-either:
+      - pattern: $INTENT.getData()
+      - pattern: $URI.getQueryParameter(...)

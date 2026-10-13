@@ -1,24 +1,31 @@
 rules:
   - id: MSTG-NETWORK-2_1
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: Weak transport protocol version $PROTO is used.
     metadata:
-      authors:
-        - Giacomo Zorzin @gellge (IMQ Minded Security)
-      owasp-mobile: M3
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-326: Inadequate Encryption Strength'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/tree/v1.5.0/Document/0x04f-Testing-Network-Communication.md
+        - https://cwe.mitre.org/data/definitions/326.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M3
       area: network
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/tree/v1.5.0/Document/0x04f-Testing-Network-Communication.md
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: Weak transport protocol version $PROTO is used.
+      authors:
+        - Giacomo Zorzin @gellge (IMQ Minded Security)
     options:
       symbolic_propagation: true
     patterns:
@@ -32,4 +39,4 @@ rules:
           (SSLContext $OBJ).init(...);
       - metavariable-regex:
           metavariable: $PROTO
-          regex: "(?i)(?!TLSv1.[23])"
+          regex: (?i)(?!TLSv1.[23])

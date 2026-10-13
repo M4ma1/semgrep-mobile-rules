@@ -1,17 +1,32 @@
 rules:
   - id: android.owasp.sql-injection-contentprovider
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      [MASVS-CODE-4] Possible SQL Injection: unvalidated user input from `Uri.getPathSegments()`
+      concatenated into `SQLiteQueryBuilder.appendWhere()`
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/89.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: The rule detects possible SQL injection in Android ContentProviders via unvalidated URI path segment concatenation.
-    message: "[MASVS-CODE-4] Possible SQL Injection: unvalidated user input from `Uri.getPathSegments()` concatenated into `SQLiteQueryBuilder.appendWhere()`"
     patterns:
       - pattern-either:
           - pattern: |
               $QB.appendWhere("..." + $VAR);
           - pattern: |
               $QB.appendWhere($VAR);
-      - pattern-inside: |
+      - pattern-inside: |-
           $VAR = $URI.getPathSegments().get(...);
           ...

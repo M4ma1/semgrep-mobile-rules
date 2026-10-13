@@ -1,24 +1,31 @@
 rules:
   - id: MSTG-STORAGE-6_2
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The application may expose sensitive data via Clipboard Manager.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M3
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#determining-whether-sensitive-stored-data-has-been-exposed-via-ipc-mechanisms-mstg-storage-6
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M3
       area: storage
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#determining-whether-sensitive-stored-data-has-been-exposed-via-ipc-mechanisms-mstg-storage-6
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
-    message: The application may expose sensitive data via Clipboard Manager.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     options:
       symbolic_propagation: true
     patterns:

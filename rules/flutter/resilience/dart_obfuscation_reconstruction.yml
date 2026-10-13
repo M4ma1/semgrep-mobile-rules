@@ -1,5 +1,23 @@
 rules:
   - id: flutter.apiiro.dart-obfuscation-reconstruction
+    languages:
+      - dart
+    severity: WARNING
+    message: Obfuscation by reconstruction of hardcoded data.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-506: Embedded Malicious Code'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/506.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern-regex: ^.{,401}$
       - pattern-either:
@@ -10,7 +28,3 @@ rules:
       - metavariable-pattern:
           metavariable: $CONCAT
           pattern-regex: \[\s*((((["'])(?:(?!\4).)*\4)|(\d+|(0|\\{1,})[beoux]\d+))\s*,\s*){5,}(((((["'])(?:(?!\11).)))*\11)|(\d+|(0|\\{1,})[beoux]\d+))\s*\]
-    message: Obfuscation by reconstruction of hardcoded data.
-    severity: WARNING
-    languages:
-      - dart

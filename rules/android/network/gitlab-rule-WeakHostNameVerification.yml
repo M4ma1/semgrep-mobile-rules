@@ -2,22 +2,31 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_endpoint_rule-WeakHostNameVerification
     languages:
-      - "kotlin"
-    message: |
-      A HostnameVerifier that accept any host are often use because of certificate
-      reuse on many hosts. As a consequence, this is vulnerable to Man-in-the-middle
-      attacks since the client will trust any certificate.
+      - kotlin
+    severity: WARNING
+    message: >-
+      A HostnameVerifier that accept any host are often use because of certificate reuse on many
+      hosts. As a consequence, this is vulnerable to Man-in-the-middle attacks since the client
+      will trust any certificate.
     metadata:
-      category: "security"
-      cwe: "CWE-295"
-      shortDescription: "Improper Certificate Validation"
-      security-severity: "MEDIUM"
-    severity: "WARNING"
-
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      security-severity: MEDIUM
+      shortDescription: Improper Certificate Validation
     patterns:
       - pattern-either:
           - patterns:
@@ -35,6 +44,6 @@ rules:
                     ...
                   }
               - pattern-either:
-                  - pattern: "fun checkClientTrusted(...) {}"
-                  - pattern: "fun checkServerTrusted(...) {}"
-                  - pattern: "fun getAcceptedIssuers(): Array<X509Certificate>? {return null}"
+                  - pattern: fun checkClientTrusted(...) {}
+                  - pattern: fun checkServerTrusted(...) {}
+                  - pattern: 'fun getAcceptedIssuers(): Array<X509Certificate>? {return null}'

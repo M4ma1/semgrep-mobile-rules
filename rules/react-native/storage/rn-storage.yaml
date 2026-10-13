@@ -1,29 +1,77 @@
 rules:
   - id: react-native.storage.asyncstorage-sensitive-data
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: ERROR
     message: Sensitive data is stored in AsyncStorage without platform-backed encryption.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-312, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-312: Cleartext Storage of Sensitive Information'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/312.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
     patterns:
       - pattern: AsyncStorage.setItem($KEY, $VALUE)
       - metavariable-regex:
           metavariable: $KEY
-          regex: '(?i).*(token|secret|password|credential|session|auth|pin|ssn|private).*'
+          regex: (?i).*(token|secret|password|credential|session|auth|pin|ssn|private).*
+
   - id: react-native.storage.asyncstorage-pii
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Personally identifiable information is stored in AsyncStorage.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-359, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-359: Exposure of Private Personal Information to an Unauthorized Actor'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/359.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
     patterns:
       - pattern: AsyncStorage.setItem($KEY, $VALUE)
       - metavariable-regex:
           metavariable: $KEY
-          regex: '(?i).*(email|phone|address|passport|birth|medical|card|account).*'
+          regex: (?i).*(email|phone|address|passport|birth|medical|card|account).*
+
   - id: react-native.storage.redux-persist-unencrypted
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Redux Persist stores sensitive state without an encryption transform.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-311, technology: [react-native, redux]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-311: Missing Encryption of Sensitive Data'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/311.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - redux
     patterns:
       - pattern: |
           $CONFIG = {key: $KEY, storage: $STORAGE, ...}
@@ -31,12 +79,29 @@ rules:
           $CONFIG = {key: $KEY, storage: $STORAGE, transforms: [..., $ENCRYPT, ...], ...}
       - metavariable-regex:
           metavariable: $KEY
-          regex: '(?i).*(auth|user|session|account|payment|token).*'
+          regex: (?i).*(auth|user|session|account|payment|token).*
+
   - id: react-native.storage.mmkv-without-encryption-key
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: MMKV instance for sensitive data is created without encryptionKey.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-311, technology: [react-native, mmkv]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-311: Missing Encryption of Sensitive Data'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/311.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - mmkv
     patterns:
       - pattern-either:
           - pattern: 'new MMKV({id: $ID})'
@@ -44,12 +109,29 @@ rules:
       - pattern-not: 'new MMKV({... , encryptionKey: $KEY, ...})'
       - metavariable-regex:
           metavariable: $ID
-          regex: '(?i).*(auth|secure|secret|user|session|token|payment).*'
+          regex: (?i).*(auth|secure|secret|user|session|token|payment).*
+
   - id: react-native.storage.realm-without-encryption-key
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Realm database for sensitive objects is opened without encryptionKey.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-311, technology: [react-native, realm]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-311: Missing Encryption of Sensitive Data'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/311.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - realm
     patterns:
       - pattern-either:
           - pattern: 'Realm.open({schema: $SCHEMA, ...})'
@@ -58,20 +140,56 @@ rules:
       - pattern-not: 'new Realm({... , encryptionKey: $KEY, ...})'
       - metavariable-regex:
           metavariable: $SCHEMA
-          regex: '(?i).*(user|auth|account|payment|medical|credential|token).*'
+          regex: (?i).*(user|auth|account|payment|medical|credential|token).*
+
   - id: react-native.storage.expo-secure-store-weak-accessibility
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
-    message: Expo SecureStore uses an accessibility level that permits access after first unlock or always.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-922, technology: [react-native, expo]}
+    message: >-
+      Expo SecureStore uses an accessibility level that permits access after first unlock or
+      always.
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-922: Insecure Storage of Sensitive Information'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/922.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - expo
     pattern-either:
       - pattern: 'SecureStore.setItemAsync($KEY, $VALUE, {..., keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK, ...})'
       - pattern: 'SecureStore.setItemAsync($KEY, $VALUE, {..., keychainAccessible: SecureStore.ALWAYS, ...})'
+
   - id: react-native.storage.sensitive-clipboard-write
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Sensitive value is copied to the shared system clipboard.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-200, technology: [react-native, expo]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - expo
     patterns:
       - pattern-either:
           - pattern: Clipboard.setString($VALUE)
@@ -79,4 +197,4 @@ rules:
           - pattern: Clipboard.setImageAsync($VALUE)
       - metavariable-regex:
           metavariable: $VALUE
-          regex: '(?i).*(token|password|secret|credential|private|pin|card|ssn).*'
+          regex: (?i).*(token|password|secret|credential|private|pin|card|ssn).*

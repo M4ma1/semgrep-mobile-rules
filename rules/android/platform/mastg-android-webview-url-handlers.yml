@@ -1,11 +1,24 @@
 rules:
   - id: android.owasp.webviewclient-url-handlers
-    severity: INFO
     languages:
       - java
+    severity: INFO
+    message: '[MASVS-CODE-4] Detected WebViewClient URL interception method.'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-939: Improper Authorization in Handler for Custom URL Scheme'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/939.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule detects WebViewClient methods that intercept URL loading, including shouldOverrideUrlLoading and shouldInterceptRequest.
-    message: "[MASVS-CODE-4] Detected WebViewClient URL interception method."
     pattern-either:
       - pattern: |
           class $CLASS extends WebViewClient {
@@ -24,12 +37,25 @@ rules:
       - pattern: $WEBVIEW.setWebViewClient(...)
 
   - id: android.owasp.webviewclient-safebrowsing-whitelist
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: '[MASVS-CODE-4] Detected SafeBrowsing customization that may weaken security.'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/79.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule detects usage of SafeBrowsing whitelist or onSafeBrowsingHit callback which may weaken security.
-    message: "[MASVS-CODE-4] Detected SafeBrowsing customization that may weaken security."
     pattern-either:
       - pattern: WebView.setSafeBrowsingWhitelist(...)
       - pattern: $WEBVIEW.setSafeBrowsingWhitelist(...)

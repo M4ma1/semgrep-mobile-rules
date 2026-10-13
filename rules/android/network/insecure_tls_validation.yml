@@ -1,24 +1,36 @@
 rules:
   - id: android.insecure_tls_validation
-    severity: ERROR
     languages:
       - java
+    severity: ERROR
+    message: >-
+      Improper TLS certificate or hostname validation. This code trusts every server certificate
+      (a TrustManager that never rejects a chain, an empty getAcceptedIssuers, SSLContext
+      initialised without TrustManagers), accepts every hostname (HostnameVerifier that always
+      returns true, ALLOW_ALL_HOSTNAME_VERIFIER), or lets a WebView continue after an SSL error.
+      The app is then open to man-in-the-middle attacks.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: MEDIUM
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
       impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05g-Testing-Network-Communication.md#testing-endpoint-identify-verification-mstg-network-3
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
       subcategory:
         - vuln
-      owasp-mobile: M5
+      technology:
+        - android
       owasp-mas:
         identifier: MASVS-NETWORK-1
         area: network
         level:
           - L1
           - L2
-      cwe: CWE-295
-      technology: [android]
+      owasp-mobile: M5
       replaces:
         - MSTG-NETWORK-3
         - android.owasp.network-hostname-verification
@@ -26,15 +38,6 @@ rules:
         - android.owasp.network-onreceivedsslerror
         - android.mobsf.ignore_ssl_certificate_errors
         - android.mobsf.accept_self_signed_certificate
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05g-Testing-Network-Communication.md#testing-endpoint-identify-verification-mstg-network-3
-        - https://cwe.mitre.org/data/definitions/295.html
-    message: >-
-      Improper TLS certificate or hostname validation. This code trusts every server certificate
-      (a TrustManager that never rejects a chain, an empty getAcceptedIssuers, SSLContext initialised
-      without TrustManagers), accepts every hostname (HostnameVerifier that always returns true,
-      ALLOW_ALL_HOSTNAME_VERIFIER), or lets a WebView continue after an SSL error. The app is then
-      open to man-in-the-middle attacks.
     patterns:
       - pattern-either:
           # --- TrustManager that never rejects a chain (any param names, with or without `throws`) ---

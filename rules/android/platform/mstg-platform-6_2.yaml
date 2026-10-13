@@ -1,32 +1,39 @@
 rules:
   - id: MSTG-PLATFORM-6_2
-    severity: WARNING
     languages:
       - java
       - kotlin
+    severity: WARNING
+    message: >-
+      The WebView allows to load external content. It is suggested to verify that the granted
+      accesses are necessary and follow the best practices. Enabling file access from URLs in a
+      WebView can leak sensitive information from the file system.
     metadata:
-      authors:
-        - Federico Dotta @apps3c (HN Security)
-      owasp-mobile: M1
       category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-webview-protocol-handlers-mstg-platform-6
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-webview-protocol-handlers-mstg-platform-6
-      confidence: LOW
-      likelihood: LOW
-      impact: LOW
-      technology: [android]
+      authors:
+        - Federico Dotta @apps3c (HN Security)
       replaces:
         - android.mobsf.webview_allow_file_from_url
         - android.mobsf.webview_set_allow_file_access
         - android.owasp.webview-settings
-    message: >-
-        The WebView allows to load external content. It is suggested to verify that the granted
-        accesses are necessary and follow the best practices. Enabling file access from URLs in a
-        WebView can leak sensitive information from the file system.
     options:
       symbolic_propagation: true
     patterns:

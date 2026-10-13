@@ -1,28 +1,35 @@
 rules:
   - id: MSTG-CODE-2
-    severity: WARNING
     languages:
       - xml
+    severity: WARNING
+    message: The application is built with the "android:debuggable" flag set to true.
     metadata:
-      authors:
-        - Martino Lessio @mlessio (IMQ Minded Security)
-      owasp-mobile: M9
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-489: Active Debug Code'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#testing-whether-the-app-is-debuggable-mstg-code-2
+        - https://cwe.mitre.org/data/definitions/489.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M9
       area: code
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#testing-whether-the-app-is-debuggable-mstg-code-2
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
+      authors:
+        - Martino Lessio @mlessio (IMQ Minded Security)
       replaces:
         - android.owasp.debuggable-flag
-    message: The application is built with the "android:debuggable" flag set to true.
     paths:
       include:
-        - "**/AndroidManifest.xml"
+        - '**/AndroidManifest.xml'
     patterns:
       - pattern-inside: <application ... > ... </application>
       - pattern: android:debuggable="=~/^true$/i"

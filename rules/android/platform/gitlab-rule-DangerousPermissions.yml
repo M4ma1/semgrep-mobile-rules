@@ -2,24 +2,31 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_perm_rule-DangerousPermissions
     languages:
-      - "kotlin"
-    message: |
-      Do not grant dangerous combinations of permissions.
+      - kotlin
+    severity: WARNING
+    message: Do not grant dangerous combinations of permissions.
     metadata:
-      shortDescription: "Insecure inherited permissions"
-      category: "security"
-      cwe: "CWE-277"
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-277: Insecure Inherited Permissions'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/277.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp:
-        - "A5:2017-Broken Access Control"
-        - "A01:2021-Broken Access Control"
-      confidence: "HIGH"
-      security-severity: "MEDIUM"
-    severity: "WARNING"
-
+        - A5:2017-Broken Access Control
+        - A01:2021-Broken Access Control
+      security-severity: MEDIUM
+      shortDescription: Insecure inherited permissions
     patterns:
       - pattern-either:
           - patterns:
@@ -33,7 +40,7 @@ rules:
               ($PC: PermissionCollection).add($REFVAR)
           - pattern: '($PC: PermissionCollection).add($PERMISSION)'
       - metavariable-pattern:
-          metavariable: "$PERMISSION"
+          metavariable: $PERMISSION
           pattern-either:
-            - pattern: 'ReflectPermission("suppressAccessChecks")'
-            - pattern: 'RuntimePermission("createClassLoader")'
+            - pattern: ReflectPermission("suppressAccessChecks")
+            - pattern: RuntimePermission("createClassLoader")

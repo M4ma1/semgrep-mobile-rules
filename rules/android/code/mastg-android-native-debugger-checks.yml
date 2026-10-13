@@ -1,10 +1,24 @@
 rules:
   - id: android.owasp.native-debugger-checks
+    languages:
+      - java
     severity: WARNING
-    languages: [java]
+    message: '[MASVS-RESILIENCE-4] native anti-debugging check indicator detected.'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detects Java references to native anti-debugging checks based on TracerPid and ptrace-related indicators.
-    message: "[MASVS-RESILIENCE-4] native anti-debugging check indicator detected."
     patterns:
       - pattern-either:
           - pattern: '"/proc/self/status"'

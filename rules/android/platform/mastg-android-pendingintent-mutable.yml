@@ -1,11 +1,26 @@
 rules:
   - id: android.owasp.pendingintent-mutable
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      [MASVS-PLATFORM-1] PendingIntent created without FLAG_IMMUTABLE or with FLAG_MUTABLE may be
+      vulnerable to hijacking.
     metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-927: Use of Implicit Intent for Sensitive Communication'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/927.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detects PendingIntent creation that may be vulnerable due to mutability.
-    message: "[MASVS-PLATFORM-1] PendingIntent created without FLAG_IMMUTABLE or with FLAG_MUTABLE may be vulnerable to hijacking."
     pattern-either:
       - patterns:
           - pattern: PendingIntent.getActivity($CTX, $REQ, $INTENT, $FLAGS)

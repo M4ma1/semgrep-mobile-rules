@@ -1,43 +1,58 @@
 rules:
-- id: android.owasp.deeplink-autoverify-missing
-  severity: WARNING
-  languages:
-    - xml
-  metadata:
-    summary: This rule looks for http/https deep links declared without App Links verification.
-  message: '[MASVS-PLATFORM] Deep link intent filter missing android:autoVerify="true", enabling malicious apps to hijack links.'
-  patterns:
-    - pattern: <data ... android:scheme="$SCHEME" ... />
-    - metavariable-regex:
-        metavariable: $SCHEME
-        regex: ^https?$
-    - pattern-either:
+  - id: android.owasp.deeplink-autoverify-missing
+    languages:
+      - xml
+    severity: WARNING
+    message: >-
+      [MASVS-PLATFORM] Deep link intent filter missing android:autoVerify="true", enabling
+      malicious apps to hijack links.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-939: Improper Authorization in Handler for Custom URL Scheme'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/939.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: This rule looks for http/https deep links declared without App Links verification.
+    patterns:
+      - pattern: <data ... android:scheme="$SCHEME" ... />
+      - metavariable-regex:
+          metavariable: $SCHEME
+          regex: ^https?$
+      - pattern-either:
+          - pattern-inside: |
+              <activity ...>
+                ...
+              </activity>
+          - pattern-inside: |
+              <activity-alias ...>
+                ...
+              </activity-alias>
+      # a non-exported component cannot be opened from a link
+      - pattern-not-inside: |
+          <activity ... android:exported="false" ... />
+      - pattern-not-inside: |
+          <activity-alias ... android:exported="false" ... />
       - pattern-inside: |
-          <activity ...>
+          <intent-filter ...>
             ...
-          </activity>
+            <action android:name="android.intent.action.VIEW" />
+            ...
+          </intent-filter>
       - pattern-inside: |
-          <activity-alias ...>
+          <intent-filter ...>
             ...
-          </activity-alias>
-    # a non-exported component cannot be opened from a link
-    - pattern-not-inside: |
-        <activity ... android:exported="false" ... />
-    - pattern-not-inside: |
-        <activity-alias ... android:exported="false" ... />
-    - pattern-inside: |
-        <intent-filter ...>
-          ...
-          <action android:name="android.intent.action.VIEW" />
-          ...
-        </intent-filter>
-    - pattern-inside: |
-        <intent-filter ...>
-          ...
-          <category android:name="android.intent.category.BROWSABLE" />
-          ...
-        </intent-filter>
-    - pattern-not-inside: |
-        <intent-filter ... android:autoVerify="true" ...>
-          ...
-        </intent-filter>
+            <category android:name="android.intent.category.BROWSABLE" />
+            ...
+          </intent-filter>
+      - pattern-not-inside: |
+          <intent-filter ... android:autoVerify="true" ...>
+            ...
+          </intent-filter>

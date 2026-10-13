@@ -1,50 +1,56 @@
 rules:
   - id: MSTG-STORAGE-9
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The application does not remove sensitive data from views when moved to the background.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M1
       category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#finding-sensitive-information-in-auto-generated-screenshots-mstg-storage-9
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-3/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: storage
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#finding-sensitive-information-in-auto-generated-screenshots-mstg-storage-9
-      confidence: LOW
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: The application does not remove sensitive data from views when moved to the background.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     patterns:
       - pattern-either:
-        - patterns:
-          - pattern-either:
-            - pattern: getWindow().setFlags($P1, $P2)
-            - pattern: (...).getWindow().setFlags($P1, $P2)
-            - pattern: (Window $W).setFlags($P1, $P2)
-            - pattern: getWindow().addFlags($P1)
-            - pattern: (...).getWindow().addFlags($P1)
-            - pattern: (Window $W).addFlags($P1)
-
-          - metavariable-comparison:
-              comparison: $P1 & 8192 == 0
-        - patterns:
-          - pattern: public class $CLASS extends $ACT{ ... }
-          - pattern-not: |
-              public class $CLASS{...
-                $M(...){...
-                  (...).addFlags(...);
-                ...}
-              ...}
-          - pattern-not: |
-              public class $CLASS{...
-                $M(...){...
-                  (...).setFlags(...);
-                ...}
-              ...}
-          - metavariable-regex:
-              metavariable: $ACT
-              regex: .*Activity.*
+          - patterns:
+              - pattern-either:
+                  - pattern: getWindow().setFlags($P1, $P2)
+                  - pattern: (...).getWindow().setFlags($P1, $P2)
+                  - pattern: (Window $W).setFlags($P1, $P2)
+                  - pattern: getWindow().addFlags($P1)
+                  - pattern: (...).getWindow().addFlags($P1)
+                  - pattern: (Window $W).addFlags($P1)
+              - metavariable-comparison:
+                  comparison: $P1 & 8192 == 0
+          - patterns:
+              - pattern: public class $CLASS extends $ACT{ ... }
+              - pattern-not: |
+                  public class $CLASS{...
+                    $M(...){...
+                      (...).addFlags(...);
+                    ...}
+                  ...}
+              - pattern-not: |
+                  public class $CLASS{...
+                    $M(...){...
+                      (...).setFlags(...);
+                    ...}
+                  ...}
+              - metavariable-regex:
+                  metavariable: $ACT
+                  regex: .*Activity.*

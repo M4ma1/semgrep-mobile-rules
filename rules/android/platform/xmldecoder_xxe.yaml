@@ -1,6 +1,29 @@
 # https://github.com/returntocorp/semgrep-rules/blob/develop/java/lang/security/audit/xml-decoder.yaml
 rules:
   - id: android.mobsf.xml_decoder_xxe
+    languages:
+      - java
+    severity: WARNING
+    message: >-
+      XMLDecoder should not be used to parse untrusted data. Deserializing user input can lead to
+      arbitrary code execution. Use an alternative and explicitly disable external entities.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-611: Improper Restriction of XML External Entity Reference'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/611.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m8
+      masvs: platform-2
     patterns:
       - pattern: |
           $X $METHOD(...) {
@@ -22,16 +45,3 @@ rules:
             new XMLDecoder($STR);
             ...
           }
-    message: |
-      XMLDecoder should not be used to parse untrusted data.
-      Deserializing user input can lead to arbitrary code execution.
-      Use an alternative and explicitly disable external entities.
-    severity: WARNING
-    languages:
-      - java
-    metadata:
-      cwe: cwe-611
-      owasp-mobile: m8
-      masvs: platform-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2

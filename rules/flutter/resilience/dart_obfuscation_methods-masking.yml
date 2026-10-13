@@ -1,12 +1,26 @@
 rules:
   - id: flutter.apiiro.dart-obfuscation-methods-masking
+    languages:
+      - dart
+    severity: WARNING
+    message: Obfuscation by concatenation of string manipulating methods.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-506: Embedded Malicious Code'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/506.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern-regex: ^.{,401}$
       - pattern-either:
-        - pattern-regex: (?<!\w)(substring|replaceAll|split|join|codeUnitAt|toRadixString|padLeft|padRight|trim)(?!\w)(.*(?<!\w)\1(?!\w)){4,}
-        - pattern-regex: (?<!\w)(base64Encode|base64Decode|Utf8Encoder\.convert|Utf8Decoder\.convert|StringBuffer\.write|Random)(?!\w)(.*(?<!\w)\1(?!\w)){4,}
-        - pattern-regex: (?<!\w)(startsWith|endsWith|codeUnitAt|StringBuffer\.toString)(?!\w)(.*(?<!\w)\1(?!\w)){4,}
-    message: Obfuscation by concatenation of string manipulating methods.
-    severity: WARNING
-    languages:
-      - dart
+          - pattern-regex: (?<!\w)(substring|replaceAll|split|join|codeUnitAt|toRadixString|padLeft|padRight|trim)(?!\w)(.*(?<!\w)\1(?!\w)){4,}
+          - pattern-regex: (?<!\w)(base64Encode|base64Decode|Utf8Encoder\.convert|Utf8Decoder\.convert|StringBuffer\.write|Random)(?!\w)(.*(?<!\w)\1(?!\w)){4,}
+          - pattern-regex: (?<!\w)(startsWith|endsWith|codeUnitAt|StringBuffer\.toString)(?!\w)(.*(?<!\w)\1(?!\w)){4,}

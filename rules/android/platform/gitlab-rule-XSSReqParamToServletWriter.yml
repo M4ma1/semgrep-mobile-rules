@@ -2,31 +2,38 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_xss_rule-XSSReqParamToServletWriter
     languages:
-      - "kotlin"
-    message: |
-      Servlet reflected cross site scripting vulnerability
-    severity: "WARNING"
+      - kotlin
+    severity: WARNING
+    message: Servlet reflected cross site scripting vulnerability
     metadata:
-      shortDescription: "Improper neutralization of input during web page generation ('Cross-site Scripting')"
-      category: "security"
-      cwe: "CWE-79"
-      owasp:
-        - "A1:2017-Injection"
-        - "A03:2021-Injection"
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/79.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
       technology:
-        - "kotlin"
-      security-severity: "MEDIUM"
-
-    mode: "taint"
+        - android
+        - kotlin
+      owasp:
+        - A1:2017-Injection
+        - A03:2021-Injection
+      security-severity: MEDIUM
+      shortDescription: Improper neutralization of input during web page generation ('Cross-site Scripting')
+    mode: taint
     pattern-sanitizers:
       - patterns:
           - pattern-inside: |-
               org.owasp.encoder.Encode.forHtml($TAINTED);
-          - pattern: "$TAINTED"
+          - pattern: $TAINTED
     pattern-sinks:
       - patterns:
           - pattern-inside: |-
@@ -34,15 +41,15 @@ rules:
           - pattern-inside: |
               $WRITER = $RES.getWriter();
               ...
-          - pattern: "$WRITER.write($DATA,...);"
-          - pattern: "$DATA"
+          - pattern: $WRITER.write($DATA,...);
+          - pattern: $DATA
       - patterns:
           - pattern-inside: |-
               fun $FUNC(..., $RES: HttpServletResponse , ...) {...}
-          - pattern: "$RES.getWriter().write($DATA,...);"
-          - pattern: "$DATA"
+          - pattern: $RES.getWriter().write($DATA,...);
+          - pattern: $DATA
     pattern-sources:
       - patterns:
           - pattern-inside: |-
               fun $FUNC(..., $REQ: HttpServletRequest , ...) {...}
-          - pattern: "$REQ.getParameter(...);"
+          - pattern: $REQ.getParameter(...);

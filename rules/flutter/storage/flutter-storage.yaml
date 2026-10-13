@@ -1,9 +1,23 @@
 rules:
   - id: flutter.storage.shared-preferences-sensitive-data
-    languages: [dart]
+    languages:
+      - dart
     severity: ERROR
     message: Sensitive data is stored in SharedPreferences instead of platform-backed secure storage.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-312, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-312: Cleartext Storage of Sensitive Information'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/312.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern-either:
           - pattern: $PREFS.setString($KEY, $VALUE)
@@ -11,29 +25,59 @@ rules:
           - pattern: $PREFS.setStringList($KEY, $VALUE)
       - metavariable-regex:
           metavariable: $KEY
-          regex: '(?i).*(token|secret|password|credential|session|auth|private|pin|card).*'
+          regex: (?i).*(token|secret|password|credential|session|auth|private|pin|card).*
+
   - id: flutter.storage.sensitive-clipboard-write
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: Sensitive data is written to the system clipboard.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-200, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern: 'Clipboard.setData(ClipboardData(text: $VALUE))'
       - metavariable-regex:
           metavariable: $VALUE
-          regex: '(?i).*(token|secret|password|credential|private|pin|card|ssn).*'
+          regex: (?i).*(token|secret|password|credential|private|pin|card|ssn).*
+
   - id: flutter.storage.hardcoded-sensitive-constant
-    languages: [dart]
+    languages:
+      - dart
     severity: WARNING
     message: A secret-like constant is hardcoded in Dart source.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-798, technology: [flutter]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-798: Use of Hard-coded Credentials'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/798.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern-either:
           - pattern: const $NAME = $VALUE;
           - pattern: final $NAME = $VALUE;
       - metavariable-regex:
           metavariable: $NAME
-          regex: '(?i).*(secret|api.?key|password|private.?key|access.?token|client.?secret).*'
+          regex: (?i).*(secret|api.?key|password|private.?key|access.?token|client.?secret).*
       - metavariable-regex:
           metavariable: $VALUE
           regex: "[\"'][^\"']{8,}[\"']"

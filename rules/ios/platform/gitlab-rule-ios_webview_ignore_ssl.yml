@@ -3,25 +3,12 @@
 # source (original): https://github.com/mobsf/mobsfscan/blob/main/mobsfscan/rules/patterns/ios/oc/objective_c_rules.yaml
 # hash: e29e85c3
 # yamllint enable
----
 rules:
   - id: ios.gitlab.rules_lgpl_oc_other_rule-ios-webview-ignore-ssl
-    pattern-either:
-      - pattern: allowsAnyHTTPSCertificateForHost
-      - patterns:
-          - pattern: loadingUnvalidatedHTTPSPage = $YES
-          - metavariable-regex:
-              metavariable: "$YES"
-              regex: "YES|yes"
-      - patterns:
-          - pattern: allowsAnyHTTPSCertificate = $YES
-          - metavariable-regex:
-              metavariable: "$YES"
-              regex: "YES|yes"
-    paths:
-      include:
-        - "**/*.m"
-    message: |
+    languages:
+      - generic
+    severity: ERROR
+    message: |-
       UIWebView in App ignore SSL errors and accept any SSL Certificate. 
       App is vulnerable to MITM attacks. If the app does not verify the 
       authenticity of the server's SSL certificate, an attacker could 
@@ -56,14 +43,37 @@ rules:
         [task resume];
       }
       ```
-    languages:
-      - generic
-    severity: ERROR
     metadata:
       category: security
-      cwe: "CWE-295"
-      shortDescription: "Improper certificate validation"
+      confidence: HIGH
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - ios
       owasp:
-        - "A6:2017-Security Misconfiguration"
-        - "A05:2021-Security Misconfiguration"
+        - A6:2017-Security Misconfiguration
+        - A05:2021-Security Misconfiguration
       security-severity: CRITICAL
+      shortDescription: Improper certificate validation
+    paths:
+      include:
+        - '**/*.m'
+    pattern-either:
+      - pattern: allowsAnyHTTPSCertificateForHost
+      - patterns:
+          - pattern: loadingUnvalidatedHTTPSPage = $YES
+          - metavariable-regex:
+              metavariable: $YES
+              regex: YES|yes
+      - patterns:
+          - pattern: allowsAnyHTTPSCertificate = $YES
+          - metavariable-regex:
+              metavariable: $YES
+              regex: YES|yes

@@ -1,9 +1,24 @@
 rules:
   - id: android.owasp.system-alert-window-permission
-    severity: INFO
     languages:
       - xml
+    severity: INFO
+    message: >-
+      [MASVS-PLATFORM-3] SYSTEM_ALERT_WINDOW permission is declared, enabling the app to draw
+      overlays over other apps
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-1021: Improper Restriction of Rendered UI Layers or Frames'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/1021.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-3/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detects SYSTEM_ALERT_WINDOW permission in the manifest, enabling the app to draw overlays over other apps
-    message: "[MASVS-PLATFORM-3] SYSTEM_ALERT_WINDOW permission is declared, enabling the app to draw overlays over other apps"
     pattern: android:name="android.permission.SYSTEM_ALERT_WINDOW"

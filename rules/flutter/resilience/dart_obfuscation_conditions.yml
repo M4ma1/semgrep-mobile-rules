@@ -1,5 +1,23 @@
 rules:
   - id: flutter.apiiro.dart-obfuscation-conditions
+    languages:
+      - dart
+    severity: WARNING
+    message: Obfuscation by spurious conditions.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-506: Embedded Malicious Code'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/506.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - flutter
     patterns:
       - pattern-regex: ^.{,401}$
       - pattern-not-inside: '...'
@@ -12,7 +30,3 @@ rules:
           metavariable: $VAR
           # Match all non-literals, or the listed literals.
           regex: ^(?!.*(?<!['"`])\b(?!true|false|null)[a-zA-Z_!]).*$
-    message: Obfuscation by spurious conditions.
-    severity: WARNING
-    languages: 
-      - dart

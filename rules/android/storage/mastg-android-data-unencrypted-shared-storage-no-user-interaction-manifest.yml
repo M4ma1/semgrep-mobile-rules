@@ -1,11 +1,24 @@
 rules:
   - id: android.owasp.data-unencrypted-shared-storage-no-user-interaction-manifest
-    severity: WARNING
     languages:
       - generic
+    severity: WARNING
+    message: '[MASVS-STORAGE] Make sure to encrypt files in external storage if necessary'
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-922: Insecure Storage of Sensitive Information'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/922.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule scans for permissions that allows your app to write to external storage or shared storage
-    message: "[MASVS-STORAGE] Make sure to encrypt files in external storage if necessary"
     pattern-either:
       - pattern: WRITE_EXTERNAL_STORAGE
       - pattern: MANAGE_EXTERNAL_STORAGE

@@ -1,10 +1,23 @@
 rules:
   - id: android.owasp.strictmode
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: '[MASVS-RESILIENCE] Detected usage of StrictMode'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-489: Active Debug Code'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/489.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule scans uses of StrictMode.
-    message: "[MASVS-RESILIENCE] Detected usage of StrictMode"
     patterns:
       - pattern: StrictMode.setVmPolicy(...)

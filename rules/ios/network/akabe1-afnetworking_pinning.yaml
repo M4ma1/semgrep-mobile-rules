@@ -1,27 +1,34 @@
 rules:
   - id: ios.akabe1.afnetworking-pinning
+    languages:
+      - swift
     severity: WARNING
+    message: >-
+      This iOS mobile application seems not implementing properly the Certificate Pinning checks
+      when connecting to external web servers, with AFNetworking libraries. An attacker could be
+      able to abuse this vulnerability in order to intercept the communications and perform MitM
+      attacks. It is recommended to implement the proper Certificate Pinning controls in the iOS
+      mobile application following the official security guidelines for iOS.
     metadata:
-      author: Maurizio Siddu
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: MEDIUM
+      likelihood: LOW
       references:
         - https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning
         - https://developer.apple.com/news/?id=g9ejcf8y
         - https://cwe.mitre.org/data/definitions/295.html
         - https://cwe.mitre.org/data/definitions/297.html
         - https://cwe.mitre.org/data/slices/919.html
-      category: security
-      confidence: MEDIUM
-      likelihood: LOW
-      impact: MEDIUM
-      technology: [ios]
-    message: >-
-      This iOS mobile application seems not implementing properly the Certificate Pinning checks when
-      connecting to external web servers, with AFNetworking libraries. 
-      An attacker could be able to abuse this vulnerability in order to intercept the communications
-      and perform MitM attacks. 
-      It is recommended to implement the proper Certificate Pinning controls in the iOS mobile application
-      following the official security guidelines for iOS. 
-    languages: [swift]
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-2/
+      subcategory:
+        - vuln
+      technology:
+        - ios
+      authors:
+        - Maurizio Siddu
     patterns:
       - pattern-either:
           # AFNetworking with improper pinning configurations (pinning disabled, validation disabled for hostname/subdomains, or allowing invalid certificates)

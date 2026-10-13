@@ -1,10 +1,25 @@
 rules:
   - id: react-native.platform.dynamic-linking-open-url
-    mode: taint
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Untrusted URL reaches Linking.openURL without validation.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-939, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-939: Improper Authorization in Handler for Custom URL Scheme'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/939.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: Linking.getInitialURL()
@@ -17,24 +32,57 @@ rules:
           - pattern: $ALLOWED.includes($URL)
     pattern-sinks:
       - pattern: Linking.openURL($URL)
+
   - id: react-native.platform.sensitive-navigation-params
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Sensitive data is passed through serializable navigation parameters.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-200, technology: [react-native, react-navigation]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - react-navigation
     patterns:
       - pattern-either:
           - pattern: '$NAV.navigate($SCREEN, {..., $KEY: $VALUE, ...})'
           - pattern: '$NAV.push($SCREEN, {..., $KEY: $VALUE, ...})'
       - metavariable-regex:
           metavariable: $KEY
-          regex: '(?i)(token|password|secret|credential|pin|cvv|ssn|privateKey|accessToken)'
+          regex: (?i)(token|password|secret|credential|pin|cvv|ssn|privateKey|accessToken)
+
   - id: react-native.platform.native-module-untrusted-input
-    mode: taint
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: External data reaches a NativeModules bridge call without validation.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-20, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-20: Improper Input Validation'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/20.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $ROUTE.params.$X
@@ -49,12 +97,29 @@ rules:
           - pattern: sanitize(...)
     pattern-sinks:
       - pattern: NativeModules.$MODULE.$METHOD(..., $DATA, ...)
+
   - id: react-native.platform.webview-javascript-injection
-    mode: taint
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: ERROR
     message: Untrusted data is inserted into WebView JavaScript execution.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-94, technology: [react-native, webview]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/94.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - webview
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $ROUTE.params.$X
@@ -68,33 +133,101 @@ rules:
       - pattern-either:
           - pattern: $WEBVIEW.injectJavaScript($CODE)
           - pattern: <WebView injectedJavaScript={$CODE} ... />
+
   - id: react-native.platform.webview-file-access
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: ERROR
     message: React Native WebView permits file or universal file URL access.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-200, technology: [react-native, webview]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - webview
     pattern-either:
       - pattern: <WebView allowFileAccess={true} ... />
       - pattern: <WebView allowingReadAccessToURL={$URL} ... />
       - pattern: <WebView allowUniversalAccessFromFileURLs={true} ... />
+
   - id: react-native.platform.webview-mixed-content
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: ERROR
     message: React Native WebView permits mixed HTTP content.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-319, technology: [react-native, webview]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-319: Cleartext Transmission of Sensitive Information'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/319.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - webview
     pattern: <WebView mixedContentMode="always" ... />
+
   - id: react-native.platform.webview-postmessage-no-origin-check
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: WebView message handler consumes message data; verify the sender and validate its schema.
-    metadata: {category: security, confidence: LOW, cwe: CWE-346, technology: [react-native, webview]}
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-346: Origin Validation Error'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/346.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - webview
     pattern: <WebView onMessage={$HANDLER} ... />
+
   - id: react-native.platform.webview-unvalidated-uri
-    mode: taint
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Untrusted URL is loaded by a React Native WebView.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-939, technology: [react-native, webview]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-939: Improper Authorization in Handler for Custom URL Scheme'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/939.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - webview
+    mode: taint
     pattern-sources:
       - pattern-either:
           - pattern: $ROUTE.params.$X

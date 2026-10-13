@@ -1,26 +1,33 @@
 rules:
   - id: ios.insecure_random_number_generator
-    severity: WARNING
-    languages: 
+    languages:
       - swift
+    severity: WARNING
+    message: >-
+      This iOS mobile application seems using an insecure random number generator, which could
+      expose to various kind of vulnerabilities. If the source of entropy is used for security
+      purposes, make sure to use the `SecCopyRandomBytes` API explicitly.
     metadata:
       category: security
       confidence: LOW
-      likelihood: LOW
+      cwe:
+        - 'CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)'
       impact: LOW
+      likelihood: LOW
+      references:
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-CRYPTO/MASTG-TEST-0063/
+        - https://cwe.mitre.org/data/definitions/338.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/tests/ios/MASVS-CRYPTO/MASTG-TEST-0063/
-    message: >-
-      This iOS mobile application seems using an insecure random number generator, which could expose to various kind of vulnerabilities.
-      If the source of entropy is used for security purposes, make sure to use the `SecCopyRandomBytes` API explicitly.
     pattern-either:
       - pattern: SystemRandomNumberGenerator(...)
       - pattern: arc4random_uniform(...)

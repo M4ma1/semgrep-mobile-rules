@@ -3,13 +3,12 @@
 # source (original): https://github.com/mobsf/mobsfscan/blob/main/mobsfscan/rules/patterns/ios/swift/swift_rules.yaml
 # hash: e29e85c3
 # yamllint enable
----
 rules:
   - id: ios.gitlab.rules_lgpl_swift_other_rule-ios-file-no-special
-    pattern-either:
-      - pattern: .noFileProtection
-      - pattern: FileProtectionType.none
-    message: |
+    languages:
+      - swift
+    severity: ERROR
+    message: |-
       The file has no special protections associated with it.
       Using .noFileProtection or FileProtectionType.none for 
       file protection means that the file is not encrypted on disk, 
@@ -37,14 +36,25 @@ rules:
         print("Error writing data to file: \(error)")
       }
       ```
-    languages:
-      - swift
-    severity: ERROR
     metadata:
       category: security
-      cwe: "CWE-312"
-      shortDescription: "Cleartext storage of sensitive information"
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-312: Cleartext Storage of Sensitive Information'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/312.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-1/
+      subcategory:
+        - vuln
+      technology:
+        - ios
       owasp:
-        - "A3:2017-Sensitive Data Exposure"
-        - "A02:2021-Cryptographic Failures"
+        - A3:2017-Sensitive Data Exposure
+        - A02:2021-Cryptographic Failures
       security-severity: CRITICAL
+      shortDescription: Cleartext storage of sensitive information
+    pattern-either:
+      - pattern: .noFileProtection
+      - pattern: FileProtectionType.none

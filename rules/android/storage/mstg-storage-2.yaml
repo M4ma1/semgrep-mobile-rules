@@ -1,24 +1,33 @@
 rules:
   - id: MSTG-STORAGE-2
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      The application could store sensitive data outside of the application container or system
+      credential storage facilities.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M2
       category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-922: Insecure Storage of Sensitive Information'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-local-storage-for-sensitive-data-mstg-storage-1-and-mstg-storage-2
+        - https://cwe.mitre.org/data/definitions/922.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M2
       area: storage
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-local-storage-for-sensitive-data-mstg-storage-1-and-mstg-storage-2
-      confidence: LOW
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
-    message: The application could store sensitive data outside of the application container or system credential storage facilities.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     options:
       symbolic_propagation: true
     pattern-either:
@@ -31,21 +40,21 @@ rules:
       - patterns:
           - pattern: $X = ... .getSharedPreferences($P, $M);
           - metavariable-comparison:
-                comparison: $M != 0
+              comparison: $M != 0
       # Use of unencrypted FileOutStream
-#      - pattern-either:
-#          - patterns:
-#              - pattern: (FileOutputStream $S) = ...;
-#              - pattern-not: (FileOutputStream $S) = (EncryptedFile $EF).$METHOD(...);
-#          - patterns:
-#              - pattern: (FileInputStream $S) = ...;
-#              - pattern-not: (FileInputStream $S) = (EncryptedFile $EF).$METHOD(...);
+      #      - pattern-either:
+      #          - patterns:
+      #              - pattern: (FileOutputStream $S) = ...;
+      #              - pattern-not: (FileOutputStream $S) = (EncryptedFile $EF).$METHOD(...);
+      #          - patterns:
+      #              - pattern: (FileInputStream $S) = ...;
+      #              - pattern-not: (FileInputStream $S) = (EncryptedFile $EF).$METHOD(...);
       # Interaction with external storage directories
       - patterns:
           - pattern: $X.$M(...)
           - metavariable-regex:
-                metavariable: $M
-                regex: ((getExternal).*|getCacheDir)
+              metavariable: $M
+              regex: ((getExternal).*|getCacheDir)
       # Sensitive strings in clear text in db
       - patterns:
           - pattern-inside: |
@@ -55,12 +64,12 @@ rules:
               $X.$MTD(...);
               ... }
           - metavariable-regex:
-                metavariable: $WRT
-                regex: (getWritableDatabase|getReadableDatabase|openOrCreateDatabase|create|openDatabase)
+              metavariable: $WRT
+              regex: (getWritableDatabase|getReadableDatabase|openOrCreateDatabase|create|openDatabase)
           - pattern: $X.$MTD($...ARGS);
           - metavariable-regex:
-                metavariable: $MTD
-                regex: .*(?i)(query|insert|replace|update).*
+              metavariable: $MTD
+              regex: .*(?i)(query|insert|replace|update).*
           - metavariable-regex:
-                metavariable: $...ARGS
-                regex: .*(?i)(key|secret|password|pwd|passwd|token|seed|otp(?-i)|IV).*
+              metavariable: $...ARGS
+              regex: .*(?i)(key|secret|password|pwd|passwd|token|seed|otp(?-i)|IV).*

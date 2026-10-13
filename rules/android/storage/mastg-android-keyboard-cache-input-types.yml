@@ -1,10 +1,23 @@
 rules:
   - id: android.owasp.non-caching-input-types
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: '[MASVS-STORAGE] Set input type detected ($OBJ) with $ARG'
     metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-524: Use of Cache Containing Sensitive Information'
+      impact: LOW
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/524.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: This rule scans all usages of setInputType().
-    message: "[MASVS-STORAGE] Set input type detected ($OBJ) with $ARG"
     patterns:
       - pattern: $OBJ.setInputType($ARG)

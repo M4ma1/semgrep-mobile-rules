@@ -4,10 +4,27 @@ rules:
       - java
       - kotlin
     severity: WARNING
-    metadata:
-      summary: This rule detects uses of BiometricPrompt.authenticate without a CryptoObject (event-bound biometric authentication) and insecure key configurations.
-    message: "[MASVS-AUTH-2] BiometricPrompt.authenticate called without a CryptoObject or key not requiring user authentication. Use authenticate(PromptInfo, CryptoObject) with a keystore-backed key configured with setUserAuthenticationRequired(true) for sensitive operations."
+    message: >-
+      [MASVS-AUTH-2] BiometricPrompt.authenticate called without a CryptoObject or key not
+      requiring user authentication. Use authenticate(PromptInfo, CryptoObject) with a
+      keystore-backed key configured with setUserAuthenticationRequired(true) for sensitive
+      operations.
 
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-287: Improper Authentication'
+      impact: HIGH
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/287.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-AUTH-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: This rule detects uses of BiometricPrompt.authenticate without a CryptoObject (event-bound biometric authentication) and insecure key configurations.
     pattern-either:
       # Pattern 1: BiometricPrompt.authenticate() without CryptoObject (event-bound authentication)
       # Used in androidx Biometric library

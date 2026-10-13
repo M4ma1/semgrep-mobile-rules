@@ -1,10 +1,24 @@
 rules:
   - id: android.owasp.flag-secure-enable-flags
+    languages:
+      - java
     severity: INFO
-    languages: [java]
+    message: '[MASVS-PLATFORM] Make sure you use this flag for all screens with sensitive data'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/200.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-3/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Window uses FLAG_SECURE to block screenshots.
-    message: "[MASVS-PLATFORM] Make sure you use this flag for all screens with sensitive data"
     pattern-either:
       - patterns:
           - pattern: $W.addFlags($F)

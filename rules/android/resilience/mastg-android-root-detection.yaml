@@ -1,29 +1,77 @@
 rules:
   - id: android.owasp.root-detection-file-checks
+    languages:
+      - java
     severity: INFO
-    languages: [java]
+    message: >-
+      [MASVS-RESILIENCE-1] The app checks for file existence, which may be part of root detection
+      implementation.
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detection of file existence checks commonly used for root detection
-    message: "[MASVS-RESILIENCE-1] The app checks for file existence, which may be part of root detection implementation."
     pattern: new File($PATH).exists()
     metavariable-regex:
       metavariable: $PATH
-      regex: '.*(su|magisk|Superuser\.apk).*'
+      regex: .*(su|magisk|Superuser\.apk).*
 
   - id: android.owasp.root-detection-package-check
+    languages:
+      - java
     severity: INFO
-    languages: [java]
+    message: >-
+      [MASVS-RESILIENCE-1] The app checks for installed packages, which may be looking for root
+      management apps.
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detection of package manager checks that may be used for root detection
-    message: "[MASVS-RESILIENCE-1] The app checks for installed packages, which may be looking for root management apps."
     pattern: $PM.getPackageInfo($PKG, ...)
 
   - id: android.owasp.root-detection-test-keys
+    languages:
+      - java
     severity: INFO
-    languages: [java]
+    message: >-
+      [MASVS-RESILIENCE-1] The app checks Build.TAGS for test-keys, indicating custom ROM or root
+      detection.
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detection of test-keys build check for root/custom ROM detection
-    message: "[MASVS-RESILIENCE-1] The app checks Build.TAGS for test-keys, indicating custom ROM or root detection."
     pattern-either:
       - pattern: Build.TAGS.contains("test-keys")
       - patterns:
@@ -38,21 +86,53 @@ rules:
               ...
 
   - id: android.owasp.root-detection-system-properties
+    languages:
+      - java
     severity: INFO
-    languages: [java]
+    message: >-
+      [MASVS-RESILIENCE-1] The app reads system properties via getprop, which may be checking for
+      root indicators.
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detection of system property checks via getprop
-    message: "[MASVS-RESILIENCE-1] The app reads system properties via getprop, which may be checking for root indicators."
     pattern-either:
       - pattern: Runtime.getRuntime().exec("getprop " + $PROP)
       - pattern: Runtime.getRuntime().exec(new String[] { "getprop", $PROP })
 
   - id: android.owasp.root-detection-runtime-exec
+    languages:
+      - java
     severity: INFO
-    languages: [java]
+    message: >-
+      [MASVS-RESILIENCE-1] The app uses Runtime.exec(), which may be attempting to execute su or
+      other commands for root detection.
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detection of Runtime.exec calls that may be used for root detection
-    message: "[MASVS-RESILIENCE-1] The app uses Runtime.exec(), which may be attempting to execute su or other commands for root detection."
     patterns:
       - pattern: Runtime.getRuntime().exec($CMD)
       - pattern-not: Runtime.getRuntime().exec("getprop " + $PROP)

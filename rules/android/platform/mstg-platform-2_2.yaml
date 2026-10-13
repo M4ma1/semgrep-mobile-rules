@@ -1,36 +1,43 @@
 rules:
   - id: MSTG-PLATFORM-2_2
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: Identified the potential presence of SQL Injection in the ContentProvider class "$CLASS".
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M7
       category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-injection-flaws-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/89.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M7
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-injection-flaws-mstg-platform-2
-      confidence: MEDIUM
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
-    message: Identified the potential presence of SQL Injection in the ContentProvider class "$CLASS".
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     options:
       symbolic_propagation: true
     mode: taint
     pattern-sources:
-        - patterns:
-            - pattern-inside: public class $CLASS extends ContentProvider{...}
-            - patterns:
-                - pattern-inside: $METHOD(...,$T $A, ...){...}
-                - metavariable-regex:
-                    metavariable: $METHOD
-                    regex: (query|insert|update|delete|getType|getTypeAnonymous)
-                - focus-metavariable: $A
+      - patterns:
+          - pattern-inside: public class $CLASS extends ContentProvider{...}
+          - patterns:
+              - pattern-inside: $METHOD(...,$T $A, ...){...}
+              - metavariable-regex:
+                  metavariable: $METHOD
+                  regex: (query|insert|update|delete|getType|getTypeAnonymous)
+              - focus-metavariable: $A
     pattern-sinks:
       - pattern: $DB.delete(...)
       - pattern: $DB.update(...)
@@ -41,7 +48,7 @@ rules:
       - pattern: $DB.queryWithFactory(...)
       - pattern: $DB.rawQueryWithFactory(...)
       - patterns:
-        - pattern: <... "$X" ...>
-        - metavariable-regex:
-            metavariable: $X
-            regex: .*(?i)((WHERE )|(AND )|(OR )|(SELECT )|(INSERT INTO )|(CREATE TABLE )|(DROP TABLE )|(ALTER TABLE )|(IN\s?\()|(LIKE )).*
+          - pattern: <... "$X" ...>
+          - metavariable-regex:
+              metavariable: $X
+              regex: .*(?i)((WHERE )|(AND )|(OR )|(SELECT )|(INSERT INTO )|(CREATE TABLE )|(DROP TABLE )|(ALTER TABLE )|(IN\s?\()|(LIKE )).*

@@ -1,27 +1,37 @@
 rules:
   - id: android.mobsf.command_injection
-    message: >
-      User controlled strings in exec() will result in command execution.
-      A formatted or concatenated string was detected as input to a
-      java.lang.Runtime call. This is dangerous if a variable is controlled by
-      user input and could result in a command injection. Ensure your variables
-      are not controlled by users or sufficiently sanitized.
     languages:
       - java
     severity: ERROR
+    message: >-
+      User controlled strings in exec() will result in command execution. A formatted or
+      concatenated string was detected as input to a java.lang.Runtime call. This is dangerous if
+      a variable is controlled by user input and could result in a command injection. Ensure your
+      variables are not controlled by users or sufficiently sanitized.
     metadata:
-      cwe: cwe-78
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/78.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp-mobile: m7
       masvs: platform-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04h-Testing-Code-Quality.md#injection-flaws-mstg-arch-2-and-mstg-platform-2
       replaces:
         - android.mobsf.command_injection_warning
     pattern-either:
       # Runtime.getRuntime().exec(<non-literal>)
       - patterns:
-          - pattern-not: 'Runtime.getRuntime().exec("...", ...);'
-          - pattern-not: 'Runtime.getRuntime().exec(new String[] {"...", ...}, ...);'
+          - pattern-not: Runtime.getRuntime().exec("...", ...);
+          - pattern-not: Runtime.getRuntime().exec(new String[] {"...", ...}, ...);
           - pattern: Runtime.getRuntime().exec(...);
       # Runtime held in a variable: concatenated/formatted input, or "sh -c <arg>"
       - patterns:

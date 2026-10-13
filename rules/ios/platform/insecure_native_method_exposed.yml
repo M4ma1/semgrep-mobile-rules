@@ -1,26 +1,34 @@
 rules:
   - id: ios.insecure_native_method_exposed
-    severity: WARNING
-    languages: 
+    languages:
       - swift
+    severity: WARNING
+    message: >-
+      This iOS mobile application seems to be exposing native method to JavaScript execution in
+      WebView, which could expose to various kind of vulnerabilities. Please ensure that the
+      application do not expose critical functionality or sensitive data that should not be
+      accessible.
     metadata:
       category: security
       confidence: HIGH
-      likelihood: HIGH
+      cwe:
+        - 'CWE-749: Exposed Dangerous Method or Function'
       impact: HIGH
+      likelihood: HIGH
+      references:
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0078
+        - https://cwe.mitre.org/data/definitions/749.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
       subcategory:
         - vuln
+      technology:
+        - ios
       owasp-mas:
         identifier: MASVS-PLATFORM-2
         area: platform
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0078
-    message: >-
-      This iOS mobile application seems to be exposing native method to JavaScript execution in WebView, which could expose to various kind of vulnerabilities.
-      Please ensure that the application do not expose critical functionality or sensitive data that should not be accessible.
     pattern-either:
       - pattern: JSContext
       - pattern: JSVirtualMachine

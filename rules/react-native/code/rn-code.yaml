@@ -1,18 +1,49 @@
 rules:
   - id: react-native.code.eval-with-dynamic-data
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: ERROR
     message: Dynamic data is executed with eval or Function.
-    metadata: {category: security, confidence: HIGH, cwe: CWE-95, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/95.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
     pattern-either:
       - pattern: eval($DATA)
       - pattern: new Function($DATA)
       - pattern: Function($DATA)(...)
+
   - id: react-native.code.custom-xor-cryptography
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: XOR is used in a crypto-named function; use a reviewed cryptographic library.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-327, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
     patterns:
       - pattern-inside: |
           function $FUNC(...) {
@@ -21,12 +52,28 @@ rules:
       - pattern: $A ^ $B
       - metavariable-regex:
           metavariable: $FUNC
-          regex: '(?i).*(encrypt|decrypt|cipher|hash|crypto).*'
+          regex: (?i).*(encrypt|decrypt|cipher|hash|crypto).*
+
   - id: react-native.code.sensitive-console-logging
-    languages: [javascript, typescript]
+    languages:
+      - javascript
+      - typescript
     severity: WARNING
     message: Sensitive value is written to the JavaScript console.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-532, technology: [react-native]}
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-532: Insertion of Sensitive Information into Log File'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/532.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
     patterns:
       - pattern-either:
           - pattern: console.log(..., $VALUE, ...)
@@ -34,13 +81,31 @@ rules:
           - pattern: console.debug(..., $VALUE, ...)
       - metavariable-regex:
           metavariable: $VALUE
-          regex: '(?i).*(token|password|secret|credential|authorization|card|pin|ssn).*'
+          regex: (?i).*(token|password|secret|credential|authorization|card|pin|ssn).*
+
   - id: react-native.code.suspicious-lifecycle-script
-    languages: [json]
+    languages:
+      - json
     severity: WARNING
-    message: Package lifecycle hook executes a shell, downloads content, or evaluates code during dependency installation.
-    metadata: {category: security, confidence: MEDIUM, cwe: CWE-506, technology: [react-native, npm]}
-    paths: {include: ["*package.json"]}
+    message: >-
+      Package lifecycle hook executes a shell, downloads content, or evaluates code during
+      dependency installation.
+    metadata:
+      category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-506: Embedded Malicious Code'
+      impact: HIGH
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/506.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-3/
+      subcategory:
+        - vuln
+      technology:
+        - react-native
+        - npm
+    paths: {include: ['*package.json']}
     patterns:
       - pattern: '"$HOOK": $COMMAND'
       - metavariable-regex:
@@ -48,4 +113,4 @@ rules:
           regex: '"(preinstall|install|postinstall)"'
       - metavariable-regex:
           metavariable: $COMMAND
-          regex: '(?i)".*(curl|wget|powershell|bash -c|sh -c|node -e|eval).*"'
+          regex: (?i)".*(curl|wget|powershell|bash -c|sh -c|node -e|eval).*"

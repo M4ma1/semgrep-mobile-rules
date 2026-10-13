@@ -1,33 +1,54 @@
 rules:
   - id: android.mobsf.world_readable
+    languages:
+      - java
+    severity: WARNING
+    message: The file is World Readable. Any App can read from the file.
+    metadata:
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-276: Incorrect Default Permissions'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#testing-local-storage-for-sensitive-data-mstg-storage-1-and-mstg-storage-2
+        - https://cwe.mitre.org/data/definitions/276.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: m2
+      masvs: storage-2
     patterns:
       - pattern-either:
           - pattern: |
               Context.MODE_WORLD_READABLE
-    message: The file is World Readable. Any App can read from the file.
+
+  - id: android.mobsf.world_writeable
     languages:
       - java
     severity: WARNING
+    message: The file is World Readable and Writable. Any App can read/write to the file.
     metadata:
-      cwe: cwe-276
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-276: Incorrect Default Permissions'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#testing-local-storage-for-sensitive-data-mstg-storage-1-and-mstg-storage-2
+        - https://cwe.mitre.org/data/definitions/276.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
       owasp-mobile: m2
       masvs: storage-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#testing-local-storage-for-sensitive-data-mstg-storage-1-and-mstg-storage-2
-  - id: android.mobsf.world_writeable
     patterns:
       - pattern-either:
           - pattern: |
               Context.MODE_WORLD_WRITEABLE
-    message: >-
-      The file is World Readable and Writable. Any App can read/write to the
-      file.
-    languages:
-      - java
-    severity: WARNING
-    metadata:
-      cwe: cwe-276
-      owasp-mobile: m2
-      masvs: storage-2
-      reference: >-
-        https://github.com/MobSF/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#testing-local-storage-for-sensitive-data-mstg-storage-1-and-mstg-storage-2

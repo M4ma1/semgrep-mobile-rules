@@ -1,24 +1,31 @@
 rules:
   - id: MSTG-PLATFORM-2_1
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The regular expression $RE is potentially vulnerable to catastrophic backtracking.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M7
       category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-1333: Inefficient Regular Expression Complexity'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-injection-flaws-mstg-platform-2
+        - https://cwe.mitre.org/data/definitions/1333.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M7
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-injection-flaws-mstg-platform-2
-      confidence: MEDIUM
-      likelihood: LOW
-      impact: MEDIUM
-      technology: [android]
-    message: The regular expression $RE is potentially vulnerable to catastrophic backtracking.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     options:
       symbolic_propagation: true
     patterns:

@@ -1,26 +1,39 @@
 rules:
   - id: MSTG-CRYPTO-4
-    severity: WARNING
     languages:
       - java
       - kotlin
+    severity: WARNING
+    message: >-
+      The application uses a deprecated or insecure cryptographic algorithm or mode: DES, 3DES
+      (DESede), RC2, RC4 (ARCFOUR) or Blowfish; ECB mode (including the default
+      Cipher.getInstance("AES")); CBC with PKCS5/PKCS7 padding (vulnerable to padding oracle
+      attacks); or the deprecated "Crypto" SecureRandom provider. Use AES in an authenticated
+      mode such as AES/GCM/NoPadding. RSA/ECB/... transformations are not reported: "ECB" there
+      is only a naming convention.
     metadata:
-      authors:
-        - Maurizio Siddu @akabe1 (IMQ Minded Security)
-      owasp-mobile: M5
       category: security
-      area: cryptography
-      cwe: CWE-327
-      verification-level:
-        - L1
-        - L2
+      confidence: HIGH
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: HIGH
+      likelihood: MEDIUM
       references:
         - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x04g-Testing-Cryptography.md#identifying-insecure-andor-deprecated-cryptographic-algorithms-mstg-crypto-4
         - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M5
+      area: cryptography
+      verification-level:
+        - L1
+        - L2
+      authors:
+        - Maurizio Siddu @akabe1 (IMQ Minded Security)
       replaces:
         - android.insecure_cipher_des
         - android.insecure_cipher_3des
@@ -40,12 +53,6 @@ rules:
         - android.owasp.broken-encryption-modes
         - android.gitlab.kotlin_crypto_rule-CipherECBMode
         - android.semgrep.ecb-cipher
-    message: >-
-      The application uses a deprecated or insecure cryptographic algorithm or mode:
-      DES, 3DES (DESede), RC2, RC4 (ARCFOUR) or Blowfish; ECB mode (including the default
-      Cipher.getInstance("AES")); CBC with PKCS5/PKCS7 padding (vulnerable to padding oracle attacks);
-      or the deprecated "Crypto" SecureRandom provider. Use AES in an authenticated mode such as
-      AES/GCM/NoPadding. RSA/ECB/... transformations are not reported: "ECB" there is only a naming convention.
     patterns:
       - pattern-either:
           # --- weak algorithms (DES, 3DES, RC2, RC4, Blowfish) ---

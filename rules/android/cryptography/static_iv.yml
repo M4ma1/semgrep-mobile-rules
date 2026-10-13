@@ -1,34 +1,40 @@
 rules:
   - id: android.static_iv
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      This Android mobile application seems using a static initialization vector, which could
+      expose to various kind of vulnerabilities. Initialization vector must be regenerated for
+      each message to be encrypted. A hardcoded or constant IV makes the ciphertext predictable
+      (e.g. vulnerable to a chosen plaintext attack in CBC mode).
     metadata:
       category: security
       confidence: HIGH
-      likelihood: HIGH
+      cwe:
+        - 'CWE-329: Generation of Predictable IV with CBC Mode'
       impact: HIGH
-      cwe: cwe-329
+      likelihood: HIGH
+      references:
+        - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
+        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#predictable-initialization-vector
+        - https://cwe.mitre.org/data/definitions/329.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
       subcategory:
         - vuln
-      owasp-mobile: m5
+      technology:
+        - android
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
         level:
           - L1
           - L2
-      references:
-        - https://mas.owasp.org/MASTG/General/0x04g-Testing-Cryptography/#identifying-insecure-andor-deprecated-cryptographic-algorithms
-        - https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#cipher-modes
-        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#predictable-initialization-vector
+      owasp-mobile: m5
       replaces:
         - android.mobsf.cbc_static_iv
         - android.mobsf.weak_iv
-    message: >-
-      This Android mobile application seems using a static initialization vector, which could expose to various kind of vulnerabilities.
-      Initialization vector must be regenerated for each message to be encrypted. A hardcoded or constant IV makes
-      the ciphertext predictable (e.g. vulnerable to a chosen plaintext attack in CBC mode).
     pattern-either:
       # IV built from a hardcoded byte array
       - pattern: |

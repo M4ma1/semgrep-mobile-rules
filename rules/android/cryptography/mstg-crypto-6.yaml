@@ -1,47 +1,54 @@
 rules:
   - id: MSTG-CRYPTO-6
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The application makes use of insecure random number generator.
     metadata:
-      replaces:
-        - android.owasp.non-random-use
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M5
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05e-Testing-Cryptography.md#testing-random-number-generation-mstg-crypto-6
+        - https://cwe.mitre.org/data/definitions/338.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M5
       area: cryptography
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05e-Testing-Cryptography.md#testing-random-number-generation-mstg-crypto-6
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
-      # Math.random(...) and seeded SecureRandom are reported by android.insecure_random_number_generator
-    message: The application makes use of insecure random number generator.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
+      replaces:
+        - android.owasp.non-random-use
+    # Math.random(...) and seeded SecureRandom are reported by android.insecure_random_number_generator
     paths:
       exclude:
-        - "**/math/**"
-        - "**/Math/**"
-        - "**/kotlin/**"
-        - "**/com/google/**"
-        - "**/org/apache/**"
-        - "**/androidx/**"
-        - "**/dexguard/**"
+        - '**/math/**'
+        - '**/Math/**'
+        - '**/kotlin/**'
+        - '**/com/google/**'
+        - '**/org/apache/**'
+        - '**/androidx/**'
+        - '**/dexguard/**'
     pattern-either:
-        - patterns:
-            - pattern-inside: $M(...){ ... }
-            - pattern-either:
-                - pattern: (java.util.Random $X).$Y(...)
-                - pattern: new Date()
-                - pattern: System.currentTimeMillis()
-                - pattern: (Calendar $C).get(...)
-            - metavariable-regex:
-                metavariable: $M
-                regex: .*(?i)(random|gen).*
-            - metavariable-regex:
-                metavariable: $M
-                regex: ^((?!(?i)Log).)*$
+      - patterns:
+          - pattern-inside: $M(...){ ... }
+          - pattern-either:
+              - pattern: (java.util.Random $X).$Y(...)
+              - pattern: new Date()
+              - pattern: System.currentTimeMillis()
+              - pattern: (Calendar $C).get(...)
+          - metavariable-regex:
+              metavariable: $M
+              regex: .*(?i)(random|gen).*
+          - metavariable-regex:
+              metavariable: $M
+              regex: ^((?!(?i)Log).)*$

@@ -1,39 +1,46 @@
 rules:
   - id: MSTG-CRYPTO-2
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The application uses custom implementations of cryptographic primitives.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M5
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05e-Testing-Cryptography.md#testing-the-configuration-of-cryptographic-standard-algorithms-mstg-crypto-2-mstg-crypto-3-and-mstg-crypto-4
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M5
       area: cryptography
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05e-Testing-Cryptography.md#testing-the-configuration-of-cryptographic-standard-algorithms-mstg-crypto-2-mstg-crypto-3-and-mstg-crypto-4
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
-    message: The application uses custom implementations of cryptographic primitives.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     options:
       symbolic_propagation: true
     pattern-either:
       - patterns:
-        - pattern-inside: $M(...){ ... }
-        - pattern: $A ^ $B;
-        - metavariable-regex:
-            metavariable: $M
-            regex: .*(?i)(crypt).*
+          - pattern-inside: $M(...){ ... }
+          - pattern: $A ^ $B;
+          - metavariable-regex:
+              metavariable: $M
+              regex: .*(?i)(crypt).*
       - patterns:
-        - pattern-inside: $M(...){ ... }
-        - pattern: $X(...)
-        - metavariable-regex:
-            metavariable: $X
-            regex: .*(?i)(xor).*
-        - metavariable-regex:
-            metavariable: $M
-            regex: .*(?i)(crypt).*
+          - pattern-inside: $M(...){ ... }
+          - pattern: $X(...)
+          - metavariable-regex:
+              metavariable: $X
+              regex: .*(?i)(xor).*
+          - metavariable-regex:
+              metavariable: $M
+              regex: .*(?i)(crypt).*

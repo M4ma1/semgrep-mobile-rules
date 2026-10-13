@@ -1,10 +1,24 @@
 rules:
   - id: android.owasp.debugger-checks
+    languages:
+      - java
     severity: WARNING
-    languages: [java]
+    message: '[MASVS-RESILIENCE-4] debugger checks detected.'
     metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-919: Weaknesses in Mobile Applications'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/919.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-RESILIENCE-4/
+      subcategory:
+        - vuln
+      technology:
+        - android
       summary: Detects Android debugger checks in code.
-    message: "[MASVS-RESILIENCE-4] debugger checks detected."
     patterns:
       - pattern-either:
           - pattern: Debug.isDebuggerConnected(...)

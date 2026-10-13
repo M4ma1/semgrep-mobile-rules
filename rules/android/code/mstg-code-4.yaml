@@ -1,22 +1,29 @@
 rules:
   - id: MSTG-CODE-4
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: The application uses the StrictMode in production build.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M1
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-489: Active Debug Code'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#testing-for-debugging-code-and-verbose-error-logging-mstg-code-4
+        - https://cwe.mitre.org/data/definitions/489.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: storage
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05i-Testing-Code-Quality-and-Build-Settings.md#testing-for-debugging-code-and-verbose-error-logging-mstg-code-4
-      confidence: HIGH
-      likelihood: LOW
-      impact: LOW
-      technology: [android]
-    message: The application uses the StrictMode in production build.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
     patterns:
       - pattern: StrictMode.$M(...)

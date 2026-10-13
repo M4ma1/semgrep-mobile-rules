@@ -1,23 +1,30 @@
 rules:
   - id: MSTG-PLATFORM-9_2
-    severity: WARNING
-    languages: 
+    languages:
       - xml
+    severity: WARNING
+    message: The application does not enforce any security policy in order to prevent overlay attacks.
     metadata:
-      authors:
-        - Michele Tumolo @zer0s0urce (IMQ Minded Security)
-        - Giovanni Fazi @giovifazi (IMQ Minded Security)
-      owasp-mobile: M2
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-1021: Improper Restriction of Rendered UI Layers or Frames'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-overlay-attacks-mstg-platform-9
+        - https://cwe.mitre.org/data/definitions/1021.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-3/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M2
       area: platform
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-for-overlay-attacks-mstg-platform-9
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: The application does not enforce any security policy in order to prevent overlay attacks.
+      authors:
+        - Michele Tumolo @zer0s0urce (IMQ Minded Security)
+        - Giovanni Fazi @giovifazi (IMQ Minded Security)
     patterns:
       - pattern: android:filterTouchesWhenObscured="false"

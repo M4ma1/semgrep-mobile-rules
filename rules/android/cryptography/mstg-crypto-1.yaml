@@ -1,32 +1,41 @@
 rules:
   - id: MSTG-CRYPTO-1
-    severity: WARNING
     languages:
       - java
+    severity: WARNING
+    message: >-
+      The application relies on symmetric cryptography with hardcoded keys as a single method of
+      encryption.
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M2
       category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-321: Use of Hard-coded Cryptographic Key'
+      impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05e-Testing-Cryptography.md#testing-symmetric-cryptography-mstg-crypto-1
+        - https://cwe.mitre.org/data/definitions/321.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M2
       area: cryptography
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05e-Testing-Cryptography.md#testing-symmetric-cryptography-mstg-crypto-1
-      confidence: MEDIUM
-      likelihood: MEDIUM
-      impact: HIGH
-      technology: [android]
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
       replaces:
         - android.mobsf.aes_hardcoded_key
         - android.owasp.hardcoded-crypto-keys-usage
-    message: The application relies on symmetric cryptography with hardcoded keys as a single method of encryption.
     options:
       symbolic_propagation: true
     pattern-either:
       - patterns:
-        - pattern: |
+          - pattern: |
               class $CLASS{ ...
               byte[] $K = new byte[]{$X, ...};
               ...
@@ -34,10 +43,10 @@ rules:
                 new SecretKeySpec(this.$K,...);
               ... }
               ...}
-        - focus-metavariable:
-            - $K
+          - focus-metavariable:
+              - $K
       - patterns:
-        - pattern: |
+          - pattern: |
               class $CLASS{ ...
               String $K = "=~/.+/";
               ...
@@ -45,29 +54,29 @@ rules:
                 new SecretKeySpec(this.$K.$TB(),...);
               ... }
               ...}
-        - metavariable-regex:
-            metavariable: $TB
-            regex: (toByteArray|getBytes)
-        - focus-metavariable:
-          - $K
+          - metavariable-regex:
+              metavariable: $TB
+              regex: (toByteArray|getBytes)
+          - focus-metavariable:
+              - $K
       - patterns:
-        - pattern: |
+          - pattern: |
               class $CLASS{ ...
               ...
               $M(...){ ...
                 new SecretKeySpec($K.$TB(),...);
               ... }
               ...}
-        - metavariable-regex:
-            metavariable: $TB
-            regex: (toByteArray|getBytes)
-        - metavariable-pattern:
-            metavariable: $K
-            pattern-either:
-              - pattern: getString(...)
-              - pattern: $X.getString(...)
-        - focus-metavariable:
-            - $K
+          - metavariable-regex:
+              metavariable: $TB
+              regex: (toByteArray|getBytes)
+          - metavariable-pattern:
+              metavariable: $K
+              pattern-either:
+                - pattern: getString(...)
+                - pattern: $X.getString(...)
+          - focus-metavariable:
+              - $K
       # Hardcoded literal key passed to SecretKeySpec (directly, or through a local variable via symbolic propagation)
       - pattern: new SecretKeySpec("...".getBytes(...), $ALGO)
       - pattern: new SecretKeySpec(new byte[]{...}, $ALGO)

@@ -1,28 +1,36 @@
 rules:
   - id: MSTG-PLATFORM-8_2
-    severity: WARNING
     languages:
       - xml
+    severity: WARNING
+    message: >-
+      The application logs debug information on all the Sugar ORM queries, potentially disclosing
+      critical information.
     metadata:
-      authors:
-        - Federico Dotta @apps3c (HN Security)
-      owasp-mobile: M1
       category: security
+      confidence: MEDIUM
+      cwe:
+        - 'CWE-532: Insertion of Sensitive Information into Log File'
+      impact: LOW
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-object-persistence-mstg-platform-8
+        - https://cwe.mitre.org/data/definitions/532.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#testing-object-persistence-mstg-platform-8
-      confidence: MEDIUM
-      likelihood: MEDIUM
-      impact: LOW
-      technology: [android]
-    message: >-
-        The application logs debug information on all the Sugar ORM queries, potentially disclosing critical information.
-    paths:
-      include:
-        - "**/AndroidManifest.xml"
+      authors:
+        - Federico Dotta @apps3c (HN Security)
     options:
       symbolic_propagation: true
+    paths:
+      include:
+        - '**/AndroidManifest.xml'
     pattern: <meta-data android:name="QUERY_LOG" android:value="true" />

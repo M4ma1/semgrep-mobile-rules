@@ -1,29 +1,38 @@
 rules:
   - id: MSTG-PLATFORM-7_2
-    severity: WARNING
     languages:
       - java
       - kotlin
+    severity: WARNING
+    message: >-
+      The application exposes a native object ("$OBJ") to JavaScript through the WebView "$WV"
+      (addJavascriptInterface).
     metadata:
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-        - Federico Dotta @apps3c (HN Security)
-      owasp-mobile: M1
       category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-749: Exposed Dangerous Method or Function'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#determining-whether-java-objects-are-exposed-through-webviews-mstg-platform-7
+        - https://cwe.mitre.org/data/definitions/749.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-PLATFORM-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: platform
       verification-level:
         - L1
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05h-Testing-Platform-Interaction.md#determining-whether-java-objects-are-exposed-through-webviews-mstg-platform-7
-      confidence: LOW
-      likelihood: LOW
-      impact: MEDIUM
-      technology: [android]
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
+        - Federico Dotta @apps3c (HN Security)
       replaces:
         - android.mobsf.webview_javascript_interface
         - android.owasp.webview-bridges-setup
-    message: The application exposes a native object ("$OBJ") to JavaScript through the WebView "$WV" (addJavascriptInterface).
     pattern-either:
       - patterns:
           - pattern: $WV.addJavascriptInterface($OBJ, $Y, ...)

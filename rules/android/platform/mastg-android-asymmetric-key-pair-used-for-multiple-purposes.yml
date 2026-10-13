@@ -1,13 +1,28 @@
 rules:
   - id: android.owasp.asymmetric-key-pair-used-for-multiple-purposes
-    severity: WARNING
     languages:
       - java
-    metadata:
-      summary: Detects usage of KeyGenParameterSpec.Builder to collect observations for key-purposes evaluation.
-    message: |
-      [MASVS-CRYPTO-1] Detected usage of KeyGenParameterSpec.Builder. Review the configured purposes to ensure key separation (avoid mixing encryption/decryption with signing/verification or wrapping).
+    severity: WARNING
+    message: >-
+      [MASVS-CRYPTO-1] Detected usage of KeyGenParameterSpec.Builder. Review the configured
+      purposes to ensure key separation (avoid mixing encryption/decryption with
+      signing/verification or wrapping).
 
     # Match any construction of KeyGenParameterSpec.Builder, capturing alias and purposes.
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-323: Reusing a Nonce, Key Pair in Encryption'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/323.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: Detects usage of KeyGenParameterSpec.Builder to collect observations for key-purposes evaluation.
     pattern: |
       new KeyGenParameterSpec.Builder($ALIAS, $PURPOSES)

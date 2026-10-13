@@ -1,52 +1,57 @@
 rules:
-- id: android.semgrep.unencrypted-socket
-  metadata:
-    cwe:
-    - 'CWE-319: Cleartext Transmission of Sensitive Information'
-    owasp:
-    - A03:2017 - Sensitive Data Exposure
-    - A02:2021 - Cryptographic Failures
-    - A04:2025 - Cryptographic Failures
-    source-rule-url: https://find-sec-bugs.github.io/bugs.htm#UNENCRYPTED_SOCKET
-    asvs:
-      section: V6 Stored Cryptography Verification Requirements
-      control_id: 6.2.5 Insecure Algorithm
-      control_url: https://github.com/OWASP/ASVS/blob/master/4.0/en/0x14-V6-Cryptography.md#v62-algorithms
-      version: '4'
-    category: security
-    technology:
-    - kotlin
-    references:
-    - https://owasp.org/Top10/A02_2021-Cryptographic_Failures
-    subcategory:
-    - audit
-    likelihood: LOW
-    impact: LOW
-    confidence: LOW
-  message: This socket is not encrypted. The traffic could be read by an attacker intercepting the network
-    traffic. Use an SSLSocket created by 'SSLSocketFactory' or 'SSLServerSocketFactory' instead
-  severity: WARNING
-  languages:
-  - kt
-  patterns:
-  - pattern-either:
-    - pattern: ServerSocket(...)
-    - pattern: Socket(...)
-  - pattern-not-inside: |
-      fun $FN(...): Int {
-          ...
-          val $SS = ServerSocket(0)
-          ...
-          $SS.close()
-          ...
-      }
-  - pattern-not-inside: |
-      fun $FN(...): Int {
-          ...
-          val $SS = ServerSocket(0)
-          ...
-          $SS.localPort
-          ...
-          $SS.close()
-          ...
-      }
+  - id: android.semgrep.unencrypted-socket
+    languages:
+      - kotlin
+    severity: WARNING
+    message: >-
+      This socket is not encrypted. The traffic could be read by an attacker intercepting the
+      network traffic. Use an SSLSocket created by 'SSLSocketFactory' or 'SSLServerSocketFactory'
+      instead
+    metadata:
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-319: Cleartext Transmission of Sensitive Information'
+      impact: LOW
+      likelihood: LOW
+      references:
+        - https://owasp.org/Top10/A02_2021-Cryptographic_Failures
+        - https://find-sec-bugs.github.io/bugs.htm#UNENCRYPTED_SOCKET
+        - https://cwe.mitre.org/data/definitions/319.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+        - kotlin
+      owasp:
+        - A03:2017 - Sensitive Data Exposure
+        - A02:2021 - Cryptographic Failures
+        - A04:2025 - Cryptographic Failures
+      asvs:
+        section: V6 Stored Cryptography Verification Requirements
+        control_id: 6.2.5 Insecure Algorithm
+        control_url: https://github.com/OWASP/ASVS/blob/master/4.0/en/0x14-V6-Cryptography.md#v62-algorithms
+        version: '4'
+    patterns:
+      - pattern-either:
+          - pattern: ServerSocket(...)
+          - pattern: Socket(...)
+      - pattern-not-inside: |
+          fun $FN(...): Int {
+              ...
+              val $SS = ServerSocket(0)
+              ...
+              $SS.close()
+              ...
+          }
+      - pattern-not-inside: |
+          fun $FN(...): Int {
+              ...
+              val $SS = ServerSocket(0)
+              ...
+              $SS.localPort
+              ...
+              $SS.close()
+              ...
+          }

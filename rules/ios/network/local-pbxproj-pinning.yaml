@@ -1,6 +1,7 @@
 rules:
   - id: ios.local.release-pinning-disabled-pbxproj
-    languages: [generic]
+    languages:
+      - generic
     severity: WARNING
     message: >-
       Certificate pinning is disabled in an Xcode Release build configuration. Confirm that the
@@ -8,14 +9,24 @@ rules:
     metadata:
       category: security
       confidence: HIGH
-      cwe: CWE-295
-      technology: [ios, xcode]
+      cwe:
+        - 'CWE-295: Improper Certificate Validation'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://cwe.mitre.org/data/definitions/295.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-NETWORK-2/
+      subcategory:
+        - vuln
+      technology:
+        - ios
+        - xcode
     paths:
       include:
-        - "*.pbxproj"
+        - '*.pbxproj'
     patterns:
       - pattern-inside: |
           Release ... = {
             ...
           };
-      - pattern-regex: 'SSL_PINNING(_ENABLED)?\s*=\s*NO'
+      - pattern-regex: SSL_PINNING(_ENABLED)?\s*=\s*NO

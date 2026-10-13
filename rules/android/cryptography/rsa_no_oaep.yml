@@ -1,18 +1,28 @@
 rules:
   - id: android.rsa_no_oaep
-    severity: ERROR
     languages:
       - java
       - kotlin
+    severity: ERROR
+    message: >-
+      This application uses RSA without any padding (RSA/.../NoPadding), also called textbook
+      RSA. The padding scheme exists to prevent attacks that only work when RSA encrypts raw
+      data. Use OAEP (for example RSA/ECB/OAEPWithSHA-256AndMGF1Padding).
     metadata:
       category: security
       confidence: HIGH
-      likelihood: MEDIUM
+      cwe:
+        - 'CWE-780: Use of RSA Algorithm without OAEP'
       impact: HIGH
+      likelihood: MEDIUM
+      references:
+        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#mobile-app-cryptography
+        - https://cwe.mitre.org/data/definitions/780.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
       subcategory:
         - vuln
-      cwe: CWE-780
-      technology: [android]
+      technology:
+        - android
       owasp-mas:
         identifier: MASVS-CRYPTO-1
         area: cryptography
@@ -22,13 +32,6 @@ rules:
       replaces:
         - android.mobsf.rsa_no_oeap
         - android.gitlab.kotlin_crypto_rule-RsaNoPadding
-      references:
-        - https://github.com/MobSF/owasp-mstg/blob/master/Document/0x04g-Testing-Cryptography.md#mobile-app-cryptography
-        - https://cwe.mitre.org/data/definitions/780.html
-    message: >-
-      This application uses RSA without any padding (RSA/.../NoPadding), also called textbook RSA. The
-      padding scheme exists to prevent attacks that only work when RSA encrypts raw data. Use OAEP
-      (for example RSA/ECB/OAEPWithSHA-256AndMGF1Padding).
     pattern-either:
       - pattern: Cipher.getInstance("=~/^RSA\/[^\/]*\/NoPadding$/i", ...)
       - pattern: javax.crypto.Cipher.getInstance("=~/^RSA\/[^\/]*\/NoPadding$/i", ...)

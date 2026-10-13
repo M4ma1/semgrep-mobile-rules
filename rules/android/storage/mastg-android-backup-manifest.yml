@@ -1,13 +1,25 @@
 rules:
   - id: android.owasp.backup-manifest-backup-rules
-    severity: WARNING
     languages:
       - xml
+    severity: WARNING
+    message: '[MASVS-STORAGE-2] Backup rules detected.'
     metadata:
-      summary: This rule inspects the AndroidManifest.xml for backup rules.
+      category: security
+      confidence: LOW
+      cwe:
+        - 'CWE-530: Exposure of Backup File to an Unauthorized Control Sphere'
+      impact: LOW
+      likelihood: LOW
       references:
         - https://developer.android.com/guide/topics/data/autobackup
-    message: "[MASVS-STORAGE-2] Backup rules detected."
+        - https://cwe.mitre.org/data/definitions/530.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-STORAGE-2/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      summary: This rule inspects the AndroidManifest.xml for backup rules.
     pattern-either:
-      - pattern: 'android:fullBackupContent="@xml/backup_rules"'
-      - pattern: 'android:dataExtractionRules="@xml/data_extraction_rules"'
+      - pattern: android:fullBackupContent="@xml/backup_rules"
+      - pattern: android:dataExtractionRules="@xml/data_extraction_rules"

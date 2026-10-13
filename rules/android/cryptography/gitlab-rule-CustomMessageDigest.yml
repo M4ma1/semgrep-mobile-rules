@@ -2,27 +2,35 @@
 # License: GNU Lesser General Public License v3.0
 # source (original): https://find-sec-bugs.github.io/bugs.htm
 # yamllint enable
----
 rules:
   - id: android.gitlab.kotlin_crypto_rule-CustomMessageDigest
     languages:
-      - "kotlin"
-    message: |
+      - kotlin
+    severity: WARNING
+    message: >-
       Implementing a custom MessageDigest is error-prone. National Institute of Standards and
       Technology(NIST) recommends the use of SHA-224, SHA-256, SHA-384, SHA-512, SHA-512/224, or
       SHA-512/256.
-    severity: "WARNING"
     metadata:
-      shortDescription: "Use of a broken or risky cryptographic algorithm"
-      category: "security"
-      cwe: "CWE-327"
-      owasp:
-        - "A6:2017-Security Misconfiguration"
-        - "A04:2021-Insecure Design"
+      category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-327: Use of a Broken or Risky Cryptographic Algorithm'
+      impact: MEDIUM
+      likelihood: LOW
+      references:
+        - https://cwe.mitre.org/data/definitions/327.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CRYPTO-1/
+      subcategory:
+        - vuln
       technology:
-        - "kotlin"
-      security-severity: "MEDIUM"
-
+        - android
+        - kotlin
+      owasp:
+        - A6:2017-Security Misconfiguration
+        - A04:2021-Insecure Design
+      security-severity: MEDIUM
+      shortDescription: Use of a broken or risky cryptographic algorithm
     pattern: |
       class $CLAZZ : java.security.MessageDigest(...) {
         ...

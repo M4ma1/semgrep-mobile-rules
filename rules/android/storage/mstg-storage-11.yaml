@@ -1,25 +1,32 @@
 rules:
   - id: MSTG-STORAGE-11
-    severity: WARNING
     languages:
       - xml
+    severity: WARNING
+    message: The application allows to use Android versions earlier than 23.
     metadata:
-      replaces:
-        - android.owasp.minsdkversion
-      authors:
-        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
-      owasp-mobile: M1
       category: security
+      confidence: HIGH
+      cwe:
+        - 'CWE-1104: Use of Unmaintained Third Party Components'
+      impact: MEDIUM
+      likelihood: MEDIUM
+      references:
+        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-the-device-access-security-policy-mstg-storage-11
+        - https://cwe.mitre.org/data/definitions/1104.html
+        - https://mas.owasp.org/MASVS/controls/MASVS-CODE-1/
+      subcategory:
+        - vuln
+      technology:
+        - android
+      owasp-mobile: M1
       area: storage
       verification-level:
         - L2
-      references:
-        - https://github.com/OWASP/owasp-mastg/blob/v1.5.0/Document/0x05d-Testing-Data-Storage.md#testing-the-device-access-security-policy-mstg-storage-11
-      confidence: HIGH
-      likelihood: MEDIUM
-      impact: MEDIUM
-      technology: [android]
-    message: The application allows to use Android versions earlier than 23.
+      authors:
+        - Riccardo Cardelli @gand3lf (IMQ Minded Security)
+      replaces:
+        - android.owasp.minsdkversion
     patterns:
       - pattern: <uses-sdk android:minSdkVersion="$X" />
       - metavariable-comparison:
