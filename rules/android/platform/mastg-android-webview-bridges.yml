@@ -21,6 +21,7 @@ rules:
         - android
       summary: Detects methods annotated with @JavascriptInterface, which are exposed to JavaScript in a WebView bridge.
       replaces:
+        - MSTG-PLATFORM-7_1
         - android.federicodotta.android-webview-kotlin-apps3c
         - android.federicodotta.android-apps3c
     pattern-regex: (?m)^[ \t]*@JavascriptInterface\b
