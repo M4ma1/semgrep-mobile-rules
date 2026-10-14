@@ -2,6 +2,7 @@ rules:
   - id: MSTG-PLATFORM-5
     languages:
       - java
+      - kotlin
     severity: WARNING
     message: The application allows for JavaScript execution within a WebView instance.
     metadata:
@@ -28,6 +29,10 @@ rules:
         - Christian Cotignola @b4dsheep (IMQ Minded Security)
       replaces:
         - android.insecure_javascript_execution
+        - android.federicodotta.android-webview-kotlin-apps3c
+        - android.federicodotta.android-apps3c
     pattern-either:
       - pattern: $OBJ.setJavaScriptEnabled(true)
       - pattern: setJavaScriptEnabled(true)
+      - pattern: $OBJ.javaScriptEnabled = true
+      - pattern: javaScriptEnabled = true

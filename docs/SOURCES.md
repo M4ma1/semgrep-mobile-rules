@@ -11,7 +11,7 @@
 | [semgrep/semgrep-rules](https://github.com/semgrep/semgrep-rules) | Android, Kotlin, Gradle и Swift rules и fixtures | `rules/android/`, `rules/ios/` и `tests/`; идентификаторы начинаются с `android.semgrep.` или `ios.semgrep.` |
 | [gitlab-org/security-products/sast-rules](https://gitlab.com/gitlab-org/security-products/sast-rules) | Kotlin, Swift и Objective-C rules и fixtures | `rules/android/`, `rules/ios/` и `tests/`; идентификаторы начинаются с `android.gitlab.` или `ios.gitlab.` |
 | [akabe1/akabe1-semgrep-rules](https://github.com/akabe1/akabe1-semgrep-rules) | 24 Swift-правила и демонстрационные примеры | `rules/ios/` и `tests/upstream/akabe1/`; идентификаторы начинаются с `ios.akabe1.` |
-| [federicodotta/semgrep-rules](https://github.com/federicodotta/semgrep-rules) | Четыре Android Java/Kotlin правила и примеры | `rules/android/` и `tests/upstream/federicodotta/`; идентификаторы начинаются с `android.federicodotta.` |
+| [federicodotta/semgrep-rules](https://github.com/federicodotta/semgrep-rules) | Два Android Kotlin правила и примеры | `rules/android/` и `tests/upstream/federicodotta/`; идентификаторы начинаются с `android.federicodotta.` |
 | [adnxy/rnsec](https://github.com/adnxy/rnsec) | Сценарии проверок React Native и Expo, адаптированные под Semgrep AST/taint | `rules/react-native/`; идентификаторы начинаются с `react-native.` |
 | [apiiro/malicious-code-ruleset](https://github.com/apiiro/malicious-code-ruleset) | Dart-правила обфускации и динамического выполнения | `rules/flutter/resilience/`; идентификаторы начинаются с `flutter.apiiro.` |
 
