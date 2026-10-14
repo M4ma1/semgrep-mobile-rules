@@ -14,4 +14,14 @@
 	<cache-path name="root" path="/"/>
 	<!-- ruleid: MSTG-PLATFORM-2_4 -->
 	<external-files-path name="root" path="*"/>
+	<!-- ruleid: MSTG-PLATFORM-2_4 -->
+	<root-path name="root" path="/"/>
+	<!-- ruleid: MSTG-PLATFORM-2_4 -->
+	<root-path name="root_sub" path="sub/"/>
+	<!-- ruleid: MSTG-PLATFORM-2_4 -->
+	<root-path name="root_nopath"/>
+	<!-- ruleid: MSTG-PLATFORM-2_4 -->
+	<external-media-path name="media" path="."/>
+	<!-- ok: MSTG-PLATFORM-2_4 -->
+	<external-media-path name="media_sub" path="images/"/>
 </paths>

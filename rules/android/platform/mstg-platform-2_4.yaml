@@ -3,7 +3,11 @@ rules:
     languages:
       - xml
     severity: WARNING
-    message: Use of "$PATH" detected in a FileProvider paths configuration file.
+    message: >-
+      FileProvider paths configuration exposes an overly broad scope: either a <root-path>
+      element (device root filesystem) or a path that maps a whole base directory (".", "./",
+      "/", "*"). Narrow it to a specific subdirectory that contains only files intended for
+      sharing.
     metadata:
       category: security
       confidence: HIGH
@@ -26,16 +30,21 @@ rules:
         - L2
       authors:
         - Riccardo Cardelli @gand3lf (IMQ Minded Security)
+      replaces:
+        - android.owasp.fileprovider-broad-path-scope
+        - android.owasp.fileprovider-root-path
     patterns:
       - pattern-inside: <paths />
       - pattern-either:
-          - pattern: <root-path path="$PATH" />
-          - pattern: <files-path path="$PATH" />
-          - pattern: <cache-path path="$PATH" />
-          - pattern: <external-path path="$PATH" />
-          - pattern: <external-files-path path="$PATH" />
-          - pattern: <external-cache-path path="$PATH" />
-          - pattern: <external-media-path path="$PATH" />
-      - metavariable-regex:
-          metavariable: $PATH
-          regex: ^[\/\.\*]\/?$
+          - pattern: <root-path ... />
+          - patterns:
+              - pattern-either:
+                  - pattern: <files-path path="$PATH" />
+                  - pattern: <cache-path path="$PATH" />
+                  - pattern: <external-path path="$PATH" />
+                  - pattern: <external-files-path path="$PATH" />
+                  - pattern: <external-cache-path path="$PATH" />
+                  - pattern: <external-media-path path="$PATH" />
+              - metavariable-regex:
+                  metavariable: $PATH
+                  regex: ^[\/\.\*]\/?$
