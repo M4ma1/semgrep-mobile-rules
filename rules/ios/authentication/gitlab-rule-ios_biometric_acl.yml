@@ -9,13 +9,29 @@ rules:
       - swift
     severity: ERROR
     message: |-
-      Weak biometric ACL flag is associated with a key stored in Keychain. 
-      With '.biometryAny/.userPresence/.touchIDAny' flag, an attacker with 
-      the ability to add a biometry to the device can authenticate as the 
-      user. It is recommended to use more specific and secure authentication 
-      mechanisms like '.biometryCurrentSet' and '.touchIDCurrentSet'.
+      A key stored in Keychain is protected with a `SecAccessControlCreateFlags` value that is
+      weak or inappropriate for the intended authentication model. Two distinct concerns are
+      flagged here:
 
-      Here's an example of how to fix the problem by using .biometryCurrentSet 
+      - `.biometryAny`/`kSecAccessControlBiometryAny`, `.userPresence`/`kSecAccessControlUserPresence`,
+        or their legacy pre-iOS-11.3 alias `.touchIDAny`/`kSecAccessControlTouchIDAny`: an attacker
+        with the ability to enroll a new biometric (or, for `.userPresence`, just a passcode/biometric
+        of their own) on the device can authenticate as the user, because the Keychain item is not
+        invalidated when the set of enrolled biometrics changes. It is recommended to use
+        `.biometryCurrentSet`/`kSecAccessControlBiometryCurrentSet` instead, which invalidates the
+        item whenever enrolled biometrics change.
+      - `.watch`/`kSecAccessControlWatch`/`SecAccessControlCreateFlags.watch`: allows the Keychain
+        item to be unlocked via a paired Apple Watch instead of the device's own biometrics/passcode,
+        which may be an unwanted bypass path depending on the app's threat model.
+
+      Note: `.touchIDCurrentSet`/`kSecAccessControlTouchIDCurrentSet` is also matched by this rule,
+      but **is not itself a weak flag** — it is simply the deprecated pre-iOS-11.3 name for the
+      secure `.biometryCurrentSet`/`kSecAccessControlBiometryCurrentSet` flag and provides the same
+      invalidate-on-enrollment-change protection. It is flagged here only so the deprecated,
+      Touch-ID-specific symbol name can be modernized to the current `biometryCurrentSet` naming;
+      there is no authentication-bypass risk to fix.
+
+      Here's an example of how to fix the problem by using .biometryCurrentSet
       for biometric authentication in Swift:
       ```
       import LocalAuthentication
@@ -26,14 +42,14 @@ rules:
       // Check if biometric authentication is available
       if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
         // Use biometryCurrentSet for biometric authentication
-        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, 
-              localizedReason: "Authenticate with biometrics", 
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
+              localizedReason: "Authenticate with biometrics",
               reply: { success, error in
                   if success {
                     print("Biometric authentication successful.")
                     // Proceed with authenticated actions
                   } else {
-                    print("Biometric authentication failed: 
+                    print("Biometric authentication failed:
                           \(error?.localizedDescription ?? "Unknown error")")
                     // Handle authentication failure
                   }
@@ -54,6 +70,7 @@ rules:
       references:
         - https://cwe.mitre.org/data/definitions/305.html
         - https://mas.owasp.org/MASVS/controls/MASVS-AUTH-2/
+        - https://developer.apple.com/documentation/security/secaccesscontrolcreateflags
       subcategory:
         - vuln
       technology:
@@ -63,16 +80,25 @@ rules:
         - A07:2021-Identification and Authentication Failures
       security-severity: CRITICAL
       shortDescription: Authentication bypass by primary weakness
+      replaces:
+        - ios.akabe1.improper-biometric-auth
     patterns:
       - pattern-either:
-          # Case 1: Direct literal or array literal in the function call
+          # Case 1: direct literal or array literal in the function call (Swift enum shorthand)
           - pattern: SecAccessControlCreateWithFlags(..., .biometryAny, ...)
           - pattern: SecAccessControlCreateWithFlags(..., .userPresence, ...)
           - pattern: SecAccessControlCreateWithFlags(..., .touchIDAny, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., .watch, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., .touchIDCurrentSet, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., SecAccessControlCreateFlags.biometryAny, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., SecAccessControlCreateFlags.userPresence, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., SecAccessControlCreateFlags.watch, ...)
+          - pattern: SecAccessControlCreateWithFlags(..., SecAccessControlCreateFlags.touchIDCurrentSet, ...)
           - pattern: SecAccessControlCreateWithFlags(..., [..., .biometryAny, ...], ...)
           - pattern: SecAccessControlCreateWithFlags(..., [..., .userPresence, ...], ...)
           - pattern: SecAccessControlCreateWithFlags(..., [..., .touchIDAny, ...], ...)
-          # Case 2: Variable assignment followed by function call
+          - pattern: SecAccessControlCreateWithFlags(..., [..., .watch, ...], ...)
+          # Case 2: variable assignment followed by function call (Swift enum shorthand)
           - pattern: |
               $FLAGS = .biometryAny
               ...
@@ -85,7 +111,11 @@ rules:
               $FLAGS = .touchIDAny
               ...
               SecAccessControlCreateWithFlags(..., $FLAGS, ...)
-          # Case 3: Array assignment followed by function call
+          - pattern: |
+              $FLAGS = .watch
+              ...
+              SecAccessControlCreateWithFlags(..., $FLAGS, ...)
+          # Case 3: array assignment followed by function call (Swift enum shorthand)
           - pattern: |
               $FLAGS = [..., .biometryAny, ...]
               ...
@@ -96,5 +126,53 @@ rules:
               SecAccessControlCreateWithFlags(..., $FLAGS, ...)
           - pattern: |
               $FLAGS = [..., .touchIDAny, ...]
+              ...
+              SecAccessControlCreateWithFlags(..., $FLAGS, ...)
+          # Case 4: direct call using the legacy C-constant spellings (any let/guard-let/force-unwrap form)
+          - patterns:
+              - pattern-either:
+                  - pattern-inside: |
+                      func $FUNC() {
+                        ...
+                        let $AUTHCONTROL = SecAccessControlCreateWithFlags(..., $VALUE, ...)
+                        ...
+                      }
+                  - pattern-inside: |
+                      func $FUNC() {
+                        ...
+                        let $AUTHCONTROL = SecAccessControlCreateWithFlags(..., $VALUE, ...)!
+                        ...
+                      }
+                  - pattern-inside: |
+                      func $FUNC() {
+                        ...
+                        guard let $AUTHCONTROL = SecAccessControlCreateWithFlags(..., $VALUE, ...) else {...}
+                        ...
+                      }
+                  - pattern-inside: |
+                      func $FUNC() {
+                        ...
+                        guard let $AUTHCONTROL = SecAccessControlCreateWithFlags(..., $VALUE, ...)! else {...}
+                        ...
+                      }
+              - metavariable-regex:
+                  metavariable: $VALUE
+                  regex: (kSecAccessControlBiometryAny|kSecAccessControlUserPresence|kSecAccessControlTouchIDAny|kSecAccessControlWatch|kSecAccessControlTouchIDCurrentSet)
+              - focus-metavariable: $VALUE
+          # Case 5: variable assignment followed by function call (legacy C-constant spellings)
+          - pattern: |
+              $FLAGS = kSecAccessControlBiometryAny
+              ...
+              SecAccessControlCreateWithFlags(..., $FLAGS, ...)
+          - pattern: |
+              $FLAGS = kSecAccessControlUserPresence
+              ...
+              SecAccessControlCreateWithFlags(..., $FLAGS, ...)
+          - pattern: |
+              $FLAGS = kSecAccessControlTouchIDAny
+              ...
+              SecAccessControlCreateWithFlags(..., $FLAGS, ...)
+          - pattern: |
+              $FLAGS = kSecAccessControlWatch
               ...
               SecAccessControlCreateWithFlags(..., $FLAGS, ...)
