@@ -97,3 +97,42 @@ func complete() {
         try (URL(string: "dummy.txt")! as NSURL).setResourceValue(value, forKey: .fileProtectionKey)
     } catch  {}
 }
+
+// Legacy Objective-C-bridged constants (still valid in Swift), formerly only
+// caught by the retired ios.akabe1.none-file-protection-part1/part2 and
+// ios.gitlab...file-no-special rules.
+
+func legacy_bare_constant_in_setAttributes() {
+    let documentsPath = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+    let filename = "\(documentsPath)/tmp_activeTrans.txt"
+    // ruleid: ios.weak_file_protection
+    let protection = [FileAttributeKey.protectionKey: NSFileProtectionNone]
+    do {
+        try FileManager.default.setAttributes(protection, ofItemAtPath: filename)
+    } catch {}
+}
+
+func legacy_constant_outside_setAttributes_context() {
+    // ruleid: ios.weak_file_protection
+    someLegacyApi(protectionLevel: NSFileProtectionNone)
+}
+
+func legacy_dataWritingFileProtectionNone_dotform() {
+    // ruleid: ios.weak_file_protection
+    let options = Data.WritingOptions.dataWritingFileProtectionNone
+    do {
+        try Data().write(to: URL(string: "dummy.txt")!, options: options)
+    } catch {}
+}
+
+func legacy_fixture_spelling_from_akabe1_test() {
+    // This odd FileProtectionType.DataWritingFileProtectionNone spelling mirrors
+    // the upstream akabe1 test fixture it replaces, kept for continuity.
+    // ruleid: ios.weak_file_protection
+    try? textData.writeToFile(filepath, options: FileProtectionType.DataWritingFileProtectionNone)
+}
+
+func safe_unrelated_legacy_lookalike() {
+    // ok: ios.weak_file_protection
+    let x = NSFileProtectionComplete
+}
