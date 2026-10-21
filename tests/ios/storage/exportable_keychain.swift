@@ -50,3 +50,23 @@ func accessibility_when_unlocked() {
     ] as CFDictionary
     SecItemAdd(keychainItemQuery, nil)
 }
+
+func accessibility_always() {
+    let keychainItemQuery = [
+        kSecValueData: "dummy".data(using: .utf8)!,
+        kSecClass: kSecClassGenericPassword,
+        // ruleid: ios.exportable_keychain
+        kSecAttrAccessible: kSecAttrAccessibleAlways
+    ] as CFDictionary
+    SecItemAdd(keychainItemQuery, nil)
+}
+
+func accessibility_always_this_device_only() {
+    let keychainItemQuery = [
+        kSecValueData: "dummy".data(using: .utf8)!,
+        kSecClass: kSecClassGenericPassword,
+        // ok: ios.exportable_keychain
+        kSecAttrAccessible: kSecAttrAccessibleAlwaysThisDeviceOnly
+    ] as CFDictionary
+    SecItemAdd(keychainItemQuery, nil)
+}

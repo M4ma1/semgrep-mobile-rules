@@ -6,12 +6,14 @@ rules:
     message: >-
       This iOS mobile application seems to be configured with a weak Keychain protection, which
       could expose sensitive data. Specifically the deprecated Keychain attributes
-      `kSecAttrAccessibleAlways` or `kSecAttrAccessibleAlwaysThisDeviceOnly` could allow an
-      attacker to access the data stored in the corresponding Keychain item, regardless of
-      whether the device is locked. It is recommended to use an adequate protection level for
-      Keychain data, possibly having the `ThisDeviceOnly` suffix, related with the level of
-      confidentiality required for the stored data. Note that by default the `kSecAttrAccessible`
-      flag for Keychain is set to `kSecAttrAccessibleWhenUnlocked`.
+      `kSecAttrAccessibleAlways`, `kSecAttrAccessibleAlwaysThisDeviceOnly` or
+      `kSecAttrAccessibleAfterFirstUnlock` could allow an attacker to access the data stored in
+      the corresponding Keychain item, regardless of whether the device is locked (for the first
+      two) or without the device ever being unlocked during the current boot cycle (for the
+      latter). It is recommended to use an adequate protection level for Keychain data, possibly
+      having the `ThisDeviceOnly` suffix, related with the level of confidentiality required for
+      the stored data. Note that by default the `kSecAttrAccessible` flag for Keychain is set to
+      `kSecAttrAccessibleWhenUnlocked`.
     metadata:
       category: security
       confidence: HIGH
@@ -33,6 +35,10 @@ rules:
         level:
           - L1
           - L2
+      replaces:
+        - ios.akabe1.weak-keychain
+        - ios.gitlab.rules_lgpl_swift_other_rule-ios-keychain-weak-accessibility-value
     pattern-either:
       - pattern: kSecAttrAccessibleAlways
       - pattern: kSecAttrAccessibleAlwaysThisDeviceOnly
+      - pattern: kSecAttrAccessibleAfterFirstUnlock

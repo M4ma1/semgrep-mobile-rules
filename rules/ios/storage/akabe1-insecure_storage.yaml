@@ -31,6 +31,8 @@ rules:
         - ios
       authors:
         - Maurizio Siddu
+      replaces:
+        - ios.semgrep.swift-user-defaults
     patterns:
       - pattern-either:
           - patterns:
@@ -49,7 +51,7 @@ rules:
                   UserDefaults.standard.set($VALUE, forKey: $KEY)
               - metavariable-regex:
                   metavariable: $KEY
-                  regex: (?i)(.*?)(?=(secret|password|pwd|psw|credit|card|cvv|key|crypto|pin|token))(.*?)
+                  regex: (?i)(.*?)(?=(secret|password|pwd|psw|credit|card|cvv|key|crypto|pin|token|passcode|pass_word|passphrase|pass_code|pass_phrase))(.*?)
           - patterns:
               # Find NSUserDefaults (old version) which does not encrypt data
               - pattern: |

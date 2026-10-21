@@ -45,5 +45,13 @@ class StorageViewController: UIViewController {
         UserDefaults.standard.set(test, forKey: "PIN")
     }
 
+    func foo5() {
+        let passphrase = getPass()
+        // ruleid: vuln cleartext storage NSUserDefaults
+        UserDefaults.standard.set(passphrase, forKey: "passphrase")
+        // ruleid: vuln cleartext storage NSUserDefaults
+        UserDefaults.standard.set(passphrase, forKey: "pass_phrase")
+    }
+
        
 }

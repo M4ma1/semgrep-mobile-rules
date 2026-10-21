@@ -45,5 +45,11 @@ func example() -> Void {
     
     // okid: ios.semgrep.insecure-random
     Test.random(in: 1...10)
+
+    // ruleid: ios.semgrep.insecure-random
+    let randomCGFloat = CGFloat.random(in: 0...1)
+
+    // ruleid: ios.semgrep.insecure-random
+    srand48(100)
 }
 

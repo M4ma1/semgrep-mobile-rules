@@ -65,10 +65,34 @@ func accessibility_after_first_unlock() {
     let keychainItemQuery = [
         kSecValueData: "dummy".data(using: .utf8)!,
         kSecClass: kSecClassGenericPassword,
-        // ok: ios.weak_keychain
+        // ruleid: ios.weak_keychain
         kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock
     ] as CFDictionary
     SecItemAdd(keychainItemQuery, nil)
+}
+
+func accessibility_always_gitlab_style() {
+    let query: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrAccount as String: "username",
+        kSecValueData as String: "password".data(using: .utf8)!,
+        // ruleid: ios.weak_keychain
+        kSecAttrAccessible as String: kSecAttrAccessibleAlways
+    ]
+    SecItemAdd(query as CFDictionary, nil)
+}
+
+func accessibility_after_first_unlock_gitlab_style() {
+    let queryUpdate: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrAccount as String: "username",
+        // ruleid: ios.weak_keychain
+        kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
+    ]
+    let updateAttributes: [String: Any] = [
+        kSecValueData as String: "newPassword".data(using: .utf8)!
+    ]
+    SecItemUpdate(queryUpdate as CFDictionary, updateAttributes as CFDictionary)
 }
 
 func accessibility_when_unlocked_this_device() {

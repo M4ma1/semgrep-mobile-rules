@@ -6,8 +6,9 @@ rules:
     message: >-
       This iOS mobile application seems to be configured with an exportable Keychain protection,
       which could expose sensitive data. Specifically when the accessibility of the Keychain item
-      does not contain the `ThisDeviceOnly` suffix, then the Keychain data could be backed up to
-      iCloud or via iTunes even if using unencrypted backups which can be restored to any device.
+      does not contain the `ThisDeviceOnly` suffix (including `kSecAttrAccessibleAlways`, which
+      also lacks the suffix), then the Keychain data could be backed up to iCloud or via iTunes
+      even if using unencrypted backups which can be restored to any device.
       It is recommended to use an adequate protection level for Keychain data, possibly having
       the `ThisDeviceOnly` suffix, related with the level of confidentiality required for the
       stored data. Note that by default the `kSecAttrAccessible` flag for Keychain is set to
@@ -33,6 +34,9 @@ rules:
         level:
           - L1
           - L2
+      replaces:
+        - ios.akabe1.exportable-keychain
     pattern-either:
       - pattern: kSecAttrAccessibleWhenUnlocked
       - pattern: kSecAttrAccessibleAfterFirstUnlock
+      - pattern: kSecAttrAccessibleAlways

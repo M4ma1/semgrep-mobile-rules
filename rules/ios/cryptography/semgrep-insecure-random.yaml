@@ -31,14 +31,18 @@ rules:
         - A04:2025 - Cryptographic Failures
       masvs:
         - 'MSTG-CRYPTO-6: All random values are generated using a sufficiently secure random number generator.'
+      replaces:
+        - ios.insecure_random_number_generator
     pattern-either:
       - pattern: random()
       - pattern: Int.random(...)
       - pattern: Bool.random(...)
       - pattern: Float.random(...)
       - pattern: Double.random(...)
+      - pattern: CGFloat.random(...)
       - pattern: arc4random()
       - pattern: arc4random_buf(...)
       - pattern: arc4random_uniform(...)
       - pattern: SystemRandomNumberGenerator(...)
       - pattern: rand()
+      - pattern: srand48(...)
