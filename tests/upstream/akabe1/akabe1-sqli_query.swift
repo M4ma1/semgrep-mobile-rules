@@ -6,7 +6,7 @@ class SQLiViewController: ViewController {
 
     
     func foo1() {
-    	// ruleid: SQL injection
+    	// ruleid: ios.akabe1.sqli-query
         let queryString = "SELECT * FROM items WHERE owner='\(username)' AND itemname='\(item)'"
         var queryStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, queryString, -1, &queryStatement, nil) == SQLITE_OK {
@@ -19,7 +19,7 @@ class SQLiViewController: ViewController {
    
    
    func foo2() {
-   	// ruleid: SQL injection
+   	// ruleid: ios.akabe1.sqli-query
         let query = concatString("((SELECT COUNT (*) "
             + "      FROM ASD_TABLE a1 "
             + "      WHERE a1.state = h1.row_id "
@@ -38,7 +38,7 @@ class SQLiViewController: ViewController {
   
   
     func foo3() {
-        // ruleid: SQL injection
+        // ruleid: ios.akabe1.sqli-query
         let queryString = "SELECT * FROM items WHERE owner=" + username + " AND (itemname=" + item +")"
         var queryStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(db, queryString, -1, &queryStatement, nil) == SQLITE_OK {
@@ -52,14 +52,14 @@ class SQLiViewController: ViewController {
    
    
    func foo4() {
-       // ok: no SQL injection
+       // ok: ios.akabe1.sqli-query
        let info = "INFO" + tipology + "_KEY"
    } 
 
 
 
    func foo5() {
-       // ruleid: SQL injection
+       // ruleid: ios.akabe1.sqli-query
        let queryString = "SELECT * FROM items WHERE owner=" + username 
        var queryStatement: OpaquePointer? = nil
        if sqlite3_prepare_v2(db, queryString, -1, &queryStatement, nil) == SQLITE_OK {

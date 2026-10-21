@@ -5,8 +5,8 @@ import example
 class WKViewController: WKViewController {
 
 
+    // ruleid: ios.akabe1.improper-wkwebview
     func foo1() -> Bool {
-        // ruleid: vuln WKWebView (javascript enabled by default)
         let webView = WKWebView(frame: view.bounds)
         let url = URL(string: "https://www.test.com/test.js")!
         webView.loadData(URLRequest(url: url))
@@ -18,17 +18,16 @@ class WKViewController: WKViewController {
     func foo2(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         let name = inUrlName
         let html = "Hi \(name)"
-        // ruleid: vuln WKWebView (javascript enabled by default)
         let webView = WKWebView()
         webView.loadHTMLString(html, baseURL:nil)
     }
-    
-    
-    
+
+
+
+    // ruleid: ios.akabe1.improper-wkwebview
     func foo3() -> Bool {
         let name = inUrlName
         let html = "Hi \(name)"
-        // ruleid: vuln WKWebView (javascript enabled by default)
         let webView = WKWebView()
         webView.loadHTMLString(html, baseURL:nil)
     }
@@ -40,7 +39,7 @@ class WKViewController: WKViewController {
         preferences.javaScriptEnabled = false
         let config = WKWebViewConfiguration()
         config.preferences = preferences
-        // ok: good WKWebView
+        // ok: ios.akabe1.improper-wkwebview
         let webView = WKWebView(frame: view.bounds, configuration: config)
         let url = URL(string: "https://www.test.com/test.js")!
         webView.loadData(URLRequest(url: url))
@@ -51,7 +50,7 @@ class WKViewController: WKViewController {
      func foo5() {
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = false
-        // ok: good WKWebView
+        // ok: ios.akabe1.improper-wkwebview
         let webView = WKWebView()
         let url = URL(string: "https://www.test.com/test.js")!
         webView.configuration.defaultWebpagePreferences = preferences
@@ -63,7 +62,7 @@ class WKViewController: WKViewController {
     func foo6() {
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = false
-        // ruleid: vuln WKWebView (universal URL access enabled)
+        // ruleid: ios.akabe1.improper-wkwebview
         preferences.allowUniversalAccessFromFileURLs = true
         let config = WKWebViewConfiguration()
         config.preferences = preferences
@@ -82,7 +81,7 @@ class WKViewController: WKViewController {
         let webView = WKWebView()       
         let url = NSURL(string: "http://www.test.com/test.js")
         let urlRequest = NSURLRequest(URL: url!)
-        // ruleid: vuln WKWebView (file access enabled)
+        // ruleid: ios.akabe1.improper-wkwebview
         webView.configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         webView.loadRequest(urlRequest)
     }

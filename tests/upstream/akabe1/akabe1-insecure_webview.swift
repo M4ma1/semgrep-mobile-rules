@@ -3,10 +3,10 @@ import UIKit
 import SafariServices
 
 
-// Check UIWebView 
+// Check UIWebView
+// ruleid: ios.akabe1.insecure-webview
 class UIViewController: UIViewController {
 
-    // ruleid: vuln UIWebView
     @IBOutlet weak var webView: UIWebView!
     
     override func viewDidLoad() {
@@ -30,7 +30,7 @@ class UIViewController: UIViewController {
 class UIWebViewController: UIViewController {
    
     func foo1() {
-        // ruleid: vuln UIWebView
+        // ruleid: ios.akabe1.insecure-webview
         let webView1 = UIWebView()
         webView1.loadHTMLString("<html><body><p>Hello World!</p></body></html>", baseURL: nil)
     }
@@ -46,7 +46,7 @@ class SafariViewController_test: SafariViewController {
         if let url = URL(string: "https://www.test.net/read/\(which + 1)") {
             let config = SFSafariViewController.Configuration()
             config.entersReaderIfAvailable = true
-	    // ruleid: vuln SFSafariViewController
+	    // ruleid: ios.akabe1.insecure-webview
             let vc = SFSafariViewController(url: url, configuration: config)
             present(vc, animated: true)
         }

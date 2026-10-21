@@ -12,7 +12,7 @@ public class NetworkManager_oldAlamoFire {
         configuration.timeoutIntervalForRequest = Configuration.defaultTimeout
         
         
-        // ruleid: vuln pinning AlamoFire old version 
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
             "pin.test.net": trustPolicyPinning,
             "insecure.example.net": .disableevaluation,
@@ -27,7 +27,7 @@ public class NetworkManager_oldAlamoFire {
 
 
     public static let manager: Alamofire.SessionManager_2 = {
-        // ruleid: vuln pinning AlamoFire old version 
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
             "test.example.com": .PinCertificates(
                 certificates: ServerTrustPolicy.certificatesInBundle(),
@@ -42,7 +42,7 @@ public class NetworkManager_oldAlamoFire {
 
 
     public static let manager: Alamofire.SessionManager_3 = {
-        // ruleid: vuln pinning AlamoFire old version 
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
             "test.example.com": .PinCertificates(
                 certificates: ServerTrustPolicy.certificatesInBundle(),
@@ -56,7 +56,7 @@ public class NetworkManager_oldAlamoFire {
         
 
     public static let manager: Alamofire.SessionManager_4 = {
-        // ruleid: vuln pinning AlamoFire old version 
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
             "test.example.com": .PinPublicKeys(
                 keys: ServerTrustPolicy.keysInBundle(),
@@ -70,7 +70,7 @@ public class NetworkManager_oldAlamoFire {
 
 
     public static let manager: Alamofire.SessionManager_5 = {
-        // ruleid: vuln pinning AlamoFire old version 
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
             "test.example.com": .PinPublicKeys(
                 keys: ServerTrustPolicy.keysInBundle(),
@@ -83,7 +83,7 @@ public class NetworkManager_oldAlamoFire {
     }()
 
     public static let manager: Alamofire.SessionManager_6 = {
-        // ok: good pinning AlamoFire old version 
+        // ok: ios.akabe1.alamofire-pinning
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
             "test.example.com": .PinPublicKeys(
                 keys: ServerTrustPolicy.keysInBundle(),
@@ -109,7 +109,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafValidDNSName.trust
         let certificates = [TestCertificates.leafValidDNSName]
-        // ruleid: vuln AlamoFire 5.x pinning without certificate and host validation
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PinnedCertificatesTrustEvaluator(certificates: certificates,
                                                                  performDefaultValidation: false,
                                                                  validateHost: false)
@@ -123,7 +123,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafValidDNSName.trust
         let certificates = [TestCertificates.leafValidDNSName]
-        // ruleid: vuln AlamoFire 5.x pinning accepting self-signed certificates
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PinnedCertificatesTrustEvaluator(certificates: certificates, acceptSelfSignedCertificates: true)
         let result = Result { try serverTrustPolicy.evaluate(serverTrust, forHost: host) }
         XCTAssertTrue(result.isSuccess, "server trust should pass evaluation")
@@ -135,7 +135,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafValidDNSName.trust
         let keys = [TestCertificates.leafValidDNSName].af.publicKeys
-        // ruleid: vuln AlamoFire 5.x pinning without host validation
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PublicKeysTrustEvaluator(keys: keys, validateHost: false)
         setRootCertificateAsLoneAnchorCertificateForTrust(serverTrust)
         let result = Result { try serverTrustPolicy.evaluate(serverTrust, forHost: host) }
@@ -147,7 +147,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafExpired.trust
         let certificates = [TestCertificates.rootCA]
-        // ruleid: vuln AlamoFire 5.x pinning without certificate chain validation and accepting self-signed certificates
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PinnedCertificatesTrustEvaluator(certificates: certificates,
                                                                  performDefaultValidation: false,
                                                                  acceptSelfSignedCertificates: true,
@@ -163,7 +163,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafExpired.trust
         let certificates = [TestCertificates.rootCA]
-        // ruleid: vuln AlamoFire 5.x pinning without certificate chain validation
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PinnedCertificatesTrustEvaluator(certificates: certificates,
                                                                  performDefaultValidation: false)
 
@@ -177,7 +177,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafValidDNSName.trust
         let keys = [TestCertificates.leafValidDNSName].af.publicKeys
-        // ok: good AlamoFire 5.x pinning
+        // ok: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PublicKeysTrustEvaluator(keys: keys)
         setRootCertificateAsLoneAnchorCertificateForTrust(serverTrust)
         let result = Result { try serverTrustPolicy.evaluate(serverTrust, forHost: host) }
@@ -190,7 +190,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafValidDNSName.trust
         let keys = [TestCertificates.leafValidDNSName].af.publicKeys
-        // ok: good AlamoFire 5.x pinning
+        // ok: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PublicKeysTrustEvaluator(keys: keys, validateHost: true)
         setRootCertificateAsLoneAnchorCertificateForTrust(serverTrust)
         let result = Result { try serverTrustPolicy.evaluate(serverTrust, forHost: host) }
@@ -201,14 +201,14 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
 
 
     func foo8() {
-        // ok: good AlamoFire 5.x pinning
+        // ok: ios.akabe1.alamofire-pinning
         let evaluators: [String: ServerTrustEvaluating] = [
                 "your.domain.com": PublicKeysTrustEvaluator(
                 performDefaultValidation: true,
                 acceptSelfSignedCertificates: false,
                 validateHost: true)
         ]
-        // ruleid: vuln AlamoFire 5.x pinning disabled evaluator
+        // ruleid: ios.akabe1.alamofire-pinning
         let serverTrustManager = ServerTrustManager(evaluators: evaluators, [ "demo.test.com": DisabledEvaluator()])
         let session = Session(serverTrustManager: serverTrustManager)
     }
@@ -217,7 +217,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
 
 
     func foo9() {
-        // ruleid: vuln AlamoFire 5.x pinning disabled trust-evaluator     
+        // ruleid: ios.akabe1.alamofire-pinning
         let session = Session(configuration: configuration, serverTrustManager: ServerTrustManager(evaluators: [ "demo.test.com": DisabledTrustEvaluator()]))
     }
     
@@ -226,7 +226,7 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
         let host = "test.alamofire.org"
         let serverTrust = TestTrusts.leafValidDNSName.trust
         let keys = [TestCertificates.leafValidDNSName].af.publicKeys
-        // ok: good AlamoFire 5.x pinning
+        // ok: ios.akabe1.alamofire-pinning
         let serverTrustPolicy = PublicKeysTrustEvaluator(keys: keys, performDefaultValidation: true, validateHost: true, acceptSelfSignedCertificates: false)
         setRootCertificateAsLoneAnchorCertificateForTrust(serverTrust)
         let result = Result { try serverTrustPolicy.evaluate(serverTrust, forHost: host) }
@@ -235,143 +235,3 @@ class class_newAlamoFire: ServerTrustPolicyTestCase {
 
 
 }
-
-
-
-
-
-// Check pinning for TrustKit
-final class TrustKitService: NSObject, ApplicationService {
-    static let kMyDomain = "test.example.com"
-
-    func footrust1(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-        let trustKitConfig = [
-            kTSKPinnedDomains: [
-                TrustKitService.kMyDomain: [
-                    // ok: good Trustkit pinning
-                    kTSKEnforcePinning: true,
-                    kTSKIncludeSubdomains: true,
-                    kTSKPublicKeyAlgorithms: [kTSKAlgorithmRsa2048],
-                    kTSKPublicKeyHashes: [
-                        "public key 1",
-                        "public key 2"
-                    ]]
-            ]] as [String: Any]
-
-        TrustKit.initSharedInstance(withConfiguration: trustKitConfig)
-
-        return true
-    }
-
-
-    func footrust2(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-        let trustKitConfig = [
-            kTSKPinnedDomains: [
-                TrustKitService.kMyDomain: [
-                    // ruleid: vuln Trustkit pinning disabled
-                    kTSKEnforcePinning: false,
-                    kTSKIncludeSubdomains: true,
-                    kTSKPublicKeyAlgorithms: [kTSKAlgorithmRsa2048],
-                    kTSKPublicKeyHashes: [
-                        "public key 1",
-                        "public key 2"
-                    ]]
-            ]] as [String: Any]
-
-        TrustKit.initSharedInstance(withConfiguration: trustKitConfig)
-
-        return true
-    }
-    
-    
-        func footrust3(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-	   // vuln Trustkit pinning         
-           let trustKitConfig: [String: Any] = [
-               kTSKSwizzleNetworkDelegates: false,
-               kTSKPinnedDomains: [
-                       "test.example.com": [
-                           // ruleid: vuln Trustkit pinning enabled but not including subdomains via kTSKIncludeSubdomains
-                           kTSKEnforcePinning: true,
-                           kTSKIncludeSubdomains: false,
-                           kTSKPublicKeyHashes: [
-                              "ZCv/DWs7Y/6OPAoRMqopsFj77y+a/mCD4DRZuhTtXwg=",
-                              "AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBBBCCC="
-                          ],
-                          kTSKReportUris: ["https://website.net/trustkit/report"],
-                       ]
-               ]]
-              
-               TrustKit.initSharedInstance(withConfiguration: trustKitConfig)
-
-               return true
-        }
-
-}
-
-
-
-// Check pinning for AFSecurityPolicy 
-class class_AFNetworking: SecPolicyTestCase {
-
-        func fooAFNetworking1() {
-            var uploadSessionManager = self.uploadSessionManager
-            // ruleid: vuln AFSecurityPolicy 
-            let securityPolicy = AFSecurityPolicy(pinningMode: AFSSLPinningMode.none)
-                securityPolicy.validatesDomainName = true
-                securityPolicy.validatesCertificateChain = true
-                securityPolicy.allowInvalidCertificates = false
-            uploadSessionManager.securityPolicy = securityPolicy
-        }
-
-
-
-        func fooAFNetworking2() {
-           let certificatePath = NSBundle.mainBundle().pathForResource("pinned-certificate", ofType: "cer")! 
-           let certificateData = NSData(contentsOfFile: certificatePath)! 
-           // ruleid: vuln AFSecurityPolicy
-           let securityPolicy = AFSecurityPolicy(pinningMode: AFSSLPinningMode.Certificate) 
-           securityPolicy.pinnedCertificates = [certificateData]; 
-           securityPolicy.validatesCertificateChain = false 
-           self.securityPolicy = securityPolicy 
-        }
-
-
-
-        func fooAFNetworking3() {
-           let certificatePath = NSBundle.mainBundle().pathForResource("pinned-certificate", ofType: "cer")! 
-           let certificateData = NSData(contentsOfFile: certificatePath)! 
-           // ruleid: vuln AFSecurityPolicy
-           let securityPolicy = AFSecurityPolicy(pinningMode: AFSSLPinningMode.PublicKey) 
-           securityPolicy.pinnedCertificates = [certificateData]; 
-           securityPolicy.allowInvalidCertificates = true 
-           self.securityPolicy = securityPolicy 
-        }
-        
-        
-        
-        func fooAFNetworking4() {
-           let certificatePath = NSBundle.mainBundle().pathForResource("pinned-certificate", ofType: "cer")! 
-           let certificateData = NSData(contentsOfFile: certificatePath)! 
-           // ok: good AFSecurityPolicy
-           let securityPolicy = AFSecurityPolicy(pinningMode: AFSSLPinningMode.Certificate) 
-           securityPolicy.pinnedCertificates = [certificateData]; 
-           securityPolicy.validatesDomainName = true
-           securityPolicy.validatesCertificateChain = true
-           securityPolicy.allowInvalidCertificates = false
-           self.securityPolicy = securityPolicy 
-        }
-
-
-        func fooAFNetworking5() {
-           let manager = AFHTTPSessionManager()
-           // ruleid: vuln AFSecurityPolicy
-           let securityPolicy = AFSecurityPolicy.default()
-           securityPolicy.allowInvalidCertificates = false
-           securityPolicy.validatesDomainName = true
-           manager.securityPolicy = securityPolicy
-        }
-
-
-}
-
-

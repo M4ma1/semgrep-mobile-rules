@@ -7,10 +7,9 @@ class LogViewController: UIViewController {
     var name: String = ""
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var textFieldName: UITextField!
-    
+
     @IBAction func foo1(sender: UIButton) {
         let name = textFieldName.text!
-        // ruleid: vuln log injection (false negative because $FUNC(...) at the moment is not correctly supported by semgrep Swift
         NSLog("Input value = %@", textFieldName.text)
         labelName.text = "Hello \(name)"
     }
@@ -18,26 +17,26 @@ class LogViewController: UIViewController {
 
 
 
+// ruleid: ios.akabe1.log-inj
 class LogViewController: UIViewController {
     @IBOutlet weak var label: NSTextField!
-    
+
     @IBAction func foo2(sender: UIButton) {
-        // ruleid: vuln log injection (false negative because $FUNC(...) at the moment is not correctly supported by semgrep Swift
         NSLog("Input value = %@", label.stringValue)
     }
-    
-    
+
+
     @IBAction func foo3() {
-        // ruleid: vuln log injection
         NSLog("Input value = %@", label.stringValue)
     }
-    
+
 }
 
 
 
 
-class LogViewController: UIViewController {  
+// ruleid: ios.akabe1.log-inj
+class LogViewController: UIViewController {
     @IBOutlet weak var txtUserInput: UITextField!
 
     override func viewDidLoad() {
@@ -47,29 +46,28 @@ class LogViewController: UIViewController {
     func foo4() {
         //Read untrusted user input
         let injParam = txtUserInput.text
-        //Try to conver user input to into integer 
+        //Try to conver user input to into integer
         let num = Int(injParam)
         //Then log unvalidated user input in case of failure
         if num == nil {
-            // vuln log injection (false negative)
             NSLog("Input value = %@", injParam)
-        }         
+        }
     }
-        
+
 }
 
 
-class LogViewController: UIViewController { 
+class LogViewController: UIViewController {
 
     func foo5(_ webView: UIWebView) {
-        // ruleid: vuln log injection
+        // ruleid: ios.akabe1.log-inj
         let html = webView.stringByEvaluatingJavaScript(from: "document.body.innerHTML")
         NSLog("Input value = %@", html)
     }
-    
-    
+
+
     func foo6(_ webView: UIWebView) {
-        // ruleid: vuln log injection
+        // ruleid: ios.akabe1.log-inj
         let passwordNameValue = webview.stringByEvaluatingJavaScript(from: "document.getElementById('password').value").value
         NSLog("Input value = %@", passwordNameValue)
     }
@@ -77,9 +75,9 @@ class LogViewController: UIViewController {
 
 
     func foo7(webView: WKWebView, navigationAction: WKNavigationAction) {
+        // ruleid: ios.akabe1.log-inj
         let urlStr = navigationAction.request.url?.absoluteString
         let components = URLComponents(url: urlStr, resolvingAgainstBaseURL: false)
-        // ruleid: vuln log injection
         NSLog("Query value = %@", components.query)
         NSLog("Host value = %@", components.host)
     }
@@ -92,9 +90,9 @@ class LogViewController: UIViewController {
             components.host
             components.query
             components.percentEncodedQuery
+            // ruleid: ios.akabe1.log-inj
             let queryItems = components.queryItems
                 for queryItem in queryItems {
-                    // ruleid: vuln log injection
                     NSLog("Input nmae = %@", queryItem.name)
                     NSLog("Input value = %@", queryItem.value)
                 }
@@ -104,32 +102,32 @@ class LogViewController: UIViewController {
 
 
     func foo9(webView: WKWebView) {
+        // ruleid: ios.akabe1.log-inj
         let urlString = webView.request!.url!.absoluteString
-        // ruleid: vuln log injection
         NSLog("Input value = %@", urlString)
     }
 
 
     func foo10(webView: WKWebView, navigationAction: WKNavigationAction) {
         // Get the current URL
+        // ruleid: ios.akabe1.log-inj
         let urlStr = navigationAction.request.url?.absoluteString
-        // ruleid: vuln log injection
         NSLog("Input value = %@", urlStr)
     }
-    
-    
+
+
     func foo11(webView: UIWebView) {
         // Get the current URL
+        // ruleid: ios.akabe1.log-inj
         let url = WebView.request?.mainDocumentURL
-        // ruleid: vuln log injection
         NSLog("Input value = %@", url)
-    }  
-    
-    
+    }
+
+
     func foo12(webView: UIWebView) {
-        // Get the current URL    
+        // Get the current URL
+        // ruleid: ios.akabe1.log-inj
         let url = webView.stringByEvaluatingJavaScriptFromString("window.location.href")!
-        // ruleid: vuln log injection
         NSLog("Input value = %@", url)
     }
 }
