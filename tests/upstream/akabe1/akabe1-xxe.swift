@@ -18,6 +18,7 @@ class XXEViewController: ViewController {
 
 
 
+    // ruleid: ios.akabe1.xxe
     func foo2(xml: String) {
         // ruleid: ios.akabe1.xxe
         parser = NSXMLParser(data: rawXml.dataUsingEncoding(NSUTF8StringEncoding)!)

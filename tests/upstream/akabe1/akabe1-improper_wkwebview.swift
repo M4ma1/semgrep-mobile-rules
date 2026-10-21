@@ -14,7 +14,7 @@ class WKViewController: WKViewController {
     }
     
     
-    // False Negative at the moment "func $FUNC(...) {" is yet not supported in semgrep 
+    // ruleid: ios.akabe1.improper-wkwebview
     func foo2(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         let name = inUrlName
         let html = "Hi \(name)"

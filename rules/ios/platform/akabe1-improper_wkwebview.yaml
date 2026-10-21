@@ -46,7 +46,7 @@ rules:
                   metavariable: $LOADFUNC
                   regex: (?i)(loadHTMLString|loadData)
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                       ...
                       $PREFS.javaScriptEnabled = false
                       ...
@@ -62,7 +62,7 @@ rules:
                   metavariable: $LOADFUNC
                   regex: (?i)(loadHTMLString|loadData)
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                       ...
                       $PREFS.javaScriptEnabled = false
                       ...
@@ -78,7 +78,7 @@ rules:
                   metavariable: $LOADFUNC
                   regex: (?i)(loadHTMLString|loadData)
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                       ...
                       $PREFS.allowsContentJavaScript = false
                       ...
@@ -94,14 +94,14 @@ rules:
                   metavariable: $LOADFUNC
                   regex: (?i)(loadHTMLString|loadData)
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                       ...
                       $PREFS.allowsContentJavaScript = false
                       ...
                   }
           - patterns:
               - pattern-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     let $WEBVIEW = WKWebView(...)
                     ...
@@ -112,32 +112,32 @@ rules:
                   metavariable: $LOADFUNC
                   regex: (?i)(loadHTMLString|loadData)
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     let $PREFS = WKPreferences()
                     ...
                   }
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     let $PREFS = WKWebpagePreferences()
                     ...
                   }
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     $WEBVIEW.configuration.preferences.javaScriptEnabled = false
                     ...
                   }
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     $WEBVIEW.configuration.defaultWebpagePreferences.allowsContentJavaScript = false
                     ...
                   }
           - patterns:
               - pattern-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     let $WEBVIEW : WKWebView
                     ...
@@ -148,25 +148,25 @@ rules:
                   metavariable: $LOADFUNC
                   regex: (?i)(loadHTMLString|loadData)
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     let $PREFS = WKPreferences()
                     ...
                   }
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     let $PREFS = WKWebpagePreferences()
                     ...
                   }
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     $WEBVIEW.configuration.preferences.javaScriptEnabled = false
                     ...
                   }
               - pattern-not-inside: |
-                  func $FUNC() {
+                  func $FUNC(...) {
                     ...
                     $WEBVIEW.configuration.defaultWebpagePreferences.allowsContentJavaScript = false
                     ...

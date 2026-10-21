@@ -3,6 +3,7 @@ import example
 
 
 // Check Log Injection
+// ruleid: ios.akabe1.log-inj
 class LogViewController: UIViewController {
     var name: String = ""
     @IBOutlet weak var labelName: UILabel!
