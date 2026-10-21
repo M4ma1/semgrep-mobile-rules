@@ -6,10 +6,10 @@ final class TrustKitService: NSObject, ApplicationService {
     static let kMyDomain = "test.example.com"
 
     func footrust1(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
+        // ok: ios.akabe1.trustkit-pinning
         let trustKitConfig = [
             kTSKPinnedDomains: [
                 TrustKitService.kMyDomain: [
-                    // ok: ios.akabe1.trustkit-pinning
                     kTSKEnforcePinning: true,
                     kTSKIncludeSubdomains: true,
                     kTSKPublicKeyAlgorithms: [kTSKAlgorithmRsa2048],
@@ -26,10 +26,10 @@ final class TrustKitService: NSObject, ApplicationService {
 
 
     func footrust2(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
+        // ruleid: ios.akabe1.trustkit-pinning
         let trustKitConfig = [
             kTSKPinnedDomains: [
                 TrustKitService.kMyDomain: [
-                    // ruleid: ios.akabe1.trustkit-pinning
                     kTSKEnforcePinning: false,
                     kTSKIncludeSubdomains: true,
                     kTSKPublicKeyAlgorithms: [kTSKAlgorithmRsa2048],
@@ -46,12 +46,12 @@ final class TrustKitService: NSObject, ApplicationService {
     
     
         func footrust3(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-	   // vuln Trustkit pinning         
+	   // vuln Trustkit pinning
+           // ruleid: ios.akabe1.trustkit-pinning
            let trustKitConfig: [String: Any] = [
                kTSKSwizzleNetworkDelegates: false,
                kTSKPinnedDomains: [
                        "test.example.com": [
-                           // ruleid: ios.akabe1.trustkit-pinning
                            kTSKEnforcePinning: true,
                            kTSKIncludeSubdomains: false,
                            kTSKPublicKeyHashes: [

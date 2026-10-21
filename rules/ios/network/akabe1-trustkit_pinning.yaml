@@ -34,25 +34,37 @@ rules:
           # TrustKit with improper pinning configurations (pinning disabled or disabled for subdomains)
           - patterns:
               - pattern-inside: |
-                  let $TRUSTKITCONF: [String: Any] = $VALUE
+                  let $TRUSTKITCONF: $TY = $VALUE
+              - metavariable-regex:
+                  metavariable: $TY
+                  regex: (?i)^\[\s*String\s*:\s*Any\s*\]$
               - metavariable-regex:
                   metavariable: $VALUE
                   regex: (?i)\[([\s\S]*?)(?=kTSKEnforcePinning:\s?false)([\s\S]*?)\]
           - patterns:
               - pattern-inside: |
-                  let $TRUSTKITCONF: [String: Any] = $VALUE
+                  let $TRUSTKITCONF: $TY = $VALUE
+              - metavariable-regex:
+                  metavariable: $TY
+                  regex: (?i)^\[\s*String\s*:\s*Any\s*\]$
               - metavariable-regex:
                   metavariable: $VALUE
                   regex: (?i)\[([\s\S]*?)(?=kTSKIncludeSubdomains:\s?false)([\s\S]*?)\]
           - patterns:
               - pattern-inside: |
-                  let $TRUSTKITCONF = $VALUE as [String: Any] 
+                  let $TRUSTKITCONF = $VALUE as $TY
+              - metavariable-regex:
+                  metavariable: $TY
+                  regex: (?i)^\[\s*String\s*:\s*Any\s*\]$
               - metavariable-regex:
                   metavariable: $VALUE
                   regex: (?i)\[([\s\S]*?)(?=kTSKEnforcePinning:\s?false)([\s\S]*?)\]
           - patterns:
               - pattern-inside: |
-                  let $TRUSTKITCONF = $VALUE as [String: Any] 
+                  let $TRUSTKITCONF = $VALUE as $TY
+              - metavariable-regex:
+                  metavariable: $TY
+                  regex: (?i)^\[\s*String\s*:\s*Any\s*\]$
               - metavariable-regex:
                   metavariable: $VALUE
                   regex: (?i)\[([\s\S]*?)(?=kTSKIncludeSubdomains:\s?false)([\s\S]*?)\]
