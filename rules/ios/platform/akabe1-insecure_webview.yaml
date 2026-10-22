@@ -23,6 +23,7 @@ rules:
       likelihood: LOW
       references:
         - https://mas.owasp.org/MASTG/iOS/0x06h-Testing-Platform-Interaction
+        - https://mas.owasp.org/MASTG/tests/ios/MASVS-PLATFORM/MASTG-TEST-0076/
         - https://developer.apple.com/documentation/webkit/replacing_uiwebview_in_your_app
         - https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller
         - https://cwe.mitre.org/data/definitions/749.html
@@ -33,17 +34,13 @@ rules:
         - ios
       authors:
         - Maurizio Siddu
+      replaces:
+        - ios.deprecated_uiwebview
     patterns:
       - pattern-either:
-          # UIWebView found
-          - patterns:
-              - pattern-inside: |
-                  let $WEBVIEW = UIWebView()
-                  ...
-                  $WEBVIEW.$LOADFUNC(...)
-              - metavariable-regex:
-                  metavariable: $LOADFUNC
-                  regex: (?i)(loadHTMLString|loadData|loadRequest)
+          # Any direct reference to the deprecated UIWebView (instantiation, cast, etc.) -
+          # flagged regardless of subsequent usage, since the type itself is deprecated
+          - pattern: UIWebView
           #- patterns:
           #    - pattern-inside: |
           #        @IBOutlet weak var $WEBVIEW: UIWebView
